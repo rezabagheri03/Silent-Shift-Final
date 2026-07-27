@@ -29,8 +29,11 @@ export async function sendConfirmationEmail(
   if (smtpHost) {
     // Real SMTP delivery
     try {
-      const nodemailer = await import("nodemailer").catch(() => null);
-      if (!nodemailer) {
+      let nodemailer: any;
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        nodemailer = require("nodemailer");
+      } catch {
         console.warn("[email] nodemailer not installed — falling back to console log");
         return logConfirmationEmail(email, confirmationUrl);
       }
