@@ -35,7 +35,7 @@ export function PodcastEpisodeRow({ podcast }: { podcast: Podcast }) {
   }
 
   const episodeNo = podcast.episode_number ?? podcast.id;
-  const host = podcast.host_name || podcast.author_name || "برزو ذاکری";
+  const host = podcast.producer || "برزو ذاکری";
   const durationLabel = formatMinutes(podcast.duration_seconds);
 
   return (
