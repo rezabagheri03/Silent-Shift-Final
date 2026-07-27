@@ -94,7 +94,7 @@ export default function Header() {
 function MobileDrawer({ onClose, onSearchOpen }: { onClose: () => void; onSearchOpen: () => void }) {
   const pathname = usePathname();
   const closeRef = useRef<HTMLButtonElement>(null);
-  const drawerRef = useRef<HTMLElement>(null);
+  const drawerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
