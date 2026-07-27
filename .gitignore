@@ -1,0 +1,32 @@
+# dependencies
+node_modules
+.pnp
+.pnp.js
+
+# next
+.next/
+out/
+build/
+
+# database & uploads (keep local only)
+data/
+public/uploads/covers/*
+public/uploads/audio/*
+!public/uploads/covers/.gitkeep
+!public/uploads/audio/.gitkeep
+
+# misc
+.DS_Store
+*.pem
+.env*.local
+.env
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*

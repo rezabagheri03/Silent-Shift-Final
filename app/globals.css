@@ -1,0 +1,310 @@
+@font-face {
+  font-family: "IRANYekanXFaNum";
+  src: url("/fonts/IRANYekanXFaNum-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IRANYekanXFaNum";
+  src: url("/fonts/IRANYekanXFaNum-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IRANYekanXFaNum";
+  src: url("/fonts/IRANYekanXFaNum-DemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IRANYekanXFaNum";
+  src: url("/fonts/IRANYekanXFaNum-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #0a0a0a;
+  --surface: #171717;
+  --border: #262626;
+  --border-medium: #52525b;
+  --border-secondary: #a1a1aa;
+  --text-primary: #ffffff;
+  --text-secondary: #a1a1aa;
+  --text-tertiary: #52525B;
+  --brand: #D4AF37;
+  --brand-hover: #C49B2F;
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: "IRANYekanXFaNum", Tahoma, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  scroll-behavior: smooth;
+}
+
+* {
+  border-color: var(--border);
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Hide scrollbar utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Line clamps */
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Text highlight utility — the gold accent word in headlines */
+.text-highlight {
+  color: var(--brand);
+}
+
+/* Backdrop blur helpers (with -webkit- prefix for Safari) */
+.backdrop-card {
+  backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(9px);
+  background-color: rgba(23, 23, 23, 0.6);
+}
+
+.backdrop-email {
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Decorative glow blurs used behind the profile photo and FAQ card */
+.glow-soft {
+  filter: blur(85px);
+}
+.glow-large {
+  filter: blur(131px);
+}
+
+/* Scroll snap for mobile article carousel */
+.scroll-snap-x {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+.snap-start {
+  scroll-snap-align: start;
+}
+
+/* Sticky nav with progressive backdrop + subtle bottom shadow when scrolled */
+.sticky-nav {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: rgba(10, 10, 10, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.08);
+}
+
+/* Selection */
+::selection {
+  background: var(--brand);
+  color: var(--bg);
+}
+
+body {
+  overflow-x: hidden;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.mobile-header-safe {
+  height: calc(56px + env(safe-area-inset-top, 0px));
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+@supports (height: 100dvh) {
+  .min-h-screen { min-height: 100dvh; }
+}
+
+img {
+  display: block;
+}
+
+.design-section {
+  width: 100%;
+  padding-block: 0;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--brand);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.eyebrow::after {
+  content: "";
+  width: 48px;
+  height: 1px;
+  background: var(--brand);
+  opacity: 0.8;
+}
+
+.gold-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212,175,55,.85), transparent);
+}
+
+.design-panel {
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.25), 0 0 0 1px rgba(255,255,255,0.05) inset;
+}
+
+/* Markdown content — styled for the article body */
+.md-content {
+  color: var(--text-secondary);
+  font-size: 18px;
+  line-height: 1.9;
+  text-align: right;
+}
+.md-content > * + * {
+  margin-top: 1.25em;
+}
+@media (min-width: 768px) {
+  .md-content { font-size: 16px; line-height: 1.75; }
+}
+.md-content .md-h2 {
+  color: var(--text-primary);
+  font-size: 24px;
+  line-height: 1.4;
+  font-weight: 600;
+  margin-top: 2em;
+}
+.md-content .md-h3 {
+  color: var(--text-primary);
+  font-size: 20px;
+  line-height: 1.4;
+  font-weight: 600;
+  margin-top: 1.75em;
+}
+.md-content .md-h4 {
+  color: var(--text-primary);
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 1.5em;
+}
+.md-content strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+.md-content em {
+  color: var(--text-primary);
+  font-style: normal;
+  border-bottom: 1px dashed var(--brand);
+  padding-bottom: 1px;
+}
+.md-content .md-link {
+  color: var(--brand);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.md-content .md-link:hover {
+  color: var(--brand-hover);
+}
+.md-content .md-code {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 0.9em;
+  direction: ltr;
+  display: inline-block;
+}
+.md-content .md-ul,
+.md-content .md-ol {
+  padding-right: 1.5em;
+  margin-top: 1em;
+}
+.md-content .md-ul {
+  list-style-type: disc;
+}
+.md-content .md-ol {
+  list-style-type: decimal;
+}
+.md-content .md-ul li,
+.md-content .md-ol li {
+  margin-top: 0.5em;
+}
+.md-content .md-blockquote {
+  border-right: 3px solid var(--brand);
+  padding: 0.5em 1.25em;
+  margin: 1.5em 0;
+  color: var(--text-primary);
+  background: rgba(212, 175, 55, 0.05);
+  border-radius: 4px;
+}
+.md-content .md-blockquote p {
+  margin: 0;
+}
+.md-content .md-figure {
+  margin: 2.5rem -120px;
+}
+.md-content .md-figure img {
+  width: 100%;
+  max-height: 560px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+@media (max-width: 767px) {
+  .md-content .md-figure { margin: 2rem 0; }
+}
+.md-content .md-hr {
+  border: 0;
+  height: 1px;
+  background: var(--border);
+  margin: 2em 0;
+}
