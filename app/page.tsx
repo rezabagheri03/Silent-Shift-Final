@@ -22,9 +22,10 @@ export default function LandingPage() {
   const content = getAllContent();
 
   return (
-    <main>
+    <>
       <Header />
 
+      <main id="main" tabIndex={-1} className="outline-none">
       <div className="mx-auto max-w-page px-page-x-m md:px-12 xl:px-page-x-d">
         <div className="flex flex-col gap-section-m md:gap-8 xl:gap-section-d py-section-m xl:py-section-d">
           <Hero
@@ -63,8 +64,9 @@ export default function LandingPage() {
           <DesignFaqSection faqs={faqs} />
         </div>
       </div>
+      </main>
 
       <Footer />
-    </main>
+    </>
   );
 }

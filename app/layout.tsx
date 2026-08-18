@@ -41,7 +41,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           پرش به محتوای اصلی
         </a>
         <PlayerProvider>
-          <div id="main">{children}</div>
+          <div>{children}</div>
           <Player />
         </PlayerProvider>
       </body>

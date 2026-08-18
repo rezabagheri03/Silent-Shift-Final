@@ -46,14 +46,31 @@ export default function ArticlePLPClient({ initialList, initialFeatured, initial
       firstRequest.current = false;
       return;
     }
+    const controller = new AbortController(); // T18: cancel stale filter fetches
     setLoading(true);
     setError(null);
     const q = new URLSearchParams({ page: String(page), sort, limit: "9" });
     if (tag) q.set("tag", tag);
-    apiGet<Paginated<Article>>(`/api/articles?${q}`)
-      .then(setList)
-      .catch((e) => setError(e instanceof Error ? e.message : "خطا در دریافت لیست"))
-      .finally(() => setLoading(false));
+    apiGet<Paginated<Article>>(`/api/articles?${q}`, { signal: controller.signal })
+      .then((data) => { setList(data); setLoading(false); })
+      .catch((e) => {
+        if (e instanceof DOMException && e.name === "AbortError") return;
+        setError(e instanceof Error ? e.message : "خطا در دریافت لیست");
+        setLoading(false);
+      });
+    return () => controller.abort();
+  }, [page, sort, tag]);
+
+  // T19: mirror filters/pagination into the URL (shareable links, sane back/refresh)
+  const urlSynced = useRef(false);
+  useEffect(() => {
+    if (!urlSynced.current) { urlSynced.current = true; return; }
+    const q = new URLSearchParams();
+    if (page > 1) q.set("page", String(page));
+    if (sort !== "new") q.set("sort", sort);
+    if (tag) q.set("tag", tag);
+    const qs = q.toString();
+    window.history.replaceState(null, "", qs ? `?${qs}` : window.location.pathname);
   }, [page, sort, tag]);
 
   const visibleItems = list?.items.filter((article) => article.id !== featured?.id) ?? [];

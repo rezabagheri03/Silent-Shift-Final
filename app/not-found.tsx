@@ -3,7 +3,7 @@ import { designAssets } from "@/lib/design-assets";
 
 export default function NotFound() {
   return (
-    <main className="relative min-h-screen overflow-hidden bg-bg flex items-end justify-center">
+    <main id="main" tabIndex={-1} className="relative min-h-screen overflow-hidden bg-bg flex items-end justify-center outline-none">
       <img src={designAssets.notFound} alt="" className="absolute inset-0 w-full h-full object-cover" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10" />
       <div className="absolute z-10 top-[66%] left-1/2 -translate-x-1/2 text-[38px] md:text-[56px] leading-none font-bold text-brand whitespace-nowrap">خطا ۴۰۴</div>

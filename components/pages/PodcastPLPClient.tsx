@@ -58,19 +58,38 @@ export default function PodcastPLPClient({
       firstRequest.current = false;
       return;
     }
+    const controller = new AbortController(); // T18: cancel stale filter fetches
     setLoading(true);
     setError(null);
     setPage(1);
     const q = new URLSearchParams({ page: "1", sort, limit: "10" });
     if (tag) q.set("tag", tag);
-    apiGet<Paginated<Podcast>>(`/api/podcasts?${q}`)
+    apiGet<Paginated<Podcast>>(`/api/podcasts?${q}`, { signal: controller.signal })
       .then((data) => {
         setList(data);
         setItems(data.items);
+        setLoading(false);
       })
-      .catch((e) => setError(e instanceof Error ? e.message : "خطا در دریافت لیست"))
-      .finally(() => setLoading(false));
+      .catch((e) => {
+        if (e instanceof DOMException && e.name === "AbortError") return;
+        setError(e instanceof Error ? e.message : "خطا در دریافت لیست");
+        setLoading(false);
+      });
+    return () => controller.abort();
   }, [sort, tag]);
+
+  // T19: mirror filters/pagination into the URL (shareable links, sane back/refresh).
+  // Skips the initial render so unknown query params (e.g. utm_*) survive until interaction.
+  const urlSynced = useRef(false);
+  useEffect(() => {
+    if (!urlSynced.current) { urlSynced.current = true; return; }
+    const q = new URLSearchParams();
+    if (page > 1) q.set("page", String(page));
+    if (sort !== "new") q.set("sort", sort);
+    if (tag) q.set("tag", tag);
+    const qs = q.toString();
+    window.history.replaceState(null, "", qs ? `?${qs}` : window.location.pathname);
+  }, [page, sort, tag]);
 
   async function loadMore() {
     if (!list || page >= list.total_pages || loadingMore) return;

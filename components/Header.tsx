@@ -95,6 +95,12 @@ function MobileDrawer({ onClose, onSearchOpen }: { onClose: () => void; onSearch
   const pathname = usePathname();
   const closeRef = useRef<HTMLButtonElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
+  const openerRef = useRef<HTMLElement | null>(null);
+  // T21: capture the opener once; restore focus when the drawer unmounts
+  useEffect(() => {
+    openerRef.current = document.activeElement as HTMLElement | null;
+    return () => { openerRef.current?.focus?.(); };
+  }, []);
   useEffect(() => {
     const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";

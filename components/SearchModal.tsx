@@ -15,14 +15,19 @@ export default function SearchModal({ open, onClose }: { open: boolean; onClose:
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
+  const openerRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     if (open) {
+      openerRef.current = document.activeElement as HTMLElement | null;
       setTimeout(() => inputRef.current?.focus(), 50);
     } else {
       setQ("");
       setResults(null);
       setError(null);
+      // T21: return focus to the control that opened the modal
+      openerRef.current?.focus?.();
+      openerRef.current = null;
     }
   }, [open]);
 

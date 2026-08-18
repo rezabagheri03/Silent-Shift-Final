@@ -308,3 +308,28 @@ img {
   background: var(--border);
   margin: 2em 0;
 }
+
+/* T22: respect users who ask for less motion (WCAG 2.3.3) */
+@media (prefers-reduced-motion: reduce) {
+  html, body {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* T22: focus fallback for browsers without :focus-visible (Safari < 15.4) */
+@supports not selector(:focus-visible) {
+  button:focus,
+  a:focus,
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}

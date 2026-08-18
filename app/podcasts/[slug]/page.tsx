@@ -138,9 +138,9 @@ export default async function PodcastPage({
           >
             {adjacent.length > 0 && (
               <>
-                <h2 className="w-full text-right text-[14px] font-normal leading-5 text-brand">
+                <p className="w-full text-right text-[14px] font-normal leading-5 text-brand">
                   اپیزود‌های اخیر
-                </h2>
+                </p>
                 <div className="flex w-full flex-col gap-2">
                   {adjacent.slice(0, 3).map((item, index) => {
                     const isFirst = index === 0;

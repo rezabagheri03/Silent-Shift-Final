@@ -54,6 +54,7 @@ export default function Player() {
               aria-valuemin={0}
               aria-valuemax={Math.round(player.duration || 0)}
               aria-valuenow={Math.round(player.currentTime)}
+              aria-valuetext={`${formatDuration(player.currentTime)} از ${formatDuration(player.duration || 0)}`}
               tabIndex={0}
               onClick={(event) => seek(event.clientX, event.currentTarget)}
               onKeyDown={(event) => {

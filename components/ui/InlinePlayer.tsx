@@ -61,6 +61,7 @@ export function InlinePlayer({ podcast }: { podcast: Podcast }) {
           aria-valuemin={0}
           aria-valuemax={Math.round(duration || 0)}
           aria-valuenow={Math.round(time)}
+          aria-valuetext={`${formatDuration(time)} از ${formatDuration(duration || 0)}`}
           tabIndex={0}
           onClick={(e) => seek(e.clientX, e.currentTarget)}
           onKeyDown={(e) => {
@@ -73,12 +74,15 @@ export function InlinePlayer({ podcast }: { podcast: Podcast }) {
               jump(-5);
             }
           }}
-          className="relative h-1 w-full cursor-pointer bg-text-tertiary"
+          className="relative flex h-6 w-full cursor-pointer items-center"
         >
-          <span
-            className="absolute top-0 right-0 h-full bg-brand"
-            style={{ width: `${progress}%` }}
-          />
+          {/* T20: 24px hit area; the visible 4px track is unchanged */}
+          <div className="relative h-1 w-full bg-text-tertiary">
+            <span
+              className="absolute top-0 right-0 h-full bg-brand"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
         </div>
 
         <div className="flex w-full flex-row items-center justify-between text-[14px] leading-5 text-white">
@@ -94,7 +98,7 @@ export function InlinePlayer({ podcast }: { podcast: Podcast }) {
             type="button"
             onClick={() => jump(-10)}
             aria-label="۱۰ ثانیه عقب"
-            className="flex h-6 w-6 items-center justify-center opacity-80 transition-opacity hover:opacity-100"
+            className="flex h-11 w-11 items-center justify-center opacity-80 transition-opacity hover:opacity-100"
           >
             <img
               src="/icons/10 Sec Backward.svg"
@@ -125,7 +129,7 @@ export function InlinePlayer({ podcast }: { podcast: Podcast }) {
             type="button"
             onClick={() => jump(30)}
             aria-label="۳۰ ثانیه جلو"
-            className="flex h-6 w-6 items-center justify-center opacity-80 transition-opacity hover:opacity-100"
+            className="flex h-11 w-11 items-center justify-center opacity-80 transition-opacity hover:opacity-100"
           >
             <img
               src="/icons/30 Sec Forward.svg"
@@ -144,12 +148,12 @@ export function InlinePlayer({ podcast }: { podcast: Podcast }) {
               download
               aria-label="دانلود اپیزود"
               title="دانلود اپیزود"
-              className="flex h-5 w-5 shrink-0 items-center justify-center text-text-tertiary transition-colors hover:text-brand"
+              className="flex h-11 w-11 shrink-0 items-center justify-center text-text-tertiary transition-colors hover:text-brand"
             >
               <DownloadIcon size={20} />
             </a>
           ) : (
-            <span className="h-5 w-5 shrink-0" aria-hidden />
+            <span className="h-11 w-11 shrink-0" aria-hidden />
           )}
         </div>
       </div>
