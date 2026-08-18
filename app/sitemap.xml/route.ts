@@ -38,5 +38,5 @@ ${urls
   )
   .join("\n")}
 </urlset>`;
-  return new Response(xml, { headers: { "Content-Type": "application/xml" } });
+  return new Response(xml, { headers: { "Content-Type": "application/xml", "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400" } });
 }

@@ -8,5 +8,5 @@ Disallow: /admin
 Disallow: /api/
 Sitemap: ${base}/sitemap.xml
 `;
-  return new Response(body, { headers: { "Content-Type": "text/plain" } });
+  return new Response(body, { headers: { "Content-Type": "text/plain", "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400" } });
 }
