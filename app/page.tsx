@@ -40,7 +40,7 @@ export default function LandingPage() {
             ctaLabel="هماهنگی گفتگوی اختصاصی"
             ctaHref="/contact"
             helper="یک گپ دوستانه برای آشنایی بیشتر داشته باشیم."
-            imageSrc="/images/hero.jpg"
+            imageSrc="/images/hero.webp"
           />
 
           <PodcastSection latest={latest} />

@@ -18,7 +18,7 @@ export default function Hero({
   ctaLabel,
   ctaHref,
   helper,
-  imageSrc = "/images/hero.jpg",
+  imageSrc = "/images/hero.webp",
   imageAlt = "",
 }: Props) {
   const renderTitle = () => {
@@ -41,6 +41,9 @@ export default function Hero({
           <img
             src={imageSrc}
             alt={imageAlt}
+            width={1280}
+            height={698}
+            fetchPriority="high"
             className="h-full w-full object-cover object-center scale-[1.02]"
           />
         </div>

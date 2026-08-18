@@ -74,6 +74,8 @@ export default function Footer() {
                 <img
                   src="/brand/logo-cropped.webp"
                   alt="Silent Shift"
+                  width={1254}
+                  height={1254}
                   className="w-[91px] h-[67.7px] object-contain"
                 />
               </Link>
