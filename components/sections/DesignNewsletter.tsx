@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { apiPost } from "@/lib/api-client";
 import { Button } from "@/components/ui/Button";
+import { useNewsletterSignup } from "@/components/useNewsletterSignup";
 
 export function DesignNewsletter({
   title = "روایت‌های Silent Shift را در ایمیل خود دریافت کنید",
@@ -11,24 +10,7 @@ export function DesignNewsletter({
   title?: string;
   description?: string;
 }) {
-  const [email, setEmail] = useState("");
-  const [state, setState] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [message, setMessage] = useState("");
-
-  async function submit(e: React.FormEvent) {
-    e.preventDefault();
-    if (state === "loading") return;
-    setState("loading");
-    try {
-      const data = await apiPost<{ message: string }>("/api/newsletter", { email });
-      setMessage(data.message);
-      setEmail("");
-      setState("success");
-    } catch (error) {
-      setMessage(error instanceof Error ? error.message : "خطا در ثبت ایمیل");
-      setState("error");
-    }
-  }
+  const { email, setEmail, status: state, message, messageId, submit, inputA11y } = useNewsletterSignup();
 
   return (
     <section className="flex w-full flex-col items-center gap-[24px] px-4 py-8" dir="rtl">
@@ -59,10 +41,12 @@ export function DesignNewsletter({
             onChange={(e) => setEmail(e.target.value)}
             placeholder="ایمیل شما (برای ارسال نامه‌های گاه‌به‌گاه)"
             aria-label="ایمیل"
+            {...inputA11y}
             className="box-border h-[56px] w-full rounded-[6px] border border-[#FFFFFF] bg-white/20 px-[16px] text-right text-[16px] font-medium leading-[24px] text-[#FFFFFF] placeholder:text-[#A1A1AA] backdrop-blur-[40px] outline-none transition-colors focus:border-[#C9A84C]"
           />
 
           <p
+            id={messageId}
             className={`w-full text-right text-[14px] font-normal leading-[20px] ${
               state === "error"
                 ? "text-red-400"

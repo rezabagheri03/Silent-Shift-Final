@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { apiPost } from "@/lib/api-client";
+import { useNewsletterSignup } from "@/components/useNewsletterSignup";
 import {
   InstagramIcon,
   TelegramIcon,
@@ -41,24 +40,7 @@ const SOCIALS = [
 ];
 
 export default function Footer() {
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [msg, setMsg] = useState("");
-
-  async function submit(e: React.FormEvent) {
-    e.preventDefault();
-    if (status === "loading") return;
-    setStatus("loading");
-    try {
-      const data = await apiPost<{ message: string }>("/api/newsletter", { email });
-      setMsg(data.message);
-      setEmail("");
-      setStatus("success");
-    } catch (error) {
-      setMsg(error instanceof Error ? error.message : "خطا در ثبت ایمیل");
-      setStatus("error");
-    }
-  }
+  const { email, setEmail, status, message: msg, messageId, submit, inputA11y } = useNewsletterSignup();
 
   return (
     <footer className="px-6 xl:px-[120px] pb-4 xl:pb-6 pt-8 xl:pt-12">
@@ -101,6 +83,7 @@ export default function Footer() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="آدرس ایمیل"
                     aria-label="ایمیل"
+                    {...inputA11y}
                     className="w-full bg-transparent border-none outline-none text-[#A1A1AA] text-[16px] leading-[28px] text-right font-[IRANYekanXFaNum]"
                   />
                 </div>
@@ -116,7 +99,7 @@ export default function Footer() {
               </div>
 
               {msg && (
-                <p className={`text-[14px] text-right ${status === "error" ? "text-red-400" : "text-emerald-400"}`}>
+                <p id={messageId} role="status" className={`text-[14px] text-right ${status === "error" ? "text-red-400" : "text-emerald-400"}`}>
                   {msg}
                 </p>
               )}

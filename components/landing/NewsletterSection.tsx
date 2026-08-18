@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { apiPost } from "@/lib/api-client";
 import { Button } from "@/components/ui/Button";
+import { useNewsletterSignup } from "@/components/useNewsletterSignup";
 import { EmailInput } from "@/components/ui/EmailInput";
 
 type Props = {
@@ -11,24 +10,7 @@ type Props = {
 };
 
 export default function NewsletterSection({ title, subtitle }: Props) {
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [msg, setMsg] = useState<string>("");
-
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (status === "loading") return;
-    setStatus("loading");
-    try {
-      const data = await apiPost<{ message: string }>("/api/newsletter", { email });
-      setStatus("success");
-      setMsg(data.message);
-      setEmail("");
-    } catch (err) {
-      setStatus("error");
-      setMsg(err instanceof Error ? err.message : "خطا در ثبت ایمیل");
-    }
-  };
+  const { email, setEmail, status, message: msg, messageId, submit, inputA11y } = useNewsletterSignup();
 
   return (
     <section className="w-full flex flex-col gap-6 items-center py-8">
@@ -49,6 +31,7 @@ export default function NewsletterSection({ title, subtitle }: Props) {
             onChange={(e) => setEmail(e.target.value)}
             required
             label="ایمیل"
+            {...inputA11y}
             description="با کلیک بر روی «همراه شدن»، می‌پذیری که نامه‌های گاه‌به‌گاه سایلنت شیفت برایت ارسال شود."
           />
         </div>
@@ -61,6 +44,7 @@ export default function NewsletterSection({ title, subtitle }: Props) {
 
       {msg && (
         <p
+          id={messageId}
           className={`text-d-body-sm w-full text-right ${
             status === "error" ? "text-red-400" : "text-emerald-400"
           }`}

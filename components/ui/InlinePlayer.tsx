@@ -101,7 +101,7 @@ export function InlinePlayer({ podcast }: { podcast: Podcast }) {
             className="flex h-11 w-11 items-center justify-center opacity-80 transition-opacity hover:opacity-100"
           >
             <img
-              src="/icons/10 Sec Backward.svg"
+              src="/icons/skip-back-10.svg"
               alt=""
               width={24}
               height={24}
@@ -132,7 +132,7 @@ export function InlinePlayer({ podcast }: { podcast: Podcast }) {
             className="flex h-11 w-11 items-center justify-center opacity-80 transition-opacity hover:opacity-100"
           >
             <img
-              src="/icons/30 Sec Forward.svg"
+              src="/icons/skip-forward-30.svg"
               alt=""
               width={24}
               height={24}

@@ -37,7 +37,6 @@ export async function sendConfirmationEmail(
     try {
       let nodemailer: any;
       try {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
         nodemailer = require("nodemailer");
       } catch {
         console.warn("[email] nodemailer not installed — falling back to console log");

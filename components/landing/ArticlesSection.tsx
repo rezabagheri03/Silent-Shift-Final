@@ -101,9 +101,7 @@ export default function ArticlesSection({ articles }: Props) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIdx, setActiveIdx] = useState(0);
 
-  if (!articles || articles.length === 0) return null;
-
-  const cards: CardContent[] = articles.slice(0, 3).map((a) => ({
+  const cards: CardContent[] = (articles ?? []).slice(0, 3).map((a) => ({
     label: a.category_name || "روایت",
     title: a.title,
     subtitle: a.excerpt || "",
@@ -148,6 +146,10 @@ export default function ArticlesSection({ articles }: Props) {
     el.addEventListener("scroll", onScroll, { passive: true });
     return () => el.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Guard AFTER all hooks — early-returning before useEffect violated rules-of-hooks
+  // (latent crash risk; found by ESLint during audit T33).
+  if (!articles || articles.length === 0) return null;
 
   return (
     <section className="flex w-full flex-col gap-8">

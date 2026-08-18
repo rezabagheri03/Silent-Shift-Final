@@ -31,9 +31,15 @@ npm run seed        # populates the DB with sample data + bootstrap admin
 npm run dev         # → http://localhost:3000
 ```
 
-Development bootstrap credentials (used only when `NODE_ENV` is not production and no admin exists):
-- Username: `admin`
-- Password: `admin1234`
+There are no built-in development credentials. Before `npm run seed`, set the
+required environment variables (e.g. in `.env.local`):
+
+```
+AUTH_SECRET=<32+ chars, e.g. openssl rand -base64 48>
+ADMIN_USERNAME=<your admin username>
+ADMIN_PASSWORD=<12+ character password>
+```
+
 - Admin panel: http://localhost:3000/admin
 
 Production startup refuses to create an administrator unless `ADMIN_USERNAME`, a 12+ character `ADMIN_PASSWORD`, and a 32+ character `AUTH_SECRET` are explicitly configured. The admin URL is intentionally not linked from the public website.
