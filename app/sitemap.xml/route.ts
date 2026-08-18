@@ -14,7 +14,7 @@ function escapeXml(s: string): string {
 }
 
 export function GET(req: Request) {
-  const base = new URL(req.url).origin;
+  const base = (process.env.NEXT_PUBLIC_SITE_URL || new URL(req.url).origin).replace(/\/+$/, "");
   const pods = listPodcasts({ limit: 500 }).items;
   const arts = listArticles({ limit: 500 }).items;
 

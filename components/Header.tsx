@@ -66,7 +66,7 @@ export default function Header() {
             })}
           </nav>
           <Link href="/" aria-label="خانه" className="w-[82px] h-[68px] shrink-0 flex items-center justify-center">
-            <img src="/brand/logo-cropped.png" alt="Silent Shift" className="w-full h-full object-contain" />
+            <img src="/brand/logo-cropped.webp" alt="Silent Shift" className="w-full h-full object-contain" />
           </Link>
         </div>
       </header>
@@ -77,7 +77,7 @@ export default function Header() {
             <MenuIcon size={24} />
           </button>
           <Link href="/" aria-label="خانه" className="h-[33px] shrink-0 flex items-center" dir="ltr">
-            <img src="/brand/logo-cropped.png" alt="Silent Shift" className="h-full object-contain" />
+            <img src="/brand/logo-cropped.webp" alt="Silent Shift" className="h-full object-contain" />
           </Link>
           <button onClick={() => setSearchOpen(true)} aria-label="جستجو" className="w-11 h-11 -mr-2 flex items-center justify-center text-white">
             <SearchIcon size={24} />
@@ -125,7 +125,7 @@ function MobileDrawer({ onClose, onSearchOpen }: { onClose: () => void; onSearch
             <CloseIcon size={24} />
           </button>
           <span className="h-[28px] shrink-0 flex items-center" dir="ltr">
-            <img src="/brand/logo-cropped.png" alt="Silent Shift" className="h-full object-contain" />
+            <img src="/brand/logo-cropped.webp" alt="Silent Shift" className="h-full object-contain" />
           </span>
           <button onClick={onSearchOpen} aria-label="جستجو" className="w-11 h-11 flex items-center justify-center text-white">
             <SearchIcon size={24} />

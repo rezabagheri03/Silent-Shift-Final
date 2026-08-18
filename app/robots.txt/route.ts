@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 
 export function GET(req: Request) {
-  const base = new URL(req.url).origin;
+  const base = (process.env.NEXT_PUBLIC_SITE_URL || new URL(req.url).origin).replace(/\/+$/, "");
   const body = `User-agent: *
 Allow: /
 Disallow: /admin

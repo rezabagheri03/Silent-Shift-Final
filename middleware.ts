@@ -61,7 +61,7 @@ export async function middleware(req: NextRequest) {
   if (process.env.NODE_ENV === "production") {
     const proto = req.headers.get("x-forwarded-proto");
     const isBehindCloudflare = !!req.headers.get("cf-connecting-ip");
-    if (proto && proto === "http" && !isBehindCloudflare) {
+    if (proto && proto === "http" && !isBehindCloudflare && pathname !== "/api/health") {
       const host = req.headers.get("x-forwarded-host") || req.headers.get("host") || req.nextUrl.host;
       const url = new URL(`https://${host}${pathname}${req.nextUrl.search}`);
       return withSecurityHeaders(NextResponse.redirect(url), pathname);

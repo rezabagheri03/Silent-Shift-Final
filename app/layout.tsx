@@ -21,10 +21,11 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: "/brand/logo-cropped.webp", type: "image/webp" },
+      { url: "/brand/logo-cropped.png", type: "image/png" },
     ],
-    shortcut: ["/brand/logo-cropped.webp"],
+    shortcut: ["/brand/logo-cropped.png"],
     apple: [
-      { url: "/brand/logo-cropped.webp" },
+      { url: "/brand/logo-cropped.png" },
     ],
   },
 };

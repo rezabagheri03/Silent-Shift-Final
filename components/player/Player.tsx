@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { usePlayer } from "./PlayerContext";
 import { formatDuration } from "@/lib/utils";
@@ -11,11 +11,17 @@ export default function Player() {
   const [expanded, setExpanded] = useState(false);
   const pathname = usePathname();
 
-  if (!player.visible || !player.track) return null;
-
   // Hide player on contact page and podcast PDP pages
   const isContactPage = pathname?.startsWith("/contact");
   const isPodcastPDP = /^\/podcasts\/[^/]+$/.test(pathname || "");
+
+  // Ghost-audio fix (T09): when the UI is hidden on /contact there is no other
+  // pause control, so stop playback instead of letting audio run invisibly.
+  useEffect(() => {
+    if (isContactPage && player.playing) player.toggle();
+  }, [isContactPage, player]);
+
+  if (!player.visible || !player.track) return null;
   if (isContactPage || isPodcastPDP) return null;
   const progress = player.duration > 0 ? Math.min(100, (player.currentTime / player.duration) * 100) : 0;
 
