@@ -11,6 +11,11 @@ export function buildConfirmationUrl(token: string, baseUrl?: string): string {
   return `${base}/api/newsletter/confirm/${token}`;
 }
 
+export function buildUnsubscribeUrl(token: string, baseUrl?: string): string {
+  const base = baseUrl || process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  return `${base}/api/newsletter/unsubscribe/${token}`;
+}
+
 /**
  * Send a confirmation email to a new newsletter subscriber.
  *
@@ -22,7 +27,8 @@ export function buildConfirmationUrl(token: string, baseUrl?: string): string {
  */
 export async function sendConfirmationEmail(
   email: string,
-  confirmationUrl: string
+  confirmationUrl: string,
+  unsubscribeUrl?: string
 ): Promise<boolean> {
   const smtpHost = process.env.SMTP_HOST;
 
@@ -35,7 +41,7 @@ export async function sendConfirmationEmail(
         nodemailer = require("nodemailer");
       } catch {
         console.warn("[email] nodemailer not installed — falling back to console log");
-        return logConfirmationEmail(email, confirmationUrl);
+        return logConfirmationEmail(email, confirmationUrl, unsubscribeUrl);
       }
 
       const transporter = nodemailer.createTransport({
@@ -65,13 +71,13 @@ export async function sendConfirmationEmail(
     }
   }
 
-  // No SMTP configured — log the URL for manual delivery
-  return logConfirmationEmail(email, confirmationUrl);
+  // No SMTP configured — log the URLs for manual delivery
+  return logConfirmationEmail(email, confirmationUrl, unsubscribeUrl);
 }
 
-function logConfirmationEmail(email: string, url: string): boolean {
+function logConfirmationEmail(email: string, url: string, unsubscribeUrl?: string): boolean {
   console.log(
-    `[newsletter] Confirmation for ${email}:\n  ${url}\n  (Configure SMTP_HOST to send real emails)`
+    `[newsletter] Confirmation for ${email}:\n  confirm:     ${url}\n  unsubscribe: ${unsubscribeUrl || "(n/a)"}\n  (Include BOTH links in the manually-sent email)`
   );
   return true;
 }

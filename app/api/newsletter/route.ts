@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { subscribeEmail } from "@/lib/repos/newsletter";
+import { subscribeEmail, getUnsubscribeToken } from "@/lib/repos/newsletter";
 import { ok, fail, tooMany } from "@/lib/http";
 import { rateLimit, clientKey } from "@/lib/ratelimit";
-import { sendConfirmationEmail, buildConfirmationUrl } from "@/lib/email";
+import { sendConfirmationEmail, buildConfirmationUrl, buildUnsubscribeUrl } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
 
@@ -36,10 +36,11 @@ export async function POST(req: Request) {
     });
   }
 
-  // Send confirmation email (or log the URL if SMTP isn't configured)
+  // Send confirmation email (or log the URLs if SMTP isn't configured)
   if (r.token) {
     const confirmUrl = buildConfirmationUrl(r.token);
-    await sendConfirmationEmail(email, confirmUrl);
+    const unsubToken = getUnsubscribeToken(email);
+    await sendConfirmationEmail(email, confirmUrl, unsubToken ? buildUnsubscribeUrl(unsubToken) : undefined);
   }
 
   if (r.created) {

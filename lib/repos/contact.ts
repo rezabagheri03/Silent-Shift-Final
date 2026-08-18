@@ -22,6 +22,11 @@ export function createContactMessage(input: {
     .get(info.lastInsertRowid) as ContactMessage;
 }
 
+/** Admin-side erasure of a contact message (audit T14 / BE M-5). */
+export function deleteContactMessage(id: number): boolean {
+  return db.prepare("DELETE FROM contact_messages WHERE id = ?").run(id).changes > 0;
+}
+
 export function listContactMessages(limit = 100): ContactMessage[] {
   return db
     .prepare("SELECT * FROM contact_messages ORDER BY created_at DESC LIMIT ?")

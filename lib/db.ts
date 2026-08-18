@@ -207,6 +207,15 @@ const MIGRATIONS: { id: string; sql: string }[] = [
       ALTER TABLE newsletter_subscribers ADD COLUMN confirmed_at TEXT;
     `,
   },
+  {
+    id: "009_newsletter_unsubscribe",
+    sql: `
+      ALTER TABLE newsletter_subscribers ADD COLUMN unsubscribe_token TEXT;
+      UPDATE newsletter_subscribers SET unsubscribe_token = lower(hex(randomblob(24))) WHERE unsubscribe_token IS NULL;
+      CREATE INDEX IF NOT EXISTS idx_subscribers_confirmation_token ON newsletter_subscribers(confirmation_token);
+      CREATE UNIQUE INDEX IF NOT EXISTS idx_subscribers_unsubscribe_token ON newsletter_subscribers(unsubscribe_token);
+    `,
+  },
 ];
 
 function migrate(d: Database.Database) {
