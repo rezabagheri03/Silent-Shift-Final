@@ -23,6 +23,7 @@ export function subscribeEmail(email: string): {
 } {
   const normalized = email.trim().toLowerCase();
 
+  return db.transaction(() => {
   const existing = db
     .prepare("SELECT id, confirmed FROM newsletter_subscribers WHERE email = ?")
     .get(normalized) as { id: number; confirmed: number } | undefined;
@@ -45,6 +46,7 @@ export function subscribeEmail(email: string): {
   ).run(normalized, token);
 
   return { created: true, already_confirmed: false, token };
+  })();
 }
 
 /**

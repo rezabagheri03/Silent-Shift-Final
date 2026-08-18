@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { ok, fail, tooMany } from "@/lib/http";
-import { verifyAdminCredentials, signSession, setSessionCookie, ensureBootstrapAdmin } from "@/lib/auth";
+import { verifyAdminCredentials, signSession, setSessionCookie } from "@/lib/auth";
 import { rateLimit, clientKey } from "@/lib/ratelimit";
 
 export const dynamic = "force-dynamic";
@@ -13,8 +13,6 @@ const Body = z.object({
 export async function POST(req: Request) {
   const rl = rateLimit(clientKey(req, "login"), { windowSeconds: 60, max: 5 });
   if (!rl.ok) return tooMany(rl.retry_after_seconds);
-
-  await ensureBootstrapAdmin();
 
   let json: unknown;
   try {

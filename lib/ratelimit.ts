@@ -57,9 +57,13 @@ const IP_RE = /^(?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|[0-9a-f:]{3,39})$/i;
  *      to rotate than the old UA+language pair.
  */
 export function clientKey(req: Request, prefix: string): string {
-  // 1. Try to extract a validated IP from common proxy / CDN headers.
-  const ip = extractIP(req);
-  if (ip) return `${prefix}:ip:${ip}`;
+  // 1. Only trust proxy-provided IP headers when the deployment explicitly opts in.
+  //    TRUST_PROXY=true means a trusted proxy (e.g. Cloudflare) overwrites these
+  //    headers; otherwise they are client-controlled and spoofable (audit BE H-1).
+  if (process.env.TRUST_PROXY === "true") {
+    const ip = extractIP(req);
+    if (ip) return `${prefix}:ip:${ip}`;
+  }
 
   // 2. Fallback: build a fingerprint from several headers so rotation is harder.
   const parts = [

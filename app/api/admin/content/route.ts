@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { ok, fail } from "@/lib/http";
 import { isAdmin } from "@/lib/auth";
-import { getAllContent, setContent } from "@/lib/repos/content";
+import { getAllContent, setContentMany } from "@/lib/repos/content";
 
 export const dynamic = "force-dynamic";
 
@@ -35,7 +35,7 @@ async function upsertContent(req: Request) {
   }
   const parsed = Body.safeParse(json);
   if (!parsed.success) return fail("ورودی نامعتبر است", 400);
-  for (const [k, v] of Object.entries(parsed.data)) setContent(k, v);
+  setContentMany(parsed.data);
   return ok(getAllContent());
 }
 
