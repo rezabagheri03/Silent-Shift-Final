@@ -331,8 +331,8 @@ export function EditorialMosaic({
             <div
               data-slide
               key={article.id}
-              className="w-full shrink-0 snap-start"
-              style={{ height: 410, paddingRight: 16 }}
+              className="shrink-0 snap-start"
+              style={{ height: 410, minWidth: "100%", maxWidth: "100%" }}
             >
               <MosaicCard
                 article={article}

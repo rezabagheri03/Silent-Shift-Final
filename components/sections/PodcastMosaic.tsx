@@ -167,8 +167,8 @@ export function PodcastMosaic({ podcasts }: { podcasts: Podcast[] }) {
             <div
               key={item.id}
               data-podcast-slide
-              className="w-full shrink-0 snap-start"
-              style={{ height: 410 }}
+              className="shrink-0 snap-start"
+              style={{ height: 410, width: "100%" }}
             >
               <MosaicCard item={item} size="large" />
             </div>

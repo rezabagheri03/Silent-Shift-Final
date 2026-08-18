@@ -56,7 +56,7 @@ export function MobileCarousel({ children, ariaLabel }: Props) {
           <div
             key={i}
             data-carousel-slide
-            className="w-full shrink-0 snap-start"
+            className="shrink-0 snap-start" style={{ minWidth: "100%", maxWidth: "100%" }}
           >
             {child}
           </div>

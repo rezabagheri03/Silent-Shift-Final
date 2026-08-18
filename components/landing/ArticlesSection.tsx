@@ -79,7 +79,6 @@ function ArticleStoryCard({
           </p>
         </div>
 
-        {/* Meta — visual RIGHT */}
         <div
           dir="ltr"
           className="flex w-full flex-row items-center justify-end gap-6"
@@ -102,14 +101,9 @@ export default function ArticlesSection({ articles }: Props) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIdx, setActiveIdx] = useState(0);
 
-  // Hide section entirely when there are no articles
   if (!articles || articles.length === 0) return null;
 
-  /**
-   * Build cards from real articles.
-   * Falls back to generic labels/placeholders for missing fields only.
-   */
-  const cards: CardContent[] = articles.slice(0, 3).map((a, i) => ({
+  const cards: CardContent[] = articles.slice(0, 3).map((a) => ({
     label: a.category_name || "روایت",
     title: a.title,
     subtitle: a.excerpt || "",
@@ -120,6 +114,16 @@ export default function ArticlesSection({ articles }: Props) {
   }));
 
   const [left, rightTop, rightBottom] = cards;
+
+  const scrollTo = (index: number) => {
+    scrollRef.current
+      ?.querySelectorAll<HTMLElement>("[data-article-slide]")
+      [index]?.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "center",
+      });
+  };
 
   useEffect(() => {
     const el = scrollRef.current;
@@ -144,12 +148,6 @@ export default function ArticlesSection({ articles }: Props) {
     el.addEventListener("scroll", onScroll, { passive: true });
     return () => el.removeEventListener("scroll", onScroll);
   }, []);
-
-  const scrollTo = (i: number) => {
-    scrollRef.current
-      ?.querySelectorAll<HTMLElement>("[data-article-slide]")
-      [i]?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
-  };
 
   return (
     <section className="flex w-full flex-col gap-8">
@@ -185,33 +183,50 @@ export default function ArticlesSection({ articles }: Props) {
         </div>
       </div>
 
-      <div className="md:hidden -mx-page-x-m">
+      <div className="md:hidden" style={{ paddingLeft: 24, paddingRight: 24 }}>
         <div
           ref={scrollRef}
-          className="no-scrollbar flex snap-x gap-2 overflow-x-auto px-page-x-m"
+          onScroll={(e) => {
+            const el = e.currentTarget;
+            const center = el.getBoundingClientRect().left + el.clientWidth / 2;
+            const slides = Array.from(el.querySelectorAll<HTMLElement>("[data-article-slide]"));
+            let nearest = 0;
+            let distance = Number.POSITIVE_INFINITY;
+            slides.forEach((slide, index) => {
+              const rect = slide.getBoundingClientRect();
+              const next = Math.abs(rect.left + rect.width / 2 - center);
+              if (next < distance) {
+                distance = next;
+                nearest = index;
+              }
+            });
+            setActiveIdx(nearest);
+          }}
+          className="no-scrollbar flex snap-x overflow-x-auto"
+          role="region"
+          aria-label="روایت‌ها"
         >
           {cards.map((card, i) => (
             <div
-              key={i}
               data-article-slide
-              className="w-[calc(100vw-48px)] max-w-[364px] shrink-0 snap-start"
+              key={i}
+              className="w-full shrink-0 snap-start"
+              style={{ height: 410, paddingRight: 16 }}
             >
               <ArticleStoryCard
                 {...card}
                 size={i === 0 ? "large" : "small"}
-                className="min-h-[460px]"
+                className="h-full"
               />
             </div>
           ))}
         </div>
-        <div className="mt-1">
-          <CarouselDots
-            count={cards.length}
-            active={activeIdx}
-            onSelect={scrollTo}
-            label="مقاله"
-          />
-        </div>
+        <CarouselDots
+          count={cards.length}
+          active={activeIdx}
+          onSelect={scrollTo}
+          label="مقاله"
+        />
       </div>
     </section>
   );

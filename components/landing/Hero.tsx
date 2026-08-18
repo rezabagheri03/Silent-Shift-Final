@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 type Props = {
@@ -39,13 +38,10 @@ export default function Hero({
       <div className="grid w-full grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-14 xl:gap-20">
         {/* LEFT — image */}
         <div className="relative aspect-[5/3] w-full overflow-hidden rounded-2xl lg:aspect-auto lg:h-[400px] xl:h-[440px]">
-          <Image
+          <img
             src={imageSrc}
             alt={imageAlt}
-            fill
-            priority
-            className="object-cover object-center"
-            sizes="(max-width: 1024px) 100vw, 50vw"
+            className="h-full w-full object-cover object-center scale-[1.02]"
           />
         </div>
 

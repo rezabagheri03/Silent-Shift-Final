@@ -3,6 +3,25 @@ const path = require("node:path");
 const fs = require("node:fs");
 
 const root = process.cwd();
+
+// Load .env file if present (simple parser, no dependencies)
+const envPath = path.join(root, ".env");
+if (fs.existsSync(envPath)) {
+  for (const line of fs.readFileSync(envPath, "utf8").split("\n")) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) continue;
+    const eqIdx = trimmed.indexOf("=");
+    if (eqIdx === -1) continue;
+    const key = trimmed.slice(0, eqIdx).trim();
+    let val = trimmed.slice(eqIdx + 1).trim();
+    // Strip surrounding quotes
+    if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+      val = val.slice(1, -1);
+    }
+    if (!(key in process.env)) process.env[key] = val;
+  }
+}
+
 // AUTH_SECRET, ADMIN_USERNAME, and ADMIN_PASSWORD are required in ALL environments.
 const secret = process.env.AUTH_SECRET || "";
 if (secret.length < 32) {
@@ -21,7 +40,6 @@ fs.mkdirSync(dataDir, { recursive: true });
 fs.mkdirSync(path.join(uploadDir, "covers"), { recursive: true });
 fs.mkdirSync(path.join(uploadDir, "audio"), { recursive: true });
 
-// Next serves /public/uploads. Link it to a persistent mount when UPLOAD_DIR points elsewhere.
 if (uploadDir !== defaultUploads) {
   fs.rmSync(defaultUploads, { recursive: true, force: true });
   fs.mkdirSync(path.dirname(defaultUploads), { recursive: true });

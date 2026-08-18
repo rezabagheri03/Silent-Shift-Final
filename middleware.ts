@@ -60,9 +60,10 @@ export async function middleware(req: NextRequest) {
   // proxy that already handles this — detected via x-forwarded-proto header).
   if (process.env.NODE_ENV === "production") {
     const proto = req.headers.get("x-forwarded-proto");
-    if (proto && proto === "http") {
-      const url = req.nextUrl.clone();
-      url.protocol = "https";
+    const isBehindCloudflare = !!req.headers.get("cf-connecting-ip");
+    if (proto && proto === "http" && !isBehindCloudflare) {
+      const host = req.headers.get("x-forwarded-host") || req.headers.get("host") || req.nextUrl.host;
+      const url = new URL(`https://${host}${pathname}${req.nextUrl.search}`);
       return withSecurityHeaders(NextResponse.redirect(url), pathname);
     }
   }
