@@ -9,7 +9,8 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "روایت‌ها",
-  description: "روایت‌ها و مقالات Silent Shift",
+  description: "روایت‌ها و نوشته‌های Silent Shift درباره رشد فردی، مهاجرت و تغییرات ماندگار.",
+  alternates: { canonical: "/articles" },
 };
 
 export default async function ArticlesPage({

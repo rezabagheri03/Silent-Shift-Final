@@ -16,6 +16,12 @@ export const metadata: Metadata = {
     description: "مکثی برای شروعی دوباره.",
     locale: "fa_IR",
     type: "website",
+    siteName: "Silent Shift",
+    url: "/",
+    images: [{ url: "/images/hero.jpg", width: 1200, height: 720, alt: "Silent Shift" }],
+  },
+  twitter: {
+    card: "summary_large_image",
   },
   robots: { index: true, follow: true },
   icons: {
@@ -30,6 +36,34 @@ export const metadata: Metadata = {
   },
 };
 
+const SITE = process.env.NEXT_PUBLIC_SITE_URL || "https://silentshift.life";
+const siteGraph = JSON.stringify({
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${SITE}/#org`,
+      name: "Silent Shift",
+      url: SITE,
+      logo: `${SITE}/brand/logo-cropped.png`,
+    },
+    {
+      "@type": "Person",
+      "@id": `${SITE}/#person`,
+      name: "برزو ذاکری",
+      url: `${SITE}/about`,
+      worksFor: { "@id": `${SITE}/#org` },
+    },
+    {
+      "@type": "WebSite",
+      url: SITE,
+      name: "Silent Shift",
+      inLanguage: "fa",
+      publisher: { "@id": `${SITE}/#org` },
+    },
+  ],
+}).replace(/</g, "\\u003c");
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fa" dir="rtl">
@@ -40,6 +74,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           پرش به محتوای اصلی
         </a>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: siteGraph }} />
         <PlayerProvider>
           <div>{children}</div>
           <Player />

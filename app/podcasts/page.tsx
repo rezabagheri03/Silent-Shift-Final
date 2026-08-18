@@ -10,6 +10,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "پادکست‌ها",
   description: "اپیزودهای سایلنت شیفت درباره مکث، تغییر آرام، مهاجرت و توسعه فردی.",
+  alternates: { canonical: "/podcasts" },
 };
 
 export default async function PodcastPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {

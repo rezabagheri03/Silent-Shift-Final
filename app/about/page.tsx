@@ -10,7 +10,7 @@ import { listFaqs } from "@/lib/repos/faqs";
 import { designAssets } from "@/lib/design-assets";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "داستان من", description: "درباره برزو ذاکری و چرایی ساختن Silent Shift." };
+export const metadata: Metadata = { title: "داستان من", description: "درباره برزو ذاکری و چرایی ساختن Silent Shift.", alternates: { canonical: "/about" } };
 
 const PILLARS = [
   { title: "شنیدن بدون قضاوت", description: "فضایی امن برای گفت‌وگو، بدون قضاوت؛ جایی که می‌توانی خودت باشی و مسیر را از نو ببینی." },

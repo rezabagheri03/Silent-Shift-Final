@@ -19,11 +19,13 @@ import { designAssets } from "@/lib/design-assets";
 
 export const dynamic = "force-dynamic";
 
+const SITE = process.env.NEXT_PUBLIC_SITE_URL || "https://silentshift.life";
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const article = getArticleBySlug(slug);
   if (!article) return { title: "پیدا نشد" };
-  return { title: article.title, description: article.excerpt ?? undefined, openGraph: { title: article.title, description: article.excerpt ?? undefined, type: "article", images: [article.cover_url || designAssets.articleStage] } };
+  return { title: article.title, description: article.excerpt ?? undefined, alternates: { canonical: `/articles/${article.slug}` }, openGraph: { title: article.title, description: article.excerpt ?? undefined, type: "article", images: [article.cover_url || designAssets.articleStage] } };
 }
 
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
@@ -37,6 +39,23 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   return (
     <PageShell>
       <ArticleViewTracker slug={article.slug} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            headline: article.title,
+            description: article.excerpt || undefined,
+            datePublished: article.published_at,
+            image: article.cover_url ? [new URL(article.cover_url, SITE).toString()] : undefined,
+            author: { "@type": "Person", name: article.author || "برزو ذاکری" },
+            publisher: { "@id": `${SITE}/#org` },
+            mainEntityOfPage: `${SITE}/articles/${article.slug}`,
+            inLanguage: "fa",
+          }).replace(/</g, "\\u003c"),
+        }}
+      />
       <Breadcrumb items={[{ label: "خانه", href: "/" }, { label: "روایت‌ها", href: "/articles" }, { label: article.title }]} />
 
       <section className="w-full py-10 md:py-14">

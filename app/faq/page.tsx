@@ -8,7 +8,11 @@ import { listFaqs } from "@/lib/repos/faqs";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = { title: "سوالات متداول" };
+export const metadata: Metadata = {
+  title: "سوالات متداول",
+  description: "پاسخ سوالات پرتکرار درباره پادکست، جلسات کوچینگ و همراهی Silent Shift.",
+  alternates: { canonical: "/faq" },
+};
 
 export default function FaqPage() {
   const faqs = listFaqs();

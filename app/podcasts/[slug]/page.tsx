@@ -18,6 +18,8 @@ import { formatPersianDate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
+const SITE = process.env.NEXT_PUBLIC_SITE_URL || "https://silentshift.life";
+
 function formatChapterTime(totalSeconds: number): string {
   const s = Math.max(0, Math.floor(totalSeconds));
   const m = Math.floor(s / 60);
@@ -27,12 +29,8 @@ function formatChapterTime(totalSeconds: number): string {
 
 /** Turn markdown-ish summary into plain paragraphs for the design block. */
 function summaryParagraphs(raw: string | null | undefined): string[] {
-  const fallback = [
-    "در دنیایی که مدام ما را به دویدن، تولید کردن و رسیدن تشویق می‌کند، «توقف کردن» اغلب شبیه به یک شکست یا عقب‌ماندگی به نظر می‌رسد. اما واقعیت این است که عمیق‌ترین تغییرات و استراتژیک‌ترین تصمیمات زندگی، نه در هیاهویِ حرکت، بلکه در سکوتِ یک «مکث» شکل می‌گیرند.",
-    "در این اپیزود از Silent Shift، به سراغ تله‌ی روانشناختیِ بهره‌وری بی‌وقفه می‌رویم. بررسی می‌کنیم که چرا ذهن ما از فضای خالی می‌ترسد، فرسودگیِ پنهان چگونه در لباسِ موفقیت ظاهر می‌شود و از همه مهم‌تر، چگونه می‌توانیم با طراحی مکث‌های کوتاه و آگاهانه در طول روز، از حالتِ «واکنشِ خودکار» خارج شویم و کنترل فرمانِ زندگی را دوباره در دست بگیریم. این اپیزود دعوتی است برای آرام‌تر شدن، تا بتوانیم مسیر را شفاف‌تر ببینیم.",
-  ];
-
-  if (!raw?.trim()) return fallback;
+  // T28 (owner decision D4): no boilerplate fallback — empty summary renders nothing.
+  if (!raw?.trim()) return [];
 
   const plain = raw
     .replace(/\r\n/g, "\n")
@@ -60,7 +58,7 @@ function summaryParagraphs(raw: string | null | undefined): string[] {
     }
     return parts;
   }
-  return fallback;
+  return parts;
 }
 
 export async function generateMetadata({
@@ -74,6 +72,7 @@ export async function generateMetadata({
   return {
     title: podcast.title,
     description: podcast.description ?? undefined,
+    alternates: { canonical: `/podcasts/${podcast.slug}` },
     openGraph: {
       title: podcast.title,
       description: podcast.description ?? undefined,
@@ -110,6 +109,26 @@ export default async function PodcastPage({
 
   return (
     <PageShell>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "PodcastEpisode",
+            name: podcast.title,
+            description: podcast.description || undefined,
+            url: `${SITE}/podcasts/${podcast.slug}`,
+            datePublished: podcast.published_at,
+            episodeNumber: podcast.episode_number || undefined,
+            image: podcast.cover_url ? new URL(podcast.cover_url, SITE).toString() : undefined,
+            inLanguage: "fa",
+            associatedMedia: podcast.audio_url
+              ? { "@type": "AudioObject", contentUrl: new URL(podcast.audio_url, SITE).toString() }
+              : undefined,
+            partOfSeries: { "@type": "PodcastSeries", name: "Silent Shift", url: SITE },
+          }).replace(/</g, "\\u003c"),
+        }}
+      />
       <Breadcrumb
         items={[
           { label: "خانه", href: "/" },
@@ -338,10 +357,12 @@ export default async function PodcastPage({
 
         {/* ── Summary / خلاصه اپیزود ── */}
         <div className="flex min-w-0 flex-1 flex-col items-end">
-          <div className="mb-8 flex h-7 w-full flex-row items-center justify-end gap-6">
-            <h2 className="text-[20px] font-medium leading-7 text-[#A1A1AA]">خلاصه اپیزود</h2>
-            <span className="h-[2px] w-14 shrink-0 bg-[#C9A84C]" aria-hidden />
-          </div>
+          {paragraphs.length > 0 && (
+            <div className="mb-8 flex h-7 w-full flex-row items-center justify-end gap-6">
+              <h2 className="text-[20px] font-medium leading-7 text-[#A1A1AA]">خلاصه اپیزود</h2>
+              <span className="h-[2px] w-14 shrink-0 bg-[#C9A84C]" aria-hidden />
+            </div>
+          )}
 
           {lead ? (
             <p className="w-full text-right text-[16px] font-normal leading-7 text-white">

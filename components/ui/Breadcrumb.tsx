@@ -3,7 +3,20 @@ import Link from "next/link";
 type Item = { label: string; href?: string };
 
 export function Breadcrumb({ items }: { items: Item[] }) {
+  const base = process.env.NEXT_PUBLIC_SITE_URL || "https://silentshift.life";
+  const jsonLd = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((it, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: it.label,
+      ...(it.href ? { item: base + it.href } : {}),
+    })),
+  }).replace(/</g, "\\u003c");
   return (
+    <>
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />
     <nav
       aria-label="مسیر صفحه"
       className="text-d-body-sm text-text-secondary text-right"
@@ -21,5 +34,6 @@ export function Breadcrumb({ items }: { items: Item[] }) {
         </span>
       ))}
     </nav>
+    </>
   );
 }

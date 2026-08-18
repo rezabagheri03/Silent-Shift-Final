@@ -15,6 +15,8 @@ import { getAllContent } from "@/lib/repos/content";
 
 export const dynamic = "force-dynamic";
 
+export const metadata = { alternates: { canonical: "/" } };
+
 export default function LandingPage() {
   const latest = getLatestPodcast();
   const articles = listArticles({ limit: 6 }).items;
