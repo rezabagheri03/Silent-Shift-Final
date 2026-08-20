@@ -38,7 +38,7 @@ export default function LandingPage() {
               "کوچینگ و منتورینگ اختصاصی برای ایرانیان خارج از کشور؛ مسیری آرام برای رشد شخصی و حرفه‌ای."
             }
             ctaLabel="هماهنگی گفتگوی اختصاصی"
-            ctaHref="/contact"
+            ctaHref="https://t.me/+g_XSWnv44WI4NmI0"
             helper="یک گپ دوستانه برای آشنایی بیشتر داشته باشیم."
             imageSrc="/images/hero.webp"
           />

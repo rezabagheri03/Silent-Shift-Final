@@ -8,6 +8,7 @@ import { ArticleListCard } from "@/components/ui/ArticleListCard";
 import { HorizontalCarousel } from "@/components/ui/HorizontalCarousel";
 import { Markdown } from "@/components/ui/Markdown";
 import { ArticleViewTracker } from "@/components/ui/ArticleViewTracker";
+import VisitTracker from "@/components/ui/VisitTracker";
 import { DesignNewsletter } from "@/components/sections/DesignNewsletter";
 import { EditorialMosaic } from "@/components/sections/EditorialMosaic";
 import { DesignFaqSection } from "@/components/sections/DesignFaqSection";
@@ -39,6 +40,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   return (
     <PageShell>
       <ArticleViewTracker slug={article.slug} />
+      <VisitTracker kind="article" slug={article.slug} title={article.title} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

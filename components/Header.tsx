@@ -12,7 +12,7 @@ import {
   CastboxIcon,
   AnchorIcon,
 } from "@/components/ui/Icons";
-import SearchModal from "./SearchModal";
+import SearchPopover from "./SearchPopover";
 
 const NAV_ITEMS = [
   { href: "/", label: "خانه" },
@@ -46,14 +46,24 @@ export default function Header() {
     <>
       <header className={`hidden xl:block sticky top-0 z-40 border-b transition-all ${scrolled ? "border-border bg-bg/90 backdrop-blur-xl" : "border-transparent bg-bg"}`}>
         <div className="mx-auto max-w-page h-[108px] px-page-x-d flex items-center justify-between" dir="ltr">
-          <button
-            onClick={() => setSearchOpen(true)}
-            className="w-[282px] h-11 shrink-0 rounded-md border border-border bg-surface px-3.5 flex items-center justify-end gap-2 text-text-primary hover:border-brand transition-colors"
-            aria-label="جستجو"
-          >
-            <span className="text-d-body-sm text-right">جست و جو ...</span>
-            <SearchIcon size={20} />
-          </button>
+          <div className="relative">
+            <button
+              data-search-trigger
+              onClick={() => setSearchOpen((open) => !open)}
+              aria-label="جستجو"
+              aria-expanded={searchOpen}
+              aria-controls="site-search-popover"
+              className={`w-[282px] h-11 shrink-0 rounded-md border bg-surface px-3.5 flex items-center justify-end gap-2 text-text-primary transition-colors ${searchOpen ? "border-brand" : "border-border hover:border-brand"}`}
+            >
+              <span className="text-d-body-sm text-right">جست و جو ...</span>
+              <SearchIcon size={20} />
+            </button>
+            {searchOpen && (
+              <div id="site-search-popover">
+                <SearchPopover open={searchOpen} onClose={() => setSearchOpen(false)} />
+              </div>
+            )}
+          </div>
           <div className="w-[144px] shrink-0" />
           <nav className="flex-1 flex items-center justify-center gap-10 lg:gap-[72px]" dir="rtl" aria-label="ناوبری اصلی">
             {NAV_ITEMS.map((item) => {
@@ -79,14 +89,27 @@ export default function Header() {
           <Link href="/" aria-label="خانه" className="h-[33px] shrink-0 flex items-center" dir="ltr">
             <img src="/brand/logo-cropped.webp" alt="Silent Shift" width={1254} height={1254} className="h-full object-contain" />
           </Link>
-          <button onClick={() => setSearchOpen(true)} aria-label="جستجو" className="w-11 h-11 -mr-2 flex items-center justify-center text-white">
-            <SearchIcon size={24} />
-          </button>
+          <div className="relative">
+            <button
+              data-search-trigger
+              onClick={() => setSearchOpen((open) => !open)}
+              aria-label="جستجو"
+              aria-expanded={searchOpen}
+              aria-controls="site-search-popover"
+              className={`w-11 h-11 -mr-2 flex items-center justify-center ${searchOpen ? "text-brand" : "text-white"}`}
+            >
+              <SearchIcon size={24} />
+            </button>
+            {searchOpen && (
+              <div id="site-search-popover">
+                <SearchPopover open={searchOpen} onClose={() => setSearchOpen(false)} />
+              </div>
+            )}
+          </div>
         </div>
       </header>
 
       {menuOpen && <MobileDrawer onClose={() => setMenuOpen(false)} onSearchOpen={() => { setMenuOpen(false); setSearchOpen(true); }} />}
-      <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   );
 }

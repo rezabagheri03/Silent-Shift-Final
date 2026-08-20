@@ -15,6 +15,7 @@ import { listArticles } from "@/lib/repos/articles";
 import { listFaqs } from "@/lib/repos/faqs";
 import { designAssets } from "@/lib/design-assets";
 import { formatPersianDate } from "@/lib/utils";
+import VisitTracker from "@/components/ui/VisitTracker";
 
 export const dynamic = "force-dynamic";
 
@@ -109,6 +110,7 @@ export default async function PodcastPage({
 
   return (
     <PageShell>
+      <VisitTracker kind="podcast" slug={podcast.slug} title={podcast.title} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
