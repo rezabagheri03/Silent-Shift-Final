@@ -30,7 +30,8 @@ export default function Player() {
   function seek(clientX: number, element: HTMLElement) {
     if (!player.duration) return;
     const rect = element.getBoundingClientRect();
-    const ratio = (rect.right - clientX) / rect.width;
+    // bar fills left→right, so ratio is measured from the left edge
+    const ratio = (clientX - rect.left) / rect.width;
     player.seek(Math.max(0, Math.min(1, ratio)) * player.duration);
   }
 
@@ -121,9 +122,10 @@ export default function Player() {
                     if (event.key === "ArrowLeft") { event.preventDefault(); player.seek(player.currentTime - 5); }
                   }}
                   className="relative h-4 cursor-pointer"
+                  dir="ltr"
                 >
                   <span className="absolute inset-x-0 top-1/2 h-1 -translate-y-1/2 bg-white/10" />
-                  <span className="absolute right-0 top-1/2 h-1 -translate-y-1/2 bg-[#C9A84C]" style={{ width: `${progress}%` }} />
+                  <span className="absolute left-0 top-1/2 h-1 -translate-y-1/2 bg-[#C9A84C]" style={{ width: `${progress}%` }} />
                 </div>
                 <div className="mt-2 flex items-center justify-between text-[14px] leading-5 text-white">
                   <span dir="ltr">-{formatDuration(Math.max(0, player.duration - player.currentTime))}</span>
