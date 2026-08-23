@@ -24,10 +24,11 @@ const NAV_ITEMS = [
 ];
 
 const SOCIALS = [
-  { href: process.env.NEXT_PUBLIC_INSTAGRAM_URL || "https://instagram.com/", label: "Instagram", icon: InstagramIcon },
-  { href: process.env.NEXT_PUBLIC_TELEGRAM_URL || "https://t.me/8heshtaam", label: "Telegram", icon: TelegramIcon },
-  { href: process.env.NEXT_PUBLIC_CASTBOX_URL || "https://castbox.fm/", label: "Castbox", icon: CastboxIcon },
-  { href: process.env.NEXT_PUBLIC_APPLE_PODCASTS_URL || "https://podcasts.apple.com/", label: "Apple Podcasts", icon: AnchorIcon },
+  // size = per-icon render size matching the footer chips (Figma ink specs)
+  { href: process.env.NEXT_PUBLIC_INSTAGRAM_URL || "https://instagram.com/", label: "Instagram", icon: InstagramIcon, size: 28 },
+  { href: process.env.NEXT_PUBLIC_TELEGRAM_URL || "https://t.me/8heshtaam", label: "Telegram", icon: TelegramIcon, size: 33 },
+  { href: process.env.NEXT_PUBLIC_CASTBOX_URL || "https://castbox.fm/", label: "Castbox", icon: CastboxIcon, size: 31 },
+  { href: process.env.NEXT_PUBLIC_APPLE_PODCASTS_URL || "https://podcasts.apple.com/", label: "Apple Podcasts", icon: AnchorIcon, size: 33 },
 ];
 
 export default function Header() {
@@ -68,13 +69,11 @@ export default function Header() {
       </header>
 
       <header className={`mobile-header-safe xl:hidden sticky top-0 z-[100] border-b transition-all ${scrolled ? "border-border bg-bg/90 backdrop-blur-xl" : "border-transparent bg-bg"}`}>
-        <div className="h-full px-2 flex items-center justify-between" dir="ltr">
-          <button onClick={() => setMenuOpen(true)} aria-label="باز کردن منو" aria-expanded={menuOpen} aria-controls="mobile-nav-drawer" className="w-11 h-11 -ml-2 flex items-center justify-center text-white">
-            <MenuIcon size={24} />
+        <div className="h-full px-8 flex items-center justify-between" dir="ltr">
+          <button onClick={() => setMenuOpen((open) => !open)} aria-label={menuOpen ? "بستن منو" : "باز کردن منو"} aria-expanded={menuOpen} aria-controls="mobile-nav-drawer" className="w-8 h-8 shrink-0 flex items-center justify-center text-white">
+            {menuOpen ? <CloseIcon size={24} /> : <MenuIcon size={24} />}
           </button>
-          <Link href="/" aria-label="خانه" className="h-[33px] shrink-0 flex items-center" dir="ltr">
-            <img src="/brand/logo-cropped.webp" alt="Silent Shift" width={1254} height={1254} className="h-full object-contain" />
-          </Link>
+          <span dir="ltr" className="text-[24px] font-semibold leading-8 text-[#C9A84C]">SILENT SHIFT</span>
           <div className="relative">
             <button
               data-search-trigger
@@ -82,7 +81,7 @@ export default function Header() {
               aria-label="جستجو"
               aria-expanded={searchOpen}
               aria-controls="site-search-popover"
-              className={`w-11 h-11 -mr-2 flex items-center justify-center ${searchOpen ? "text-brand" : "text-white"}`}
+              className={`w-8 h-8 flex items-center justify-center text-[#F5F5F5] transition-colors hover:text-white ${searchOpen ? "text-brand" : ""}`}
             >
               <SearchIcon size={24} />
             </button>
@@ -132,40 +131,60 @@ function MobileDrawer({ onClose, onSearchOpen }: { onClose: () => void; onSearch
   }, [onClose]);
 
   return (
-    <div className="fixed inset-0 z-[70] xl:hidden bg-bg" role="dialog" aria-modal="true" aria-label="منوی اصلی">
+    <div className="fixed inset-0 z-[110] xl:hidden bg-bg" role="dialog" aria-modal="true" aria-label="منوی اصلی">
       <div ref={drawerRef} className="flex flex-col h-full">
-        {/* Header bar */}
-        <div className="flex items-center justify-between px-6 py-4" dir="ltr">
-          <button ref={closeRef} onClick={onClose} aria-label="بستن منو" className="w-11 h-11 flex items-center justify-center text-white">
+        {/* Header bar — Figma 1:2183: 48px, X left · gold "SILENT SHIFT" text center · search right */}
+        {/* Icon centers sit 54px from the screen edges (px-8 bar) */}
+        <div className="flex h-12 shrink-0 items-center justify-between px-8 pt-2" dir="ltr">
+          <button ref={closeRef} onClick={onClose} aria-label="بستن منو" className="flex h-8 w-8 items-center justify-center text-[#F5F5F5]">
             <CloseIcon size={24} />
           </button>
-          <span className="h-[28px] shrink-0 flex items-center" dir="ltr">
-            <img src="/brand/logo-cropped.webp" alt="Silent Shift" width={1254} height={1254} className="h-full object-contain" />
-          </span>
-          <button onClick={onSearchOpen} aria-label="جستجو" className="w-11 h-11 flex items-center justify-center text-white">
+          <span dir="ltr" className="text-[24px] font-semibold leading-8 text-[#C9A84C]">SILENT SHIFT</span>
+          <button onClick={onSearchOpen} aria-label="جستجو" className="flex h-8 w-8 items-center justify-center text-[#F5F5F5]">
             <SearchIcon size={24} />
           </button>
         </div>
 
-        {/* Nav links - centered vertically */}
-        <nav className="flex-1 flex flex-col items-center justify-center gap-8" dir="rtl" aria-label="ناوبری موبایل">
+        {/* Menu Items — Figma: gap 48, centered; active 24/32 DemiBold gold, rest 28/36 DemiBold #A1A1AA */}
+        <nav className="flex flex-1 flex-col items-center justify-center gap-12 px-4 py-9" dir="rtl" aria-label="ناوبری موبایل">
           {NAV_ITEMS.map((item) => {
             const active = item.href === "/" ? pathname === "/" : pathname === item.href || pathname?.startsWith(`${item.href}/`);
             return (
-              <Link key={item.href} href={item.href} onClick={onClose} className={`text-[28px] leading-[40px] font-normal transition-colors ${active ? "text-brand" : "text-text-secondary"}`} aria-current={active ? "page" : undefined}>
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={onClose}
+                className={`transition-colors ${
+                  active
+                    ? "text-[24px] font-semibold leading-8 text-[#C9A84C]"
+                    : "text-[28px] font-semibold leading-9 text-[#A1A1AA]"
+                }`}
+                aria-current={active ? "page" : undefined}
+              >
                 {item.label}
               </Link>
             );
           })}
         </nav>
 
-        {/* Bottom: divider + social icons */}
-        <div className="px-6 pb-8" dir="ltr">
-          <div className="w-full h-px bg-border mb-6" />
-          <div className="flex items-center justify-center gap-4">
-            {SOCIALS.map(({ href, label, icon: Icon }) => (
-              <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label} className="w-12 h-12 rounded-full bg-overlay-chip flex items-center justify-center text-text-secondary hover:text-brand transition-colors">
-                <Icon size={20} />
+        {/* Bottom — Figma: gradient glow divider + 40px chips spread across full width */}
+        <div className="shrink-0 px-2 pb-3">
+          <div
+            aria-hidden
+            className="mb-5 h-px w-full"
+            style={{ background: "linear-gradient(to right, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.80) 52%, rgba(255,255,255,0.10) 100%)" }}
+          />
+          <div className="flex items-center justify-between px-2 pb-1">
+            {SOCIALS.map(({ href, label, icon: Icon, size }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
+                className="group flex h-10 w-10 items-center justify-center rounded-full bg-[#F5F5F5]/15 text-[#A1A1AA] transition-colors hover:text-white"
+              >
+                <Icon size={size} />
               </a>
             ))}
           </div>
