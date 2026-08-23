@@ -103,7 +103,7 @@ export function ArticleListCard({ article }: Props) {
       <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/25" />
 
       {/* ── Image / top zone ── */}
-      <div className="relative z-10 flex min-h-[200px] flex-1 flex-col">
+      <div className="relative z-10 flex flex-1 flex-col" style={{ minHeight: 225 }}>
         {/* Top row: date LEFT · bookmark RIGHT */}
         <div
           dir="ltr"
@@ -117,15 +117,7 @@ export function ArticleListCard({ article }: Props) {
           <button
             type="button"
             aria-label="ذخیره"
-            className="flex shrink-0 items-center justify-center transition-opacity hover:opacity-80"
-            style={{
-              width: 40,
-              height: 40,
-              padding: 8,
-              borderRadius: 100,
-              background: "rgba(245, 245, 245, 0.15)",
-              color: "#A1A1AA",
-            }}
+            className="flex shrink-0 items-center justify-center rounded-full bg-[#F5F5F5]/15 p-2 text-[#A1A1AA] transition-colors hover:bg-[#C9A84C] hover:text-black"
           >
             <BookmarkIcon size={24} />
           </button>
@@ -134,10 +126,15 @@ export function ArticleListCard({ article }: Props) {
         {/* Spacer */}
         <div className="flex-1" aria-hidden />
 
-        {/* Read time — bottom LEFT of image, number on RIGHT side of دقیقه */}
-        <div className="flex flex-row justify-start" style={{ padding: "0 16px 16px" }}>
-          <span dir="ltr" className="text-[14px] font-normal leading-5 text-white">{mins}</span>
-          <span className="text-[14px] font-normal leading-5 text-white"> دقیقه</span>
+        {/* Bottom row: read time LEFT · author RIGHT (Figma 1:942) */}
+        <div dir="ltr" className="flex flex-row items-end justify-between" style={{ padding: "0 16px 16px" }}>
+          <div dir="rtl" className="flex flex-row">
+            <span className="text-[14px] font-normal leading-5 text-white">{mins}</span>
+            <span className="text-[14px] font-normal leading-5 text-white"> دقیقه</span>
+          </div>
+          {author ? (
+            <span className="text-[14px] font-normal leading-5 text-white">{author}</span>
+          ) : null}
         </div>
       </div>
 
@@ -147,23 +144,18 @@ export function ArticleListCard({ article }: Props) {
         className="relative z-10 flex w-full flex-col"
         style={{
           padding: 16,
-          gap: 16,
+          gap: 23,
           background: "rgba(23, 23, 23, 0.6)",
-          backdropFilter: "blur(9px)",
-          WebkitBackdropFilter: "blur(9px)",
+          backdropFilter: "blur(18px)",
+          WebkitBackdropFilter: "blur(18px)",
         }}
       >
-        {/* Title + author */}
-        <div className="flex w-full flex-row items-start justify-between gap-3">
-          <h3 className="min-w-0 flex-1 text-right text-[20px] font-medium leading-7 text-white">
-            <Link href={href} className="transition-colors hover:text-brand">
-              {article.title}
-            </Link>
-          </h3>
-          <span className="shrink-0 pt-1 text-right text-[14px] font-normal leading-5 text-white">
-            {author}
-          </span>
-        </div>
+        {/* Title — Figma reserves 2 lines (56px) in every card */}
+        <h3 className="h-[56px] w-full overflow-hidden text-right text-[20px] font-medium leading-7 text-white">
+          <Link href={href} className="transition-colors hover:text-brand">
+            {article.title}
+          </Link>
+        </h3>
 
         {excerpt ? (
           <p className="w-full text-right text-[14px] font-normal leading-5 text-[#A1A1AA] line-clamp-2">
@@ -182,17 +174,16 @@ export function ArticleListCard({ article }: Props) {
           </span>
         </div>
 
-        {/* CTA */}
+        {/* CTA — full-fill hover */}
         <Link
           href={href}
-          className="flex w-full shrink-0 items-center justify-center font-medium transition-colors hover:bg-[#C9A84C]/10"
+          className="flex w-full shrink-0 items-center justify-center text-[#C9A84C] font-medium transition-colors hover:bg-[#C9A84C] hover:text-black"
           style={{
             minHeight: 56,
             height: 56,
             padding: 16,
             border: "1px solid #C9A84C",
             borderRadius: 4,
-            color: "#C9A84C",
             fontSize: 16,
             lineHeight: "24px",
           }}

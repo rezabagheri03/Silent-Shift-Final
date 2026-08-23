@@ -30,16 +30,20 @@ export default function AboutPage() {
     <PageShell>
       <Breadcrumb items={[{ label: "خانه", href: "/" }, { label: "داستان من" }]} />
 
-      <section className="grid gap-8 md:grid-cols-2 md:gap-[72px] items-center min-h-[520px] md:[direction:ltr]">
+      <section className="grid gap-8 md:grid-cols-2 md:gap-8 items-center md:[direction:ltr]">
         <div className="order-1 text-right flex flex-col gap-5 [direction:rtl]">
-          <h1 className="text-m-h1 md:text-d-h1 text-white"><span className="text-brand">داستان</span> من</h1>
+          <h1 className="text-m-h1 md:text-d-h1 text-[#FFEFC4]">داستان من</h1>
           <p className="text-m-body-lg md:text-d-body-lg text-text-secondary leading-loose">
             من برزو هستم؛ کسی که در طول سال‌های گذشته، در کنار صدها نفر نشسته تا صدای تغییرات آرام درونشان را بشنود.
           </p>
         </div>
-        <div className="order-2 relative min-h-[310px] md:min-h-[520px] flex items-end justify-center overflow-hidden">
-          <span className="absolute bottom-10 w-[70%] aspect-square rounded-full bg-white/20 blur-[110px]" aria-hidden />
-          <img src={designAssets.profile} alt="برزو ذاکری" className="relative w-full max-w-[520px] h-auto object-contain object-bottom" />
+        {/* Figma: portrait photo 584x626, no backdrop */}
+        <div className="order-2 relative flex justify-end overflow-hidden">
+          <img
+            src={designAssets.profile}
+            alt="برزو ذاکری"
+            className="w-full max-w-[584px] aspect-[584/626] object-cover"
+          />
         </div>
       </section>
 
@@ -50,10 +54,15 @@ export default function AboutPage() {
         </p>
       </section>
 
-      <section className="grid gap-4 md:grid-cols-3">{PILLARS.map((p, index) => <PillarCard key={p.title} {...p} className={["order-3 md:order-none", "order-2 md:order-none", "order-1 md:order-none"][index]} />)}</section>
+      {/* Figma 1:1098: 3 cards, 24px gap */}
+      <section className="grid md:grid-cols-3" style={{ columnGap: 24 }}>{PILLARS.map((p) => <PillarCard key={p.title} {...p} />)}</section>
 
-      <blockquote className="max-w-4xl mx-auto py-8 md:py-14 text-center text-m-h2 md:text-d-h2 text-white leading-relaxed">
-        برای پیدا کردن راه، نیازی به دویدن نیست؛ به <span className="text-brand">سکوتی</span> نیاز داریم تا بتوانیم صدای مسیر را بشنویم.
+      {/* Figma Slogan: pale-gold quote + gold hairline rule, left-aligned block */}
+      <blockquote className="flex max-w-4xl mx-auto flex-row items-center gap-[22px] py-8 md:py-14">
+        <span aria-hidden className="h-full w-px self-stretch shrink-0 bg-[#C9A84C]" />
+        <p className="text-m-h2 md:text-d-h2 text-right leading-relaxed text-[#FFEFC4]">
+          برای پیدا کردن راه، نیازی به دویدن نیست؛ به سکوتی نیاز داریم تا بتوانیم صدای مسیر را بشنویم.
+        </p>
       </blockquote>
 
       <section className="max-w-4xl w-full mx-auto py-4 md:py-10">

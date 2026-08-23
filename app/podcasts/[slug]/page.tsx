@@ -140,13 +140,13 @@ export default async function PodcastPage({
       />
 
       {/* ── Top Hero ── */}
-      <section className="relative -mx-6 md:mx-0 overflow-hidden border-y border-border">
+      <section className="relative overflow-hidden bg-bg -mx-page-x-m md:-mx-12 xl:-mx-page-x-d">
+        {/* Figma: hero image fill at 10% opacity over the page base */}
         <img
           src={designAssets.podcastHero}
           alt=""
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full object-cover opacity-10"
         />
-        <div className="absolute inset-0 bg-gradient-to-l from-black/95 via-black/80 to-black/50" />
 
         <div className="mx-auto max-w-page px-page-x-m md:px-12 xl:px-page-x-d">
           <div
@@ -170,29 +170,25 @@ export default async function PodcastPage({
                         key={item.id}
                         href={`/podcasts/${item.slug}`}
                         dir="ltr"
-                        className="flex w-full flex-row items-start justify-end gap-4 border-b p-2"
-                        style={{
-                          borderBottomWidth: 0.2,
-                          borderBottomColor: isFirst
-                            ? "rgba(201, 168, 76, 0.5)"
-                            : "rgba(201, 168, 76, 0.1)",
-                        }}
+                        className="flex h-16 w-full flex-row items-start justify-end gap-4 p-2"
                       >
-                        <div className="flex min-w-0 flex-1 flex-col items-end gap-2 text-right">
+                        {/* Figma 1:1142 — fixed 233px block: title right-aligned, duration below left-aligned */}
+                        <div dir="rtl" className="flex w-[233px] min-w-0 shrink-0 flex-col gap-2">
                           <span
-                            className={`w-full text-[14px] leading-5 ${
+                            className={`w-full truncate text-right text-[14px] leading-5 ${
                               isFirst ? "text-white" : "text-text-secondary"
                             }`}
                           >
                             {item.title}
                           </span>
                           {item.duration_seconds > 0 && (
-                            <span className="w-full text-[14px] leading-5 text-text-tertiary">
+                            <span className="w-full text-left text-[14px] leading-5 text-text-tertiary">
                               {Math.round(item.duration_seconds / 60)} دقیقه
                             </span>
                           )}
                         </div>
                         <span
+                          dir="ltr"
                           className={`shrink-0 whitespace-nowrap text-[14px] leading-5 ${
                             isFirst ? "text-brand" : "text-text-tertiary"
                           }`}
@@ -211,7 +207,7 @@ export default async function PodcastPage({
             <img
               src={podcast.cover_url || designAssets.podcastCover}
               alt={podcast.title}
-              className="h-[195px] w-[195px] rounded-lg border border-brand object-cover shadow-[0_0_25px_rgba(201,168,76,0.25)]"
+              className="h-[195px] w-[195px] rounded border border-brand object-cover shadow-[0_0_25px_rgba(201,168,76,0.25)]"
               style={{ borderWidth: 0.5 }}
             />
             <div
@@ -233,7 +229,7 @@ export default async function PodcastPage({
                     className="inline-flex items-center justify-center rounded px-2 py-1 text-[14px] leading-5 text-[#A1A1AA]"
                     style={{
                       background: "rgba(245, 245, 245, 0.15)",
-                      border: "0.2px solid #C9A84C",
+                      border: "0.1px solid #C9A84C",
                       borderRadius: 4,
                     }}
                   >
@@ -261,16 +257,18 @@ export default async function PodcastPage({
                 <Link
                   key={item.id}
                   href={`/podcasts/${item.slug}`}
-                  dir="ltr"
-                  className="flex w-full flex-row items-start justify-end gap-4 border-b p-2"
-                  style={{
-                    borderBottomWidth: 0.2,
-                    borderBottomColor: isFirst
-                      ? "rgba(201, 168, 76, 0.5)"
-                      : "rgba(201, 168, 76, 0.1)",
-                  }}
+                  dir="rtl"
+                  className="flex w-full flex-row items-start justify-start gap-4 p-2"
                 >
-                  <div className="flex min-w-0 flex-1 flex-col items-end gap-2 text-right">
+                  <span
+                    dir="ltr"
+                    className={`shrink-0 whitespace-nowrap text-[14px] leading-5 ${
+                      isFirst ? "text-brand" : "text-text-tertiary"
+                    }`}
+                  >
+                    اپیزود {item.episode_number ?? item.id}
+                  </span>
+                  <div className="flex min-w-0 flex-1 flex-col gap-2">
                     <span
                       className={`w-full text-[14px] leading-5 ${
                         isFirst ? "text-white" : "text-text-secondary"
@@ -279,7 +277,7 @@ export default async function PodcastPage({
                       {item.title}
                     </span>
                     {item.duration_seconds > 0 && (
-                      <span className="w-full text-[14px] leading-5 text-text-tertiary">
+                      <span className="w-full text-left text-[14px] leading-5 text-text-tertiary">
                         {Math.round(item.duration_seconds / 60)} دقیقه
                       </span>
                     )}
@@ -393,13 +391,13 @@ export default async function PodcastPage({
             <div className="flex flex-row flex-wrap items-center gap-3">
               <button
                 type="button"
-                className="inline-flex h-9 min-w-[100px] items-center justify-center rounded-sm border border-[#C9A84C] px-3 text-[14px] leading-5 text-[#C9A84C] transition-colors hover:bg-[#C9A84C]/10"
+                className="inline-flex h-9 min-w-[100px] items-center justify-center rounded-sm border border-[#C9A84C] px-3 text-[14px] leading-5 text-[#C9A84C] transition-colors hover:bg-[#C9A84C] hover:text-black"
               >
                 ذخیره
               </button>
               <button
                 type="button"
-                className="inline-flex h-9 min-w-[100px] items-center justify-center rounded-sm border border-[#C9A84C] px-3 text-[14px] leading-5 text-[#C9A84C] transition-colors hover:bg-[#C9A84C]/10"
+                className="inline-flex h-9 min-w-[100px] items-center justify-center rounded-sm border border-[#C9A84C] px-3 text-[14px] leading-5 text-[#C9A84C] transition-colors hover:bg-[#C9A84C] hover:text-black"
               >
                 انتشار
               </button>

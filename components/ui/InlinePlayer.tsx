@@ -45,7 +45,8 @@ export function InlinePlayer({ podcast }: { podcast: Podcast }) {
   function seek(clientX: number, element: HTMLElement) {
     if (!duration) return;
     const rect = element.getBoundingClientRect();
-    const ratio = (rect.right - clientX) / rect.width;
+    // bar fills left→right, so ratio is measured from the left edge
+    const ratio = (clientX - rect.left) / rect.width;
     const target = Math.max(0, Math.min(1, ratio)) * duration;
     if (current) player.seek(target);
     else setLocalTime(target);
@@ -77,9 +78,9 @@ export function InlinePlayer({ podcast }: { podcast: Podcast }) {
           className="relative flex h-6 w-full cursor-pointer items-center"
         >
           {/* T20: 24px hit area; the visible 4px track is unchanged */}
-          <div className="relative h-1 w-full bg-text-tertiary">
+          <div dir="ltr" className="relative h-1 w-full bg-text-tertiary">
             <span
-              className="absolute top-0 right-0 h-full bg-brand"
+              className="absolute top-0 left-0 h-full bg-brand"
               style={{ width: `${progress}%` }}
             />
           </div>

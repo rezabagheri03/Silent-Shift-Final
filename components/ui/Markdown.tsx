@@ -13,6 +13,7 @@ export function Markdown({ content, className = "" }: Props) {
   const html = markdownToHtml(content);
   return (
     <div
+      dir="rtl"
       className={`md-content ${className}`}
       dangerouslySetInnerHTML={{ __html: html }}
     />

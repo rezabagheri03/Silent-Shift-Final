@@ -60,7 +60,13 @@ export default function AboutSection({ bio }: Props) {
         </p>
       </div>
 
-      <Button href="/about" variant="outline" size="md" fullWidth className="xl:!w-auto underline-offset-4">
+      <Button
+        href="/about"
+        variant="outline"
+        size="md"
+        fullWidth
+        className="xl:!w-auto underline-offset-4 hover:!bg-brand hover:!border-brand hover:!text-brand-on"
+      >
         من رو بیشتر بشناس
       </Button>
     </section>

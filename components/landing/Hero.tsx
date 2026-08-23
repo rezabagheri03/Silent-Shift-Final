@@ -35,14 +35,14 @@ export default function Hero({
 
   return (
     <section className="w-full" dir="ltr">
-      <div className="grid w-full grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-14 xl:gap-20">
+      <div className="grid w-full grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-14 xl:gap-0">
         {/* LEFT — image */}
-        <div className="relative aspect-[5/3] w-full overflow-hidden rounded-2xl lg:aspect-auto lg:h-[400px] xl:h-[440px]">
+        <div className="relative aspect-[600/327] w-full overflow-hidden rounded">
           <img
             src={imageSrc}
             alt={imageAlt}
-            width={1280}
-            height={698}
+            width={1200}
+            height={655}
             fetchPriority="high"
             className="h-full w-full object-cover object-center scale-[1.02]"
           />
@@ -64,7 +64,7 @@ export default function Hero({
           <div className="mt-8 flex flex-col items-center gap-3 md:mt-10 lg:items-start">
             <Link
               href={ctaHref}
-              className="inline-flex h-12 items-center justify-center rounded-lg bg-brand px-6 text-[16px] font-medium leading-none text-black transition-opacity hover:opacity-90"
+              className="inline-flex h-[56px] items-center justify-center rounded-sm bg-[#C9A84C] px-[16px] text-[16px] font-medium leading-[24px] text-black transition-colors hover:bg-[#b49541]"
             >
               {ctaLabel}
             </Link>

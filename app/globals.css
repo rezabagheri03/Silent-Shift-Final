@@ -279,23 +279,41 @@ img {
 .md-content .md-ol li {
   margin-top: 0.5em;
 }
+/* Figma "Qoute" (1:1032): gold #C9A84C text + right hairline rule, no bg.
+   Container is dir=rtl, so plain `row` puts the rule (first child) on the RIGHT. */
 .md-content .md-blockquote {
-  border-right: 3px solid var(--brand);
-  padding: 0.5em 1.25em;
+  display: flex;
+  flex-direction: row;
+  gap: 22px;
+  align-items: center;
+  padding: 0 0 40px 0;
   margin: 1.5em 0;
-  color: var(--text-primary);
-  background: rgba(212, 175, 55, 0.05);
-  border-radius: 4px;
+}
+.md-content .md-blockquote::before {
+  content: "";
+  order: -1;
+  width: 1px;
+  align-self: stretch;
+  background: #c9a84c;
+}
+.md-content .md-blockquote p {
+  margin: 0;
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 600;
+  color: #ffefc4;
 }
 .md-content .md-blockquote p {
   margin: 0;
 }
+/* Figma Article PDP (1:1016): in-article photos are 1200x481, content width */
 .md-content .md-figure {
-  margin: 2.5rem -120px;
+  margin: 2.5rem 0;
 }
 .md-content .md-figure img {
+  display: block;
   width: 100%;
-  max-height: 560px;
+  height: 481px;
   object-fit: cover;
   border-radius: 4px;
 }

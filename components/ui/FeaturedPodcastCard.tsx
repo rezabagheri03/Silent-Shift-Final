@@ -50,19 +50,19 @@ export function FeaturedPodcastCard({ podcast }: { podcast: Podcast }) {
   };
 
   return (
-    <article className="relative min-h-[390px] md:min-h-[533px] overflow-hidden border-y border-border bg-surface">
+    <article className="relative min-h-[390px] md:min-h-[533px] overflow-hidden bg-bg -mx-page-x-m md:-mx-12 xl:-mx-page-x-d">
+      {/* Figma: full-bleed background — image fill at 5% opacity over the dark base */}
       <img
         src={designAssets.podcastHero}
         alt=""
-        className="absolute inset-0 w-full h-full object-cover"
+        className="absolute inset-0 w-full h-full object-cover opacity-5"
       />
-      <div className="absolute inset-0 bg-gradient-to-l from-black/95 via-black/70 to-black/25" />
 
-      <div className="relative min-h-[390px] md:min-h-[533px] flex items-center justify-start px-5 py-10 md:px-[120px]">
+      <div className="relative min-h-[390px] md:min-h-[533px] flex items-center justify-start px-5 py-10 md:px-[120px] md:py-[120px]">
         <div className="w-full max-w-[663px] flex flex-col items-start gap-6 text-right">
           {/* Eyebrow */}
-          <div className="flex items-center gap-3">
-            <span className="w-14 h-[2px] bg-brand/60" />
+          <div className="flex items-center gap-3 md:gap-6">
+            <span className="w-14 h-[2px] bg-brand" />
             <span className="text-d-h5 font-medium text-brand">اپیزود</span>
             <span className="w-2 h-2 rounded-full bg-brand" />
             <span className="text-d-h5 font-medium text-brand">
@@ -82,21 +82,21 @@ export function FeaturedPodcastCard({ podcast }: { podcast: Podcast }) {
             </p>
           )}
 
-          <div className="flex items-center gap-8">
+          <div className="flex items-center gap-8 md:gap-12">
             {/* Single visual pill: entire area is clickable */}
             <button
               type="button"
               onClick={() => (isCurrent ? player.toggle() : player.play(track))}
               disabled={!podcast.audio_url}
               aria-label={isCurrent ? `توقف ${track.title}` : `شنیدن ${track.title}`}
-              className="flex items-center gap-2 rounded-md bg-brand h-14 min-w-[160px] px-4 hover:bg-brand-hover disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+              className="flex items-center gap-2 rounded-sm bg-brand h-14 min-w-[160px] px-4 hover:bg-brand-hover disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
             >
               {isLoading ? (
                 <span className="w-[18px] h-[18px] border-2 border-black border-t-transparent rounded-full animate-spin shrink-0" />
               ) : isCurrent ? (
-                <PauseIcon size={18} className="text-black shrink-0" />
+                <PauseIcon size={24} className="text-black shrink-0" />
               ) : (
-                <PlayIcon size={18} className="text-black shrink-0" />
+                <PlayIcon size={24} className="text-black shrink-0" />
               )}
               <span className="text-d-button font-medium text-black">
                 {isCurrent ? "توقف" : "پخش کردن"}
@@ -104,7 +104,7 @@ export function FeaturedPodcastCard({ podcast }: { podcast: Podcast }) {
             </button>
 
             {podcast.duration_seconds > 0 && (
-              <span className="flex items-center gap-2 text-d-body-sm text-text-tertiary">
+              <span className="flex items-center gap-4 text-d-body-sm text-text-tertiary">
                 <ClockIcon />
                 {toPersianMinutes(podcast.duration_seconds)}
               </span>
