@@ -40,17 +40,16 @@ export default function ContactPage() {
     <PageShell>
       <Breadcrumb items={[{ label: "خانه", href: "/" }, { label: "ارتباط" }]} />
 
-      {/* Hero with atmospheric image + big centered title */}
-      <section className="relative overflow-hidden border-y border-border mb-8">
+      {/* Hero — Figma 1:987: IMAGE fill @30% opacity over the dark base, no overlay; full-bleed */}
+      <section className="relative overflow-hidden bg-bg mb-8 -mx-page-x-m md:-mx-12 xl:-mx-page-x-d">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={designAssets.contactHero}
           alt=""
-          className="w-full h-[300px] md:h-[500px] object-cover"
+          className="w-full h-[300px] md:h-[533px] object-cover opacity-30"
         />
-        <div className="absolute inset-0 bg-black/15" aria-hidden />
         <div className="absolute inset-0 flex items-center justify-center px-6 text-center">
-          <h1 className="text-m-h1 md:text-d-h1 text-brand drop-shadow-lg">
+          <h1 className="text-m-h1 md:text-d-h1 text-[#FFEFC4]">
             نقطه گفت و گو
           </h1>
         </div>
@@ -119,13 +118,13 @@ export default function ContactPage() {
             </p>
           )}
 
-          {/* Gold divider + submit */}
-          <div className="flex flex-col items-end gap-4 pt-4">
+          {/* Gold divider + submit — packed to the RIGHT (items-start = right in RTL) */}
+          <div className="flex flex-col items-start gap-4 pt-4 w-full">
             <div className="w-full h-px bg-brand/40" />
             <button
               type="submit"
               disabled={status === "loading"}
-              className="inline-flex items-center gap-2 text-d-button text-brand hover:text-white disabled:opacity-50 transition-colors"
+              className="inline-flex items-center gap-[13px] text-d-button text-[#C9A84C] hover:text-white disabled:opacity-50 transition-colors"
             >
               <span>ارسال پیام</span>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
@@ -143,7 +142,7 @@ export default function ContactPage() {
 
         {/* Booking card - left side */}
         <div className="order-2 md:sticky md:top-24">
-          <div className="bg-surface border border-border rounded-lg p-8 flex flex-col items-center gap-5 text-center">
+          <div className="group bg-surface border border-border rounded-lg p-8 flex flex-col items-center gap-5 text-center transition-colors duration-200 hover:border-[#C9A84C]">
             <CalendarIcon />
             <div className="flex flex-col gap-2">
               <h2 className="text-d-h4 text-text-primary">رزرو جلسه معارفه</h2>
@@ -155,7 +154,7 @@ export default function ContactPage() {
               href={TELEGRAM_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center px-6 py-3 border border-brand text-brand text-d-button rounded hover:bg-brand/10 transition-colors w-full"
+              className="inline-flex items-center justify-center px-3 py-2 border border-[#C9A84C] text-[#C9A84C] text-[14px] leading-5 rounded-[2px] hover:bg-[#C9A84C] hover:text-black transition-colors w-full"
             >
               هماهنگی گفتگوی اختصاصی
             </a>

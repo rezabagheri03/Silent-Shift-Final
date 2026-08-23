@@ -41,10 +41,10 @@ export function PodcastEpisodeRow({ podcast }: { podcast: Podcast }) {
   return (
     <article
       dir="rtl"
-      className="grid grid-cols-1 items-center gap-4 border-b border-white/10 py-8 md:grid-cols-[auto_1fr_auto_auto] md:gap-8 md:py-10"
+      className="group grid grid-cols-1 items-center gap-4 border-b border-white/10 py-8 transition-colors hover:bg-[#C9A84C]/10 md:grid-cols-[auto_1fr_auto_auto] md:gap-8 md:py-10"
     >
       {/* Episode number — far right */}
-      <div className="text-d-body-md text-text-secondary md:min-w-[4.5rem] md:text-right">
+      <div className="text-d-body-md text-text-secondary transition-colors group-hover:text-[#C9A84C] md:min-w-[4.5rem] md:text-right">
         اپیزود {episodeNo}
       </div>
 
@@ -65,11 +65,11 @@ export function PodcastEpisodeRow({ podcast }: { podcast: Podcast }) {
         {/*
           dir=rtl → justify-start pins host + duration to the VISUAL RIGHT
         */}
-        <div className="mt-1 flex flex-wrap items-center justify-start gap-2 text-d-body-sm text-text-tertiary">
+        <div className="mt-1 flex flex-wrap items-center justify-start gap-2 text-d-body-sm text-text-tertiary transition-colors group-hover:text-[#C9A84C]">
           <span>{host}</span>
           {durationLabel ? (
             <>
-              <span className="h-1 w-1 shrink-0 rounded-full bg-text-tertiary/80" />
+              <span className="h-1 w-1 shrink-0 rounded-full bg-current" />
               <span>{durationLabel}</span>
             </>
           ) : null}

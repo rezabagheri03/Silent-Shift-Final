@@ -64,8 +64,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         <ArticleTitleBlock article={article} />
       </section>
 
-      <figure className="w-full overflow-hidden rounded-sm">
-        <img src={article.cover_url || designAssets.articleStage} alt={article.title} className="w-full max-h-[560px] object-cover" />
+      <figure dir="ltr" className="w-full overflow-hidden rounded-sm">
+        <img src={article.cover_url || designAssets.articleStage} alt={article.title} className="block h-[481px] w-full object-cover" />
       </figure>
 
       <article className="w-full flex flex-col gap-8">
@@ -78,7 +78,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         <Button
           href="/contact"
           variant="outline"
-          className="!w-[436px] !h-[56px] !min-w-[120px] !rounded !border !border-brand !px-4"
+          className="!w-[436px] !h-[56px] !min-w-[120px] !rounded !border !border-brand !px-4 hover:!bg-brand hover:!text-brand-on hover:!border-brand"
         >
           رزرو جلسه رایگان
         </Button>

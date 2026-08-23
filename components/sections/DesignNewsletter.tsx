@@ -42,7 +42,7 @@ export function DesignNewsletter({
             placeholder="ایمیل شما (برای ارسال نامه‌های گاه‌به‌گاه)"
             aria-label="ایمیل"
             {...inputA11y}
-            className="box-border h-[56px] w-full rounded-[6px] border border-[#FFFFFF] bg-white/20 px-[16px] text-right text-[16px] font-medium leading-[24px] text-[#FFFFFF] placeholder:text-[#A1A1AA] backdrop-blur-[40px] outline-none transition-colors focus:border-[#C9A84C]"
+            className="box-border h-[56px] w-full rounded-[6px] border border-[#FFFFFF] bg-white/20 px-[16px] text-right text-[16px] font-medium leading-[24px] text-[#FFFFFF] placeholder:text-[#A1A1AA] backdrop-blur-[40px] outline-none transition-colors"
           />
 
           <p

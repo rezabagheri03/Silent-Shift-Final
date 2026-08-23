@@ -6,6 +6,7 @@ import type { Article } from "@/lib/types";
 import { articleCover } from "@/lib/design-assets";
 import { formatPersianDate, truncate } from "@/lib/utils";
 import { CarouselDots } from "@/components/ui/CarouselDots";
+import { ArrowUpLeftIcon } from "@/components/ui/Icons";
 
 type ArticleWithReadTime = Article & {
   read_time_minutes?: number;
@@ -54,18 +55,15 @@ function MosaicCard({
         padding: 24,
       }}
     >
+      {/* Figma mosaic principle: image fill at 30% (rest) → 40% (hover) */}
       <img
         src={articleCover(article)}
         alt=""
-        className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        className="absolute inset-0 h-full w-full object-cover opacity-30 transition-opacity duration-300 group-hover:opacity-40"
       />
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            "linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.55) 55%, rgba(0,0,0,0.88) 100%)",
-        }}
-      />
+      {/* black 20% overlay → #3C3C3C 20% on hover */}
+      <div className="absolute inset-0 bg-black/20 transition-colors duration-300 group-hover:bg-[#3C3C3C]/20" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
       <Link
         href={`/articles/${article.slug}`}
@@ -123,18 +121,25 @@ function MosaicCard({
           ) : null}
         </div>
 
+        {/* Meta row — gold arrow pinned to the LEFT corner on hover (landing principle) */}
         <div
           dir="ltr"
-          className="flex w-full flex-row items-center justify-end gap-6"
+          className="flex w-full flex-row items-center justify-between gap-6"
         >
-          <span className="text-[14px] font-normal leading-5 text-[#52525B] flex items-center gap-1">
-            <span dir="rtl">دقیقه</span>
-            <span>{mins}</span>
-          </span>
-          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#52525B]" />
-          <span className="text-[14px] font-normal leading-5 text-[#52525B]">
-            {date}
-          </span>
+          <ArrowUpLeftIcon
+            size={16}
+            className="w-0 shrink-0 -translate-x-1 text-[#C9A84C] opacity-0 transition-all duration-200 group-hover:w-4 group-hover:translate-x-0 group-hover:opacity-100"
+          />
+          <div className="flex flex-row items-center justify-end gap-6">
+            <span className="text-[14px] font-normal leading-5 text-[#52525B] flex items-center gap-1">
+              <span dir="rtl">دقیقه</span>
+              <span>{mins}</span>
+            </span>
+            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#52525B]" />
+            <span className="text-[14px] font-normal leading-5 text-[#52525B]">
+              {date}
+            </span>
+          </div>
         </div>
       </div>
     </article>

@@ -21,21 +21,27 @@ const SOCIALS = [
     href: process.env.NEXT_PUBLIC_INSTAGRAM_URL || "https://instagram.com/",
     label: "Instagram",
     icon: InstagramIcon,
+    // Per-icon render sizes chosen so the visible glyph ink matches the
+    // Figma chip spec (each icon carries different empty margins internally)
+    size: 28,
   },
   {
     href: process.env.NEXT_PUBLIC_TELEGRAM_URL || "https://t.me/8heshtaam",
     label: "Telegram",
     icon: TelegramIcon,
+    size: 33,
   },
   {
     href: process.env.NEXT_PUBLIC_CASTBOX_URL || "https://castbox.fm/",
     label: "Castbox",
     icon: CastboxIcon,
+    size: 31,
   },
   {
     href: process.env.NEXT_PUBLIC_APPLE_PODCASTS_URL || "https://podcasts.apple.com/",
     label: "Apple Podcasts",
     icon: AnchorIcon,
+    size: 33,
   },
 ];
 
@@ -74,17 +80,18 @@ export default function Footer() {
                 عضویت در خبرنامه ما
               </p>
 
-              <div className="flex flex-col xl:flex-row-reverse items-stretch xl:items-center w-full gap-3">
-                <div className="flex-1 h-[48px] bg-white/15 rounded px-4 flex items-center justify-end">
+              <div className="flex flex-col xl:flex-row-reverse items-stretch xl:items-center w-full gap-[14px]">
+                <div className="flex-1 h-9 bg-white/15 rounded-sm px-4 flex items-center justify-end">
                   <input
                     type="email"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    onFocus={() => setEmail("")}
                     placeholder="آدرس ایمیل"
                     aria-label="ایمیل"
                     {...inputA11y}
-                    className="w-full bg-transparent border-none outline-none text-[#A1A1AA] text-[16px] leading-[28px] text-right font-[IRANYekanXFaNum]"
+                    className="w-full bg-transparent border-none outline-none focus-visible:outline-none text-[#A1A1AA] text-[16px] leading-[28px] text-right font-[IRANYekanXFaNum]"
                   />
                 </div>
 
@@ -92,7 +99,7 @@ export default function Footer() {
                   type="submit"
                   onClick={submit}
                   disabled={status === "loading"}
-                  className="w-full xl:w-[100px] h-[48px] border border-[#C9A84C] rounded bg-transparent text-[#C9A84C] text-[14px] leading-[20px] font-[IRANYekanXFaNum] cursor-pointer disabled:opacity-50"
+                  className="w-full xl:w-[100px] h-9 shrink-0 border border-[#C9A84C] rounded-[2px] bg-transparent px-3 py-2 text-[#C9A84C] text-[14px] leading-[20px] font-normal font-[IRANYekanXFaNum] cursor-pointer transition-colors duration-150 hover:bg-[#C9A84C] hover:text-black disabled:opacity-50"
                 >
                   {status === "loading" ? "..." : "عضویت"}
                 </button>
@@ -106,14 +113,20 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Divider - desktop only */}
-          <div className="hidden xl:flex w-0 h-[217px]">
-            <span className="w-[1px] h-full bg-[#262626]" />
-          </div>
+          {/* Divider - desktop only (Figma: gradient white 10% -> 80% -> 10%) */}
+          <div
+            aria-hidden
+            className="hidden xl:block w-px h-[217px] shrink-0"
+            style={{ background: 'linear-gradient(to bottom, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.80) 52%, rgba(255,255,255,0.10) 100%)' }}
+          />
 
           {/* Mobile divider */}
           <div className="xl:hidden w-full flex justify-center py-2">
-            <span className="w-[80%] h-[1px] bg-[#3F3F46]" />
+            <span
+              aria-hidden
+              className="block w-[80%] h-px"
+              style={{ background: 'linear-gradient(to right, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.80) 52%, rgba(255,255,255,0.10) 100%)' }}
+            />
           </div>
 
           {/* Nav Links */}
@@ -129,28 +142,40 @@ export default function Footer() {
             ))}
           </nav>
 
-          {/* Divider - desktop only */}
-          <div className="hidden xl:flex w-0 h-[217px]">
-            <span className="w-[1px] h-full bg-[#262626]" />
-          </div>
+          {/* Divider - desktop only (Figma: gradient white 10% -> 80% -> 10%) */}
+          <div
+            aria-hidden
+            className="hidden xl:block w-px h-[217px] shrink-0"
+            style={{ background: 'linear-gradient(to bottom, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.80) 52%, rgba(255,255,255,0.10) 100%)' }}
+          />
 
           {/* Mobile divider */}
           <div className="xl:hidden w-full flex justify-center py-2">
-            <span className="w-[80%] h-[1px] bg-[#3F3F46]" />
+            <span
+              aria-hidden
+              className="block w-[80%] h-px"
+              style={{ background: 'linear-gradient(to right, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.80) 52%, rgba(255,255,255,0.10) 100%)' }}
+            />
           </div>
 
           {/* Social Icons */}
           <div className="flex flex-row xl:flex-col items-center justify-center xl:justify-between w-full xl:w-[173px] h-auto xl:h-[217px] gap-4 xl:gap-0">
-            {SOCIALS.map(({ href, label, icon: Icon }) => (
+            {SOCIALS.map(({ href, label, icon: Icon, size }) => (
               <a
                 key={label}
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={label}
-                className="flex items-center justify-center w-[40px] h-[40px] p-2 bg-[rgba(245,245,245,0.15)] rounded-full"
+                className="group relative flex items-center justify-center w-[40px] h-[40px] bg-[rgba(245,245,245,0.15)] rounded-full transition-colors overflow-visible"
               >
-                <Icon size={24} className="text-[#A1A1AA]" />
+                <Icon size={size} className="shrink-0 text-[#A1A1AA] transition-colors group-hover:text-white" />
+                <span
+                  dir="ltr"
+                  className="hidden xl:block absolute pl-3 left-full whitespace-nowrap text-[16px] leading-7 text-white opacity-0 translate-x-1 transition-all duration-200 pointer-events-none group-hover:opacity-100 group-hover:translate-x-0"
+                >
+                  {label}
+                </span>
               </a>
             ))}
           </div>
@@ -158,7 +183,11 @@ export default function Footer() {
 
         {/* Bottom divider */}
         <div className="w-full flex justify-center py-6">
-          <span className="w-full h-[1px] bg-[#262626]" />
+          <span
+            aria-hidden
+            className="block w-full h-px"
+            style={{ background: "linear-gradient(to right, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.80) 52%, rgba(255,255,255,0.10) 100%)" }}
+          />
         </div>
 
         {/* Copyright */}

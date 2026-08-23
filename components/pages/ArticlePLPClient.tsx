@@ -29,7 +29,6 @@ type Props = {
 export default function ArticlePLPClient({ initialList, initialFeatured, initialTags, initialMosaicArticles, initialFaqs, initialPage, initialSort, initialTag }: Props) {
   const firstRequest = useRef(true);
   const [page, setPage] = useState(initialPage);
-  const [showAllMobile, setShowAllMobile] = useState(false);
   const [sort, setSort] = useState<SortMode>(initialSort);
   const [tag, setTag] = useState<string | undefined>(initialTag);
 
@@ -75,6 +74,10 @@ export default function ArticlePLPClient({ initialList, initialFeatured, initial
 
   const visibleItems = list?.items.filter((article) => article.id !== featured?.id) ?? [];
 
+  // Show 3 cards initially; the button reveals the rest on any screen size
+  const [showAllCards, setShowAllCards] = useState(false);
+  const shownItems = showAllCards ? visibleItems : visibleItems.slice(0, 6);
+
   return (
     <PageShell>
       <Breadcrumb items={[{ label: "خانه", href: "/" }, { label: "روایت‌ها" }]} />
@@ -91,7 +94,7 @@ export default function ArticlePLPClient({ initialList, initialFeatured, initial
             if ("tag" in n) setTag(n.tag);
             if ("sort" in n && n.sort) setSort(n.sort);
             setPage(1);
-            setShowAllMobile(false);
+            setShowAllCards(false);
           }}
         />
       </div>
@@ -99,27 +102,35 @@ export default function ArticlePLPClient({ initialList, initialFeatured, initial
       {error && <ErrorMessage message={error} />}
 
       {loading ? (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3" style={{ columnGap: 16, rowGap: 11 }}>
           {Array.from({ length: 6 }).map((_, i) => (
             <ArticleCardSkeleton key={i} />
           ))}
         </div>
       ) : visibleItems.length > 0 ? (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {visibleItems.map((a, index) => (
-            <div key={a.id} className={index >= 3 && !showAllMobile ? "hidden md:block" : "block"}>
-              <ArticleListCard article={a} />
-            </div>
-          ))}
-        </div>
+        <>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3" style={{ columnGap: 16, rowGap: 11 }}>
+            {shownItems.map((a) => (
+              <div key={a.id}>
+                <ArticleListCard article={a} />
+              </div>
+            ))}
+          </div>
+
+          {/* Figma 1:946 Small Button — reveals/hides the remaining cards */}
+          {visibleItems.length > 6 && (
+            <button
+              type="button"
+              onClick={() => setShowAllCards((v) => !v)}
+              className="mx-auto inline-flex shrink-0 cursor-pointer items-center justify-center border border-[#C9A84C] bg-transparent px-3 py-2 text-[14px] leading-5 text-[#C9A84C] transition-colors hover:bg-[#C9A84C] hover:text-black"
+              style={{ borderRadius: 2, minWidth: 101, minHeight: 36 }}
+            >
+              {showAllCards ? "نمایش کمتر" : "نمایش بیشتر"}
+            </button>
+          )}
+        </>
       ) : (
         <EmptyState message="هنوز درباره این موضوع چیزی منتشر نکرده‌ایم. شاید این روایت‌ها برایت جالب باشد…" />
-      )}
-
-      {visibleItems.length > 3 && (
-        <button type="button" onClick={() => setShowAllMobile((value) => !value)} className="md:hidden w-full min-h-12 border border-brand text-brand rounded-md hover:bg-brand/10 transition-colors">
-          {showAllMobile ? "نمایش کمتر" : "نمایش بیشتر"}
-        </button>
       )}
 
       {list && list.total_pages > 1 && (

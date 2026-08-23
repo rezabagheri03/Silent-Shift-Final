@@ -13,16 +13,19 @@ export function FeaturedArticleCard({ article }: { article: Article }) {
 
   return (
     <article
-      className="relative w-full overflow-hidden"
-      style={{ minHeight: 533 }}
+      className="relative w-screen max-w-[100vw] overflow-hidden bg-bg"
+      style={{
+        minHeight: 533,
+        marginLeft: "calc(50% - 50vw)",
+        marginRight: "calc(50% - 50vw)",
+      }}
     >
-      {/* Keep design hero asset (not article cover) */}
+      {/* Figma: hero image fill at 40% opacity over the dark base */}
       <img
         src={designAssets.articleHero}
         alt=""
-        className="absolute inset-0 h-full w-full object-cover"
+        className="absolute inset-0 h-full w-full object-cover opacity-40"
       />
-      <div className="absolute inset-0 bg-black/35" />
 
       {/*
         Hero shell — LTR so padding/alignment match Figma frame

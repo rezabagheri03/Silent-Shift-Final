@@ -76,8 +76,14 @@ export function PodcastListCard({ podcast }: Props) {
         aria-label={podcast.title}
       />
 
-      {/* Spacer */}
-      <div className="relative z-0 flex-1" aria-hidden />
+      {/* Image zone — author anchored bottom-right (Figma 1:1203) */}
+      <div className="relative z-0 flex-1">
+        {producer ? (
+          <span className="absolute bottom-4 right-4 z-20 text-[14px] leading-5 text-white md:bottom-5 md:right-5">
+            {producer}
+          </span>
+        ) : null}
+      </div>
 
       {/* Glass panel */}
       <div
@@ -89,19 +95,14 @@ export function PodcastListCard({ podcast }: Props) {
           WebkitBackdropFilter: "blur(10px)",
         }}
       >
-        <div className="flex flex-row items-start justify-between gap-3">
-          <h3 className="min-w-0 flex-1 text-[18px] font-semibold leading-7 text-white md:text-[20px]">
-            <Link
-              href={`/podcasts/${podcast.slug}`}
-              className="relative z-20 transition-colors hover:text-brand"
-            >
-              {podcast.title}
-            </Link>
-          </h3>
-          <span className="shrink-0 pt-1 text-[13px] leading-5 text-[#A1A1AA]">
-            {producer}
-          </span>
-        </div>
+        <h3 className="w-full text-[18px] font-semibold leading-7 text-white md:text-[20px]">
+          <Link
+            href={`/podcasts/${podcast.slug}`}
+            className="relative z-20 transition-colors hover:text-brand"
+          >
+            {podcast.title}
+          </Link>
+        </h3>
 
         {excerpt ? (
           <p className="line-clamp-2 text-[13px] leading-6 text-[#A1A1AA] md:text-[14px]">
@@ -147,7 +148,7 @@ export function PodcastListCard({ podcast }: Props) {
 
         <Link
           href={`/podcasts/${podcast.slug}`}
-          className="flex h-11 w-full items-center justify-center border border-[#C9A84C] text-[14px] text-[#C9A84C] transition-colors hover:bg-[#C9A84C]/10"
+          className="flex h-11 w-full items-center justify-center border border-[#C9A84C] text-[14px] text-[#C9A84C] transition-colors hover:bg-[#C9A84C] hover:text-black"
           style={{ borderRadius: 4 }}
         >
           مشاهده جزییات اپیزود

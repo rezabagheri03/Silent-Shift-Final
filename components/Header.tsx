@@ -13,6 +13,7 @@ import {
   AnchorIcon,
 } from "@/components/ui/Icons";
 import SearchPopover from "./SearchPopover";
+import HeaderSearch from "./HeaderSearch";
 
 const NAV_ITEMS = [
   { href: "/", label: "خانه" },
@@ -47,22 +48,7 @@ export default function Header() {
       <header className={`hidden xl:block sticky top-0 z-40 border-b transition-all ${scrolled ? "border-border bg-bg/90 backdrop-blur-xl" : "border-transparent bg-bg"}`}>
         <div className="mx-auto max-w-page h-[108px] px-page-x-d flex items-center justify-between" dir="ltr">
           <div className="relative">
-            <button
-              data-search-trigger
-              onClick={() => setSearchOpen((open) => !open)}
-              aria-label="جستجو"
-              aria-expanded={searchOpen}
-              aria-controls="site-search-popover"
-              className={`w-[282px] h-11 shrink-0 rounded-md border bg-surface px-3.5 flex items-center justify-end gap-2 text-text-primary transition-colors ${searchOpen ? "border-brand" : "border-border hover:border-brand"}`}
-            >
-              <span className="text-d-body-sm text-right">جست و جو ...</span>
-              <SearchIcon size={20} />
-            </button>
-            {searchOpen && (
-              <div id="site-search-popover">
-                <SearchPopover open={searchOpen} onClose={() => setSearchOpen(false)} />
-              </div>
-            )}
+            <HeaderSearch />
           </div>
           <div className="w-[144px] shrink-0" />
           <nav className="flex-1 flex items-center justify-center gap-10 lg:gap-[72px]" dir="rtl" aria-label="ناوبری اصلی">
