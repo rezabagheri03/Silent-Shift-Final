@@ -4,9 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import {
-  MenuIcon,
+  MenuCloseIcon,
   SearchIcon,
-  CloseIcon,
   InstagramIcon,
   TelegramIcon,
   CastboxIcon,
@@ -34,7 +33,19 @@ const SOCIALS = [
 export default function Header() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+
+  // The drawer renders beneath the sticky header, so the morphing icon stays
+  // visible the whole time — both animations run together, nothing gets covered.
+  const openMenu = () => {
+    setMenuOpen(true);
+    setDrawerOpen(true);
+  };
+  const closeMenu = () => {
+    setMenuOpen(false);
+    setDrawerOpen(false);
+  };
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -70,8 +81,8 @@ export default function Header() {
 
       <header className={`mobile-header-safe xl:hidden sticky top-0 z-[100] border-b transition-all ${scrolled ? "border-border bg-bg/90 backdrop-blur-xl" : "border-transparent bg-bg"}`}>
         <div className="h-full px-8 flex items-center justify-between" dir="ltr">
-          <button onClick={() => setMenuOpen((open) => !open)} aria-label={menuOpen ? "بستن منو" : "باز کردن منو"} aria-expanded={menuOpen} aria-controls="mobile-nav-drawer" className="w-8 h-8 shrink-0 flex items-center justify-center text-white">
-            {menuOpen ? <CloseIcon size={24} /> : <MenuIcon size={24} />}
+          <button onClick={() => (menuOpen ? closeMenu() : openMenu())} aria-label={menuOpen ? "بستن منو" : "باز کردن منو"} aria-expanded={menuOpen} aria-controls="mobile-nav-drawer" className="w-8 h-8 shrink-0 flex items-center justify-center text-white">
+            <MenuCloseIcon size={24} open={menuOpen} />
           </button>
           <span dir="ltr" className="text-[24px] font-semibold leading-8 text-[#C9A84C]">SILENT SHIFT</span>
           <div className="relative">
@@ -94,25 +105,42 @@ export default function Header() {
         </div>
       </header>
 
-      {menuOpen && <MobileDrawer onClose={() => setMenuOpen(false)} onSearchOpen={() => { setMenuOpen(false); setSearchOpen(true); }} />}
+      <MobileDrawer open={drawerOpen} onClose={closeMenu} onSearchOpen={() => { closeMenu(); setSearchOpen(true); }} />
     </>
   );
 }
 
-function MobileDrawer({ onClose, onSearchOpen }: { onClose: () => void; onSearchOpen: () => void }) {
+function MobileDrawer({ open, onClose, onSearchOpen }: { open: boolean; onClose: () => void; onSearchOpen: () => void }) {
   const pathname = usePathname();
   const closeRef = useRef<HTMLButtonElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
   const openerRef = useRef<HTMLElement | null>(null);
-  // T21: capture the opener once; restore focus when the drawer unmounts
+  const [render, setRender] = useState(open);
+  const [visible, setVisible] = useState(false);
+  const firstMount = useRef(true);
+  // Mount on open, animate in on the next frame; animate out then unmount on close.
+  // Skip the exit branch on first mount so SSR + initial client render agree.
   useEffect(() => {
-    openerRef.current = document.activeElement as HTMLElement | null;
-    return () => { openerRef.current?.focus?.(); };
-  }, []);
+    if (open) {
+      firstMount.current = false;
+      openerRef.current = document.activeElement as HTMLElement | null;
+      setRender(true);
+      setVisible(false);
+      const frame = requestAnimationFrame(() => requestAnimationFrame(() => setVisible(true)));
+      return () => cancelAnimationFrame(frame);
+    }
+    if (firstMount.current) return;
+    setVisible(false);
+    const timer = setTimeout(() => {
+      setRender(false);
+      openerRef.current?.focus?.();
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [open]);
   useEffect(() => {
+    if (!render) return;
     const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    closeRef.current?.focus();
     const key = (event: KeyboardEvent) => {
       if (event.key === "Escape") onClose();
       if (event.key !== "Tab" || !drawerRef.current) return;
@@ -128,33 +156,30 @@ function MobileDrawer({ onClose, onSearchOpen }: { onClose: () => void; onSearch
       document.body.style.overflow = previous;
       document.removeEventListener("keydown", key);
     };
-  }, [onClose]);
+  }, [render, onClose]);
+  useEffect(() => {
+    if (render && visible) closeRef.current?.focus();
+  }, [render, visible]);
+
+  if (!render) return null;
 
   return (
-    <div className="fixed inset-0 z-[110] xl:hidden bg-bg" role="dialog" aria-modal="true" aria-label="منوی اصلی">
+    <div aria-hidden={!visible} className={`fixed inset-0 top-[56px] z-[90] xl:hidden bg-bg/95 backdrop-blur-xl transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${visible ? "opacity-100" : "pointer-events-none opacity-0"}`} role="dialog" aria-modal="true" aria-label="منوی اصلی">
       <div ref={drawerRef} className="flex flex-col h-full">
-        {/* Header bar — Figma 1:2183: 48px, X left · gold "SILENT SHIFT" text center · search right */}
-        {/* Icon centers sit 54px from the screen edges (px-8 bar) */}
-        <div className="flex h-12 shrink-0 items-center justify-between px-8 pt-2" dir="ltr">
-          <button ref={closeRef} onClick={onClose} aria-label="بستن منو" className="flex h-8 w-8 items-center justify-center text-[#F5F5F5]">
-            <CloseIcon size={24} />
-          </button>
-          <span dir="ltr" className="text-[24px] font-semibold leading-8 text-[#C9A84C]">SILENT SHIFT</span>
-          <button onClick={onSearchOpen} aria-label="جستجو" className="flex h-8 w-8 items-center justify-center text-[#F5F5F5]">
-            <SearchIcon size={24} />
-          </button>
-        </div>
-
         {/* Menu Items — Figma: gap 48, centered; active 24/32 DemiBold gold, rest 28/36 DemiBold #A1A1AA */}
         <nav className="flex flex-1 flex-col items-center justify-center gap-12 px-4 py-9" dir="rtl" aria-label="ناوبری موبایل">
-          {NAV_ITEMS.map((item) => {
+          {NAV_ITEMS.map((item, i) => {
             const active = item.href === "/" ? pathname === "/" : pathname === item.href || pathname?.startsWith(`${item.href}/`);
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 onClick={onClose}
-                className={`transition-colors ${
+                tabIndex={visible ? 0 : -1}
+                style={{ transitionDelay: visible ? `${120 + i * 60}ms` : "0ms" }}
+                className={`transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                  visible ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+                } ${
                   active
                     ? "text-[24px] font-semibold leading-8 text-[#C9A84C]"
                     : "text-[28px] font-semibold leading-9 text-[#A1A1AA]"
@@ -168,7 +193,7 @@ function MobileDrawer({ onClose, onSearchOpen }: { onClose: () => void; onSearch
         </nav>
 
         {/* Bottom — Figma: gradient glow divider + 40px chips spread across full width */}
-        <div className="shrink-0 px-2 pb-3">
+        <div className={`shrink-0 px-2 pb-3 transition-all delay-300 duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${visible ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}`}>
           <div
             aria-hidden
             className="mb-5 h-px w-full"

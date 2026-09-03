@@ -14,8 +14,24 @@ const base = (size: number) => ({
 export function MenuIcon({ size = 24, ...p }: IconProps) {
   return (
     <svg {...base(size)} {...p}>
-      <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <path d="M0 6h10M0 12h24M0 18h14" stroke="currentColor" strokeWidth="2" />
     </svg>
+  );
+}
+
+export function MenuCloseIcon({ size = 24, open = false, className, style }: { size?: number; open?: boolean; className?: string; style?: React.CSSProperties }) {
+  const k = size / 24;
+  const lineBase = 'absolute left-0 bg-current will-change-transform';
+  const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
+  const tIcon = `transform 0.5s ${EASE}, opacity 0.2s ease`;
+  return (
+    <span aria-hidden className={`relative block overflow-visible ${className ?? ''}`} style={{ width: size, height: size, ...style }}>
+      <span aria-hidden className={lineBase} style={{ top: 5 * k, width: 10 * k, height: 2 * k, transformOrigin: '5px center', transform: open ? `translateY(${6 * k}px) rotate(45deg)` : 'translateY(0px) rotate(0deg)', transition: tIcon, opacity: open ? 0 : 1 }} />
+      <span aria-hidden className={lineBase} style={{ top: 11 * k, width: 24 * k, height: 2 * k, transformOrigin: 'center', transform: 'translateY(0px)', transition: tIcon, opacity: open ? 0 : 1 }} />
+      <span aria-hidden className={lineBase} style={{ top: 17 * k, width: 14 * k, height: 2 * k, transformOrigin: '7px center', transform: open ? `translateY(${-6 * k}px) rotate(-45deg)` : 'translateY(0px) rotate(0deg)', transition: tIcon, opacity: open ? 0 : 1 }} />
+      <span aria-hidden className={lineBase} style={{ top: 11 * k, left: 3 * k, width: 18 * k, height: 2 * k, transformOrigin: 'center', transform: open ? 'rotate(45deg) scaleX(1)' : 'rotate(45deg) scaleX(0)', transition: tIcon, opacity: open ? 1 : 0 }} />
+      <span aria-hidden className={lineBase} style={{ top: 11 * k, left: 3 * k, width: 18 * k, height: 2 * k, transformOrigin: 'center', transform: open ? 'rotate(-45deg) scaleX(1)' : 'rotate(-45deg) scaleX(0)', transition: tIcon, opacity: open ? 1 : 0 }} />
+    </span>
   );
 }
 
