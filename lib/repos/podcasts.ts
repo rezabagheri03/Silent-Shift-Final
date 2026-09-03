@@ -18,6 +18,7 @@ const BASE_SELECT = `
 export function listPodcasts(opts: {
   category?: string;
   tag?: string;
+  tags?: string[];
   sort?: SortMode;
   page?: number;
   limit?: number;
@@ -35,10 +36,12 @@ export function listPodcasts(opts: {
     where.push("c.slug = @category");
     params.category = opts.category;
   }
-  if (opts.tag) {
+  const tagList = [...(opts.tags ?? []), ...(opts.tag ? [opts.tag] : [])].filter((t, i, arr) => t && arr.indexOf(t) === i);
+  if (tagList.length > 0) {
     joins.push("JOIN podcast_tags pt ON pt.podcast_id = p.id JOIN tags t ON t.id = pt.tag_id");
-    where.push("t.slug = @tag");
-    params.tag = opts.tag;
+    const placeholders = tagList.map((_, i) => "@tag" + i).join(", ");
+    where.push("t.slug IN (" + placeholders + ")");
+    tagList.forEach((t, i) => { params["tag" + i] = t; });
   }
   if (opts.q && opts.q.trim()) {
     where.push("(p.title LIKE @q OR p.description LIKE @q OR p.summary LIKE @q)");

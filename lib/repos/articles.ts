@@ -16,6 +16,7 @@ const BASE_SELECT = `
 export function listArticles(opts: {
   category?: string;
   tag?: string;
+  tags?: string[];
   sort?: SortMode;
   page?: number;
   limit?: number;
@@ -33,10 +34,12 @@ export function listArticles(opts: {
     where.push("c.slug = @category");
     params.category = opts.category;
   }
-  if (opts.tag) {
+  const tagList = [...(opts.tags ?? []), ...(opts.tag ? [opts.tag] : [])].filter((t, i, arr) => t && arr.indexOf(t) === i);
+  if (tagList.length > 0) {
     joins.push("JOIN article_tags at2 ON at2.article_id = a.id JOIN tags t ON t.id = at2.tag_id");
-    where.push("t.slug = @tag");
-    params.tag = opts.tag;
+    const placeholders = tagList.map((_, i) => "@tag" + i).join(", ");
+    where.push("t.slug IN (" + placeholders + ")");
+    tagList.forEach((t, i) => { params["tag" + i] = t; });
   }
   if (opts.q && opts.q.trim()) {
     where.push("(a.title LIKE @q OR a.excerpt LIKE @q OR a.body LIKE @q)");

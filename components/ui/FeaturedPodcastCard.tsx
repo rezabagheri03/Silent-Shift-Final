@@ -82,14 +82,14 @@ export function FeaturedPodcastCard({ podcast }: { podcast: Podcast }) {
             </p>
           )}
 
-          <div className="flex items-center gap-8 md:gap-12">
+          <div className="flex w-full flex-col items-center gap-4 md:w-auto md:flex-row md:items-center md:gap-12">
             {/* Single visual pill: entire area is clickable */}
             <button
               type="button"
               onClick={() => (isCurrent ? player.toggle() : player.play(track))}
               disabled={!podcast.audio_url}
               aria-label={isCurrent ? `توقف ${track.title}` : `شنیدن ${track.title}`}
-              className="flex items-center gap-2 rounded-sm bg-brand h-14 min-w-[160px] px-4 hover:bg-brand-hover disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+              className="flex h-14 w-full items-center justify-center gap-2 rounded-sm bg-brand px-4 hover:bg-brand-hover disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer md:h-14 md:w-auto md:min-w-[160px]"
             >
               {isLoading ? (
                 <span className="w-[18px] h-[18px] border-2 border-black border-t-transparent rounded-full animate-spin shrink-0" />
@@ -104,7 +104,7 @@ export function FeaturedPodcastCard({ podcast }: { podcast: Podcast }) {
             </button>
 
             {podcast.duration_seconds > 0 && (
-              <span className="flex items-center gap-4 text-d-body-sm text-text-tertiary">
+              <span className="flex items-center justify-center gap-4 text-d-body-sm text-text-tertiary">
                 <ClockIcon />
                 {toPersianMinutes(podcast.duration_seconds)}
               </span>

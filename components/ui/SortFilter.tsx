@@ -2,13 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { SortMode, Tag } from "@/lib/types";
-import { ChevronDownIcon } from "./Icons";
+import { ChevronDownIcon, CloseIcon, FilterIcon } from "./Icons";
 
 type Props = {
   tags: Tag[];
   tag?: string;
+  selectedTags?: string[];
   sort: SortMode;
-  onChange: (next: { tag?: string; sort?: SortMode }) => void;
+  onChange: (next: { tag?: string; tags?: string[]; sort?: SortMode }) => void;
 };
 
 const SORT_OPTIONS: { value: SortMode; label: string }[] = [
@@ -19,8 +20,41 @@ const SORT_OPTIONS: { value: SortMode; label: string }[] = [
 /**
  * Filter chips (by tag) + sort dropdown for PLP pages.
  * Chips: rounded rectangle (not capsule) · active = gold · sort menu dark.
+ *
+ * Mobile (Figma 1:1644/1:1647): a single row with a Filter button (right)
+ * and a Sort button (left); the active tag shows as a dismissible pill
+ * below, and tapping Filter expands the tag cloud inline, pushing content
+ * down. Desktop keeps the exposed chip cloud.
  */
-export function SortFilter({ tags, tag, sort, onChange }: Props) {
+export function SortFilter({ tags, tag, selectedTags, sort, onChange }: Props) {
+  const selected: string[] = selectedTags ?? (tag ? [tag] : []);
+  const [filterOpen, setFilterOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!filterOpen) return;
+    const onMouse = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) setFilterOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setFilterOpen(false);
+    };
+    document.addEventListener("mousedown", onMouse);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onMouse);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [filterOpen]);
+
+  const toggleTag = (slug: string) => {
+    const next = selected.includes(slug) ? selected.filter((t) => t !== slug) : [...selected, slug];
+    onChange({ tags: next });
+  };
+
+  const activeTags = tags.filter((t) => selected.includes(t.slug));
+  const filterLabel = selected.length === 0 ? "فیلتر" : `فیلتر (${selected.length})`;
+
   const chipBase =
     "inline-flex min-h-10 items-center justify-center whitespace-nowrap rounded-md px-4 text-d-body-md font-medium transition-colors";
 
@@ -30,37 +64,92 @@ export function SortFilter({ tags, tag, sort, onChange }: Props) {
   const chipActive = "bg-[#C9A84C] text-black";
 
   return (
-    <div
-      dir="rtl"
-      className="flex w-full flex-wrap items-center justify-between gap-3 text-d-body-md"
-    >
-      {/* Tag chips — right */}
-      <div className="flex flex-wrap items-center justify-start gap-2">
-        <button
-          type="button"
-          onClick={() => onChange({ tag: undefined })}
-          className={`${chipBase} ${!tag ? chipActive : chipIdle}`}
+    <div dir="rtl" className="flex w-full flex-col gap-3 text-d-body-md">
+      <div className="flex w-full items-center justify-between md:hidden">
+        <div
+          ref={dropdownRef}
+          className="relative inline-flex shrink-0 flex-col rounded-[6px] border-[0.5px] border-border-medium bg-bg px-4 py-2 transition-colors hover:border-text-secondary"
         >
-          همه
-        </button>
-
-        {tags.map((t) => (
           <button
-            key={t.id}
             type="button"
-            onClick={() => onChange({ tag: t.slug })}
-            className={`${chipBase} ${
-              tag === t.slug ? chipActive : chipIdle
-            }`}
+            onClick={() => setFilterOpen((o) => !o)}
+            aria-expanded={filterOpen}
+            aria-haspopup="listbox"
+            className="flex cursor-pointer items-center gap-[14px] whitespace-nowrap text-d-body-md font-medium text-[#FFEFC4] focus:outline-none"
           >
-            {t.name}
+            <FilterIcon size={20} />
+            {filterLabel}
           </button>
-        ))}
+
+          {filterOpen && (
+            <div role="listbox" aria-multiselectable aria-label="فیلتر بر اساس موضوع" className="mt-2 flex max-h-[300px] w-full flex-col overflow-y-auto pb-1">
+              <button type="button" onClick={() => { onChange({ tags: [] }); setFilterOpen(false); }} className="flex w-full items-center justify-between whitespace-nowrap py-1.5 text-right text-[14px] leading-5 transition-colors hover:bg-white/5">
+                <span className={selected.length === 0 ? "font-medium text-[#FFEFC4]" : "text-[#A1A1AA]"}>همه</span>
+                {selected.length === 0 && <CheckIcon />}
+              </button>
+              {tags.map((t) => {
+                const isOn = selected.includes(t.slug);
+                return (
+                  <button
+                    key={t.id}
+                    type="button"
+                    role="option"
+                    aria-selected={isOn}
+                    onClick={() => toggleTag(t.slug)}
+                    className="flex w-full items-center justify-between whitespace-nowrap py-1.5 text-right text-[14px] leading-5 transition-colors hover:bg-white/5"
+                  >
+                    <span className={isOn ? "font-medium text-[#FFEFC4]" : "text-[#A1A1AA]"}>{t.name}</span>
+                    {isOn && <CheckIcon />}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        <SortDropdown sort={sort} onChange={onChange} />
       </div>
 
-      {/* Sort — left; Figma State=Default/Open component */}
-      <SortDropdown sort={sort} onChange={onChange} />
+      {activeTags.length > 0 && (
+        <div className="flex w-full flex-wrap items-center justify-start gap-2 md:hidden">
+          {activeTags.map((t) => (
+            <span key={t.slug} className="inline-flex h-8 items-center gap-4 rounded bg-[#52525B] p-1 pl-3">
+              <button
+                type="button"
+                onClick={() => toggleTag(t.slug)}
+                aria-label={`حذف فیلتر ${t.name}`}
+                className="flex h-[18px] w-[18px] items-center justify-center text-[#A1A1AA] transition-colors hover:text-white"
+              >
+                <CloseIcon size={18} />
+              </button>
+              <span className="text-d-body-md font-medium text-[#FFEFC4]">{t.name}</span>
+            </span>
+          ))}
+        </div>
+      )}
+
+      <div className="hidden w-full flex-wrap items-center justify-between gap-3 md:flex">
+        <div className="flex flex-wrap items-center justify-start gap-2">
+          <button type="button" onClick={() => onChange({ tags: [] })} className={chipBase + " " + (selected.length === 0 ? chipActive : chipIdle)}>
+            همه
+          </button>
+          {tags.map((t) => (
+            <button key={t.id} type="button" onClick={() => toggleTag(t.slug)} className={chipBase + " " + (selected.includes(t.slug) ? chipActive : chipIdle)}>
+              {t.name}
+            </button>
+          ))}
+        </div>
+        <SortDropdown sort={sort} onChange={onChange} />
+      </div>
     </div>
+  );
+}
+
+function CheckIcon() {
+  return (
+    <svg width={18} height={18} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M5 13l4 4L19 7" stroke="#C9A84C" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }
 

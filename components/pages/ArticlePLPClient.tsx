@@ -30,7 +30,9 @@ export default function ArticlePLPClient({ initialList, initialFeatured, initial
   const firstRequest = useRef(true);
   const [page, setPage] = useState(initialPage);
   const [sort, setSort] = useState<SortMode>(initialSort);
-  const [tag, setTag] = useState<string | undefined>(initialTag);
+  const [selectedTags, setSelectedTags] = useState<string[]>(
+    initialTag ? [initialTag] : []
+  );
 
   const [list, setList] = useState<Paginated<Article> | null>(initialList);
   const [featured] = useState<Article | null>(initialFeatured);
@@ -49,7 +51,7 @@ export default function ArticlePLPClient({ initialList, initialFeatured, initial
     setLoading(true);
     setError(null);
     const q = new URLSearchParams({ page: String(page), sort, limit: "9" });
-    if (tag) q.set("tag", tag);
+    for (const t of selectedTags) q.append("tag", t);
     apiGet<Paginated<Article>>(`/api/articles?${q}`, { signal: controller.signal })
       .then((data) => { setList(data); setLoading(false); })
       .catch((e) => {
@@ -58,7 +60,7 @@ export default function ArticlePLPClient({ initialList, initialFeatured, initial
         setLoading(false);
       });
     return () => controller.abort();
-  }, [page, sort, tag]);
+  }, [page, sort, selectedTags]);
 
   // T19: mirror filters/pagination into the URL (shareable links, sane back/refresh)
   const urlSynced = useRef(false);
@@ -67,10 +69,10 @@ export default function ArticlePLPClient({ initialList, initialFeatured, initial
     const q = new URLSearchParams();
     if (page > 1) q.set("page", String(page));
     if (sort !== "new") q.set("sort", sort);
-    if (tag) q.set("tag", tag);
+    for (const t of selectedTags) q.append("tag", t);
     const qs = q.toString();
     window.history.replaceState(null, "", qs ? `?${qs}` : window.location.pathname);
-  }, [page, sort, tag]);
+  }, [page, sort, selectedTags]);
 
   const visibleItems = list?.items.filter((article) => article.id !== featured?.id) ?? [];
 
@@ -88,10 +90,11 @@ export default function ArticlePLPClient({ initialList, initialFeatured, initial
       <div className="flex flex-col gap-4 pt-2">
         <SortFilter
           tags={tags}
-          tag={tag}
+          selectedTags={selectedTags}
           sort={sort}
           onChange={(n) => {
-            if ("tag" in n) setTag(n.tag);
+            if ("tags" in n && n.tags) setSelectedTags(n.tags);
+            else if ("tag" in n) setSelectedTags(n.tag ? [n.tag] : []);
             if ("sort" in n && n.sort) setSort(n.sort);
             setPage(1);
             setShowAllCards(false);

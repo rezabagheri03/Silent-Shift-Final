@@ -16,15 +16,17 @@ export const metadata: Metadata = {
 export default async function ArticlesPage({
   searchParams,
 }: {
-  searchParams?: Promise<{ page?: string; sort?: string; tag?: string; q?: string }>;
+  searchParams?: Promise<{ page?: string; sort?: string; tag?: string | string[]; q?: string }>;
 }) {
   const sp = (await searchParams) ?? {};
   const page = Math.max(1, Number(sp.page) || 1);
   const sort: SortMode = sp.sort === "popular" ? "popular" : "new";
-  const tag = sp.tag?.trim() || undefined;
+  const tagValues = Array.isArray(sp.tag) ? sp.tag : sp.tag ? [sp.tag] : [];
+  const tags = tagValues.map((t) => t.trim()).filter(Boolean);
+  const tag = tags[0];
 
   const limit = page === 1 ? 10 : 9;
-  const list = listArticles({ page, limit, sort, tag, q: sp.q });
+  const list = listArticles({ page, limit, sort, tags, q: sp.q });
   const featured = page === 1 ? list.items[0] ?? null : null;
 
   const mosaicArticles = listArticles({ limit: 3 }).items;

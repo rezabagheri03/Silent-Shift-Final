@@ -290,6 +290,20 @@ export function AnchorIcon({ size = 20, ...p }: IconProps) {
   );
 }
 
+export function FilterIcon({ size = 20, ...p }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true" {...p}>
+      <path
+        d="M4 5h16l-6 7v6l-4 2v-8L4 5z"
+        stroke="currentColor"
+        strokeWidth={1.8}
+        strokeLinejoin="round"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 export function StarIcon({ size = 14, filled = true, ...p }: IconProps & { filled?: boolean }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true" {...p}
