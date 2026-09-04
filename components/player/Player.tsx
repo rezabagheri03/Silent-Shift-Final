@@ -69,17 +69,7 @@ export default function Player() {
                   <ChevronDownIcon size={24} className="text-[#A1A1AA]" />
                 </button>
                 <span className="text-[20px] font-medium leading-7 text-[#C9A84C]">در حال پخش</span>
-                <button
-                  type="button"
-                  aria-label="گزینه‌های بیشتر"
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F5F5F5]/15 transition-colors hover:bg-[#F5F5F5]/25"
-                >
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="text-[#A1A1AA]">
-                    <circle cx="12" cy="5" r="2" fill="currentColor" />
-                    <circle cx="12" cy="12" r="2" fill="currentColor" />
-                    <circle cx="12" cy="19" r="2" fill="currentColor" />
-                  </svg>
-                </button>
+                <span aria-hidden className="h-10 w-10 shrink-0" />
               </div>
 
               {/* Picture — 302×302, radius 24, gold hairline + soft glow, image inset 10px */}
