@@ -23,7 +23,7 @@ export function ServiceCard({
 }: Props) {
   return (
     <article
-      className={`group relative flex flex-col items-center gap-4 overflow-hidden p-4 md:max-h-[229px] md:hover:max-h-[380px]
+      className={`group relative flex flex-col items-center gap-4 overflow-hidden p-4 pb-6 md:max-h-[241px]
         bg-surface border border-border-medium rounded-sm
         transition-all duration-200
         hover:border-[#E5C15D] hover:shadow-[0_0_20px_rgba(229,193,93,0.25)]
@@ -54,20 +54,6 @@ export function ServiceCard({
           <li key={index}>{item}</li>
         ))}
       </ul>
-
-      {/* Small Button — rises from the bottom on hover (Figma: 183×36, #C9A84C, radius 2) */}
-      <div
-        aria-hidden={!ctaHref}
-        className="w-full max-h-0 overflow-hidden opacity-0 transition-all duration-200 group-hover:max-h-[60px] group-hover:opacity-100"
-      >
-        <a
-          href={ctaHref}
-          tabIndex={-1}
-          className="mx-auto mt-6 flex h-9 w-[183px] max-w-full translate-y-3 items-center justify-center rounded-[2px] bg-[#C9A84C] px-3 text-center text-[14px] font-normal leading-5 text-black transition-transform duration-200 group-hover:translate-y-0"
-        >
-          هماهنگی گفتگوی اختصاصی
-        </a>
-      </div>
     </article>
   );
 }
