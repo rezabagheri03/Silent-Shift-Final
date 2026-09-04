@@ -14,8 +14,24 @@ const base = (size: number) => ({
 export function MenuIcon({ size = 24, ...p }: IconProps) {
   return (
     <svg {...base(size)} {...p}>
-      <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <path d="M0 6h10M0 12h24M0 18h14" stroke="currentColor" strokeWidth="2" />
     </svg>
+  );
+}
+
+export function MenuCloseIcon({ size = 24, open = false, className, style }: { size?: number; open?: boolean; className?: string; style?: React.CSSProperties }) {
+  const k = size / 24;
+  const lineBase = 'absolute left-0 bg-current will-change-transform';
+  const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
+  const tIcon = `transform 0.5s ${EASE}, opacity 0.2s ease`;
+  return (
+    <span aria-hidden className={`relative block overflow-visible ${className ?? ''}`} style={{ width: size, height: size, ...style }}>
+      <span aria-hidden className={lineBase} style={{ top: 5 * k, width: 10 * k, height: 2 * k, transformOrigin: '5px center', transform: open ? `translateY(${6 * k}px) rotate(45deg)` : 'translateY(0px) rotate(0deg)', transition: tIcon, opacity: open ? 0 : 1 }} />
+      <span aria-hidden className={lineBase} style={{ top: 11 * k, width: 24 * k, height: 2 * k, transformOrigin: 'center', transform: 'translateY(0px)', transition: tIcon, opacity: open ? 0 : 1 }} />
+      <span aria-hidden className={lineBase} style={{ top: 17 * k, width: 14 * k, height: 2 * k, transformOrigin: '7px center', transform: open ? `translateY(${-6 * k}px) rotate(-45deg)` : 'translateY(0px) rotate(0deg)', transition: tIcon, opacity: open ? 0 : 1 }} />
+      <span aria-hidden className={lineBase} style={{ top: 11 * k, left: 3 * k, width: 18 * k, height: 2 * k, transformOrigin: 'center', transform: open ? 'rotate(45deg) scaleX(1)' : 'rotate(45deg) scaleX(0)', transition: tIcon, opacity: open ? 1 : 0 }} />
+      <span aria-hidden className={lineBase} style={{ top: 11 * k, left: 3 * k, width: 18 * k, height: 2 * k, transformOrigin: 'center', transform: open ? 'rotate(-45deg) scaleX(1)' : 'rotate(-45deg) scaleX(0)', transition: tIcon, opacity: open ? 1 : 0 }} />
+    </span>
   );
 }
 
@@ -270,6 +286,20 @@ export function AnchorIcon({ size = 20, ...p }: IconProps) {
         <path d="M19.6748 14.8768C20.3407 14.8003 21.0322 14.9638 21.5875 15.3411C22.255 15.7848 22.7199 16.5204 22.827 17.3157C22.9325 18.044 22.7405 18.8092 22.303 19.4002C21.8743 19.9884 21.2141 20.4037 20.4958 20.5259C19.7898 20.6526 19.0375 20.5002 18.4386 20.1034C17.7561 19.6614 17.2789 18.9158 17.1712 18.1082C17.0674 17.381 17.2588 16.6164 17.6975 16.0265C18.1596 15.3908 18.8935 14.9633 19.6748 14.8768Z" fill="currentColor" />
         <path d="M18.3355 21.8769C19.8508 21.5889 21.4553 21.6793 22.9019 22.2313C23.7078 22.5527 24.526 23.0271 24.9507 23.8152C25.1796 24.2164 25.1489 24.6891 25.1338 25.1328C25.0847 26.7619 24.824 28.3832 24.3686 29.9476C24.0728 30.9338 23.7106 31.9071 23.2067 32.8079C22.9817 33.1952 22.7362 33.6065 22.3243 33.8197C21.6563 34.1803 20.8822 34.2629 20.1354 34.288H19.8714C19.1894 34.2673 18.4952 34.1875 17.8634 33.9152C17.4013 33.7343 17.0876 33.3303 16.8521 32.9106C16.5044 32.3162 16.2304 31.6816 15.9904 31.037C15.2392 28.972 14.8597 26.7731 14.8574 24.5764C14.8541 23.924 15.2783 23.3603 15.7694 22.9719C16.5117 22.392 17.4197 22.0627 18.3355 21.8769Z" fill="currentColor" />
       </g>
+    </svg>
+  );
+}
+
+export function FilterIcon({ size = 20, ...p }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true" {...p}>
+      <path
+        d="M4 5h16l-6 7v6l-4 2v-8L4 5z"
+        stroke="currentColor"
+        strokeWidth={1.5}
+        strokeLinejoin="round"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }

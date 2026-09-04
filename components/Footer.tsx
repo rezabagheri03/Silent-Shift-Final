@@ -99,7 +99,7 @@ export default function Footer() {
                   type="submit"
                   onClick={submit}
                   disabled={status === "loading"}
-                  className="w-full xl:w-[100px] h-9 shrink-0 border border-[#C9A84C] rounded-[2px] bg-transparent px-3 py-2 text-[#C9A84C] text-[14px] leading-[20px] font-normal font-[IRANYekanXFaNum] cursor-pointer transition-colors duration-150 hover:bg-[#C9A84C] hover:text-black disabled:opacity-50"
+                  className="mx-auto w-[160px] xl:mx-0 xl:w-[100px] h-9 shrink-0 border border-[#C9A84C] rounded-[2px] bg-transparent px-3 py-2 text-[#C9A84C] text-[14px] leading-[20px] font-normal font-[IRANYekanXFaNum] cursor-pointer transition-colors duration-150 hover:bg-[#C9A84C] hover:text-black disabled:opacity-50"
                 >
                   {status === "loading" ? "..." : "عضویت"}
                 </button>
@@ -159,7 +159,7 @@ export default function Footer() {
           </div>
 
           {/* Social Icons */}
-          <div className="flex flex-row xl:flex-col items-center justify-center xl:justify-between w-full xl:w-[173px] h-auto xl:h-[217px] gap-4 xl:gap-0">
+          <div className="flex flex-row xl:flex-col items-center justify-center xl:justify-between w-full xl:w-[173px] h-auto xl:h-[217px] gap-[19px] xl:gap-0 -mt-6 mb-2 xl:mt-0 xl:mb-0">
             {SOCIALS.map(({ href, label, icon: Icon, size }) => (
               <a
                 key={label}

@@ -32,8 +32,9 @@ function ArticleStoryCard({
   href = "/articles",
   size = "small",
   className = "",
-}: CardContent & { size?: "large" | "small"; className?: string }) {
+}: CardContent & { size?: "large" | "small" | "mobile"; className?: string }) {
   const isLarge = size === "large";
+  const isMobile = size === "mobile";
 
   return (
     <Link
@@ -54,7 +55,11 @@ function ArticleStoryCard({
 
       <div
         dir="rtl"
-        className="relative z-10 flex w-full flex-col gap-[22px] p-6 text-right"
+        className={
+          isMobile
+            ? "relative z-10 flex w-full flex-1 flex-col justify-end gap-[22px] p-6 text-right"
+            : "relative z-10 flex w-full flex-col gap-[22px] p-6 text-right"
+        }
       >
         <span className="text-[16px] font-normal leading-7 text-[#AA8C2C]">
           — {label}
@@ -63,9 +68,11 @@ function ArticleStoryCard({
         <div className="flex flex-col gap-[7px]">
           <h3
             className={
-              isLarge
-                ? "text-[24px] font-semibold leading-8 text-white"
-                : "text-[20px] font-medium leading-7 text-white"
+              isMobile
+                ? "text-[18px] font-medium leading-7 text-white"
+                : isLarge
+                  ? "text-[24px] font-semibold leading-8 text-white"
+                  : "text-[20px] font-medium leading-7 text-white"
             }
           >
             {title}
@@ -73,9 +80,11 @@ function ArticleStoryCard({
 
           <p
             className={
-              isLarge
-                ? "text-[16px] font-normal leading-7 text-[#52525B] line-clamp-2"
-                : "text-[14px] font-normal leading-5 text-[#52525B] line-clamp-2"
+              isMobile
+                ? "text-[14px] font-normal leading-5 text-[#52525B]"
+                : isLarge
+                  ? "text-[16px] font-normal leading-7 text-[#52525B] line-clamp-2"
+                  : "text-[14px] font-normal leading-5 text-[#52525B] line-clamp-2"
             }
           >
             {subtitle}
@@ -85,7 +94,7 @@ function ArticleStoryCard({
         {/* Meta row — gold arrow pinned to the LEFT corner; times stay right */}
         <div
           dir="ltr"
-          className="flex w-full flex-row items-center justify-between gap-6"
+          className="hidden w-full flex-row items-center justify-between gap-6 md:flex"
         >
           <ArrowUpLeftIcon
             size={16}
@@ -102,6 +111,19 @@ function ArticleStoryCard({
             </span>
           </div>
         </div>
+
+        {/* Figma mobile meta row: date · dot · read time, no arrow */}
+        {isMobile && (
+          <div dir="rtl" className="flex w-full flex-row items-center justify-start gap-6">
+            <span className="text-[14px] font-normal leading-5 text-[#52525B]">
+              {date}
+            </span>
+            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#52525B]" />
+            <span className="text-[14px] font-normal leading-5 text-[#52525B]">
+              {readTime} دقیقه مطالعه
+            </span>
+          </div>
+        )}
       </div>
     </Link>
   );
@@ -163,13 +185,13 @@ export default function ArticlesSection({ articles }: Props) {
 
   return (
     <section className="flex w-full flex-col gap-8">
-      <div className="relative flex items-end justify-between">
-        <h2 className="w-full text-center text-m-h2 text-text-primary md:text-d-h2">
+      <div className="relative flex items-center justify-between md:flex-row md:items-end">
+        <h2 className="flex-1 text-right text-m-h2 text-text-primary md:w-full md:flex-none md:text-center md:text-d-h2">
           روایت‌ها
         </h2>
         <Link
           href="/articles"
-          className="absolute left-0 top-1/2 -translate-y-1/2 text-d-body-md text-text-secondary underline transition-colors hover:text-brand"
+          className="static shrink-0 text-d-body-md text-text-secondary underline transition-colors hover:text-brand md:absolute md:left-0 md:top-1/2 md:-translate-y-1/2"
         >
           تمام روایت‌ها
         </Link>
@@ -195,7 +217,7 @@ export default function ArticlesSection({ articles }: Props) {
         </div>
       </div>
 
-      <div className="md:hidden" style={{ paddingLeft: 24, paddingRight: 24 }}>
+      <div className="md:hidden overflow-hidden">
         <div
           ref={scrollRef}
           onScroll={(e) => {
@@ -214,7 +236,7 @@ export default function ArticlesSection({ articles }: Props) {
             });
             setActiveIdx(nearest);
           }}
-          className="no-scrollbar flex snap-x overflow-x-auto"
+          className="no-scrollbar flex snap-x snap-mandatory overflow-x-auto"
           role="region"
           aria-label="روایت‌ها"
         >
@@ -222,23 +244,28 @@ export default function ArticlesSection({ articles }: Props) {
             <div
               data-article-slide
               key={i}
-              className="w-full shrink-0 snap-start"
-              style={{ height: 410, paddingRight: 16 }}
+              className="w-full shrink-0 snap-center"
+              style={{ height: 279 }}
             >
-              <ArticleStoryCard
-                {...card}
-                size={i === 0 ? "large" : "small"}
-                className="h-full"
-              />
+              <div className="mx-auto h-full" style={{ width: 327 }}>
+                <ArticleStoryCard
+                  {...card}
+                  size="mobile"
+                  className="h-full"
+                />
+              </div>
             </div>
           ))}
         </div>
-        <CarouselDots
-          count={cards.length}
-          active={activeIdx}
-          onSelect={scrollTo}
-          label="مقاله"
-        />
+        <div className="mt-4 flex justify-center" dir="ltr">
+          <CarouselDots
+            count={cards.length}
+            active={activeIdx}
+            onSelect={scrollTo}
+            label="مقاله"
+            variant="figma"
+          />
+        </div>
       </div>
     </section>
   );

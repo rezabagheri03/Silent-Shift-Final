@@ -40,7 +40,9 @@ export default function PodcastPLPClient({
 
   const [page, setPage] = useState(initialPage);
   const [sort, setSort] = useState<SortMode>(initialSort);
-  const [tag, setTag] = useState<string | undefined>(initialTag);
+  const [selectedTags, setSelectedTags] = useState<string[]>(
+    initialTag ? [initialTag] : []
+  );
 
   const [list, setList] = useState<Paginated<Podcast> | null>(initialList);
   const [items, setItems] = useState<Podcast[]>(initialList.items);
@@ -63,7 +65,7 @@ export default function PodcastPLPClient({
     setError(null);
     setPage(1);
     const q = new URLSearchParams({ page: "1", sort, limit: "10" });
-    if (tag) q.set("tag", tag);
+    for (const t of selectedTags) q.append("tag", t);
     apiGet<Paginated<Podcast>>(`/api/podcasts?${q}`, { signal: controller.signal })
       .then((data) => {
         setList(data);
@@ -76,7 +78,7 @@ export default function PodcastPLPClient({
         setLoading(false);
       });
     return () => controller.abort();
-  }, [sort, tag]);
+  }, [sort, selectedTags]);
 
   // T19: mirror filters/pagination into the URL (shareable links, sane back/refresh).
   // Skips the initial render so unknown query params (e.g. utm_*) survive until interaction.
@@ -86,10 +88,10 @@ export default function PodcastPLPClient({
     const q = new URLSearchParams();
     if (page > 1) q.set("page", String(page));
     if (sort !== "new") q.set("sort", sort);
-    if (tag) q.set("tag", tag);
+    for (const t of selectedTags) q.append("tag", t);
     const qs = q.toString();
     window.history.replaceState(null, "", qs ? `?${qs}` : window.location.pathname);
-  }, [page, sort, tag]);
+  }, [page, sort, selectedTags]);
 
   async function loadMore() {
     if (!list || page >= list.total_pages || loadingMore) return;
@@ -98,7 +100,7 @@ export default function PodcastPLPClient({
     setError(null);
     try {
       const q = new URLSearchParams({ page: String(next), sort, limit: "10" });
-      if (tag) q.set("tag", tag);
+      for (const t of selectedTags) q.append("tag", t);
       const data = await apiGet<Paginated<Podcast>>(`/api/podcasts?${q}`);
       setList(data);
       setItems((prev) => [...prev, ...data.items]);
@@ -122,10 +124,11 @@ export default function PodcastPLPClient({
       <div className="flex flex-col gap-4 pt-2">
         <SortFilter
           tags={tags}
-          tag={tag}
+          selectedTags={selectedTags}
           sort={sort}
           onChange={(n) => {
-            if ("tag" in n) setTag(n.tag);
+            if ("tags" in n && n.tags) setSelectedTags(n.tags);
+            else if ("tag" in n) setSelectedTags(n.tag ? [n.tag] : []);
             if ("sort" in n && n.sort) setSort(n.sort);
           }}
         />

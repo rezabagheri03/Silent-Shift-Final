@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
   const { page, limit } = parsePagination(searchParams);
   const result = listPodcasts({
     category: searchParams.get("category") ?? undefined,
-    tag: searchParams.get("tag") ?? undefined,
+    tags: searchParams.getAll("tag").map((t) => t.trim()).filter(Boolean),
     sort: parseSort(searchParams.get("sort")),
     q: searchParams.get("q") ?? undefined,
     page,

@@ -48,8 +48,8 @@ function removeHistoryItem(visitedAt: number) {
 
 type Suggestion = { kind: "podcast" | "article"; slug: string; title: string };
 
-export default function HeaderSearch() {
-  const [focused, setFocused] = useState(false);
+export default function HeaderSearch({ autoFocus = false, onNavigate }: { autoFocus?: boolean; onNavigate?: () => void } = {}) {
+  const [focused, setFocused] = useState(autoFocus);
   const [q, setQ] = useState("");
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
@@ -58,6 +58,10 @@ export default function HeaderSearch() {
 
   const rootRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (autoFocus) inputRef.current?.focus();
+  }, [autoFocus]);
 
   useEffect(() => {
     setHistory(loadHistory());
@@ -111,16 +115,20 @@ export default function HeaderSearch() {
     };
   }, [q]);
 
-  // Click-outside + Escape close
+  // Click-outside + Escape close (mobile: also close the header search)
   useEffect(() => {
     if (!focused) return;
+    const dismiss = () => {
+      setFocused(false);
+      onNavigate?.();
+    };
     const onMouse = (event: MouseEvent) => {
       const target = event.target as Node | null;
-      if (target && !rootRef.current?.contains(target)) setFocused(false);
+      if (target && !rootRef.current?.contains(target)) dismiss();
     };
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        setFocused(false);
+        dismiss();
         inputRef.current?.blur();
       }
     };
@@ -169,7 +177,7 @@ export default function HeaderSearch() {
                 <Link
                   key={`${item.kind}-${item.slug}`}
                   href={item.kind === "podcast" ? `/podcasts/${item.slug}` : `/articles/${item.slug}`}
-                  onClick={() => setFocused(false)}
+                  onClick={() => { setFocused(false); onNavigate?.(); }}
                   className="flex items-center justify-start gap-[7px] text-right"
                 >
                   <SearchIcon size={20} className="shrink-0 text-white" />
@@ -187,7 +195,7 @@ export default function HeaderSearch() {
                       <ClockIcon size={18} className="shrink-0 text-text-secondary" />
                       <Link
                         href={item.kind === "podcast" ? `/podcasts/${item.slug}` : `/articles/${item.slug}`}
-                        onClick={() => setFocused(false)}
+                        onClick={() => { setFocused(false); onNavigate?.(); }}
                         className="truncate text-[14px] leading-5 text-text-secondary hover:text-white"
                       >
                         {item.title}
@@ -211,7 +219,7 @@ export default function HeaderSearch() {
                     <Link
                       key={`${item.kind}-${item.slug}`}
                       href={item.kind === "podcast" ? `/podcasts/${item.slug}` : `/articles/${item.slug}`}
-                      onClick={() => setFocused(false)}
+                      onClick={() => { setFocused(false); onNavigate?.(); }}
                       className="flex items-center justify-start gap-[7px] text-right"
                     >
                       <SearchIcon size={20} className="shrink-0 text-white" />

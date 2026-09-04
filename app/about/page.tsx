@@ -55,7 +55,7 @@ export default function AboutPage() {
       </section>
 
       {/* Figma 1:1098: 3 cards, 24px gap */}
-      <section className="grid md:grid-cols-3" style={{ columnGap: 24 }}>{PILLARS.map((p) => <PillarCard key={p.title} {...p} />)}</section>
+      <section className="grid gap-8 md:grid-cols-3 md:gap-0" style={{ columnGap: 24 }}>{PILLARS.map((p) => <PillarCard key={p.title} {...p} />)}</section>
 
       {/* Figma Slogan: pale-gold quote + gold hairline rule, left-aligned block */}
       <blockquote className="flex max-w-4xl mx-auto flex-row items-center gap-[22px] py-8 md:py-14">

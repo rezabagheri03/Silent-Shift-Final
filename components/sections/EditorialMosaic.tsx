@@ -38,9 +38,10 @@ function MosaicCard({
 }: {
   article: Article;
   className?: string;
-  size?: "large" | "small";
+  size?: "large" | "small" | "mobile";
 }) {
   const isLarge = size === "large";
+  const isMobile = size === "mobile";
   const category = article.category_name || "روایت ویژه";
   const date = formatPersianDate(article.published_at);
   const mins = getReadTimeMinutes(article);
@@ -94,9 +95,9 @@ function MosaicCard({
             className="w-full"
             style={{
               margin: 0,
-              fontSize: isLarge ? 24 : 20,
-              lineHeight: isLarge ? "32px" : "28px",
-              fontWeight: isLarge ? 600 : 500,
+              fontSize: isMobile ? 18 : isLarge ? 24 : 20,
+              lineHeight: isMobile ? "28px" : isLarge ? "32px" : "28px",
+              fontWeight: isMobile ? 500 : isLarge ? 600 : 500,
               color: "#FFFFFF",
               textAlign: "right",
             }}
@@ -109,19 +110,31 @@ function MosaicCard({
               className="w-full line-clamp-2"
               style={{
                 margin: 0,
-                fontSize: isLarge ? 16 : 14,
-                lineHeight: isLarge ? "28px" : "20px",
+                fontSize: 14,
+                lineHeight: "20px",
                 fontWeight: 400,
                 color: "#52525B",
                 textAlign: "right",
               }}
             >
-              {truncate(article.excerpt, isLarge ? 160 : 110)}
+              {truncate(article.excerpt, 110)}
             </p>
           ) : null}
         </div>
 
-        {/* Meta row — gold arrow pinned to the LEFT corner on hover (landing principle) */}
+        {/* Figma mobile meta row: date · dot · read time, no arrow */}
+        {isMobile ? (
+          <div dir="rtl" className="flex w-full flex-row items-center justify-start" style={{ gap: 24 }}>
+            <span className="text-[14px] font-normal leading-5 text-[#52525B]">
+              {date}
+            </span>
+            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#52525B]" />
+            <span className="text-[14px] font-normal leading-5 text-[#52525B]">
+              {mins} دقیقه مطالعه
+            </span>
+          </div>
+        ) : (
+        /* Meta row — gold arrow pinned to the LEFT corner on hover (landing principle) */
         <div
           dir="ltr"
           className="flex w-full flex-row items-center justify-between gap-6"
@@ -141,6 +154,7 @@ function MosaicCard({
             </span>
           </div>
         </div>
+        )}
       </div>
     </article>
   );
@@ -308,8 +322,8 @@ export function EditorialMosaic({
         )}
       </div>
 
-      {/* Mobile carousel */}
-      <div className="md:hidden" style={{ paddingLeft: 24, paddingRight: 24 }}>
+      {/* Mobile carousel (Figma 1:1711): 364-wide cards with 8px gaps, centered dots */}
+      <div className="overflow-hidden md:hidden">
         <div
           ref={scrollRef}
           onScroll={(e) => {
@@ -328,30 +342,36 @@ export function EditorialMosaic({
             });
             setActiveIdx(nearest);
           }}
-          className="no-scrollbar flex snap-x overflow-x-auto"
+          className="no-scrollbar flex snap-x snap-mandatory overflow-x-auto"
           role="region"
           aria-label={title || eyebrow}
         >
-          {items.map((article, i) => (
+          {items.map((article) => (
             <div
               data-slide
               key={article.id}
-              className="shrink-0 snap-start"
-              style={{ height: 410, minWidth: "100%", maxWidth: "100%" }}
+              className="w-full shrink-0 snap-center"
+              style={{ height: 279 }}
             >
-              <MosaicCard
-                article={article}
-                size={i === 0 ? "large" : "small"}
-              />
+              <div className="mx-auto h-full" style={{ width: 327 }}>
+                <MosaicCard
+                  article={article}
+                  size="mobile"
+                  className="h-full"
+                />
+              </div>
             </div>
           ))}
         </div>
-        <CarouselDots
-          count={items.length}
-          active={activeIdx}
-          onSelect={scrollTo}
-          label={title || eyebrow}
-        />
+        <div className="mt-4 flex justify-center" dir="ltr">
+          <CarouselDots
+            count={items.length}
+            active={activeIdx}
+            onSelect={scrollTo}
+            label={title || eyebrow}
+            variant="figma"
+          />
+        </div>
       </div>
     </section>
   );

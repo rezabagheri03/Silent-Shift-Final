@@ -17,12 +17,13 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
   const query = await searchParams;
   const page = Math.max(1, Number(Array.isArray(query.page) ? query.page[0] : query.page) || 1);
   const sort: SortMode = (Array.isArray(query.sort) ? query.sort[0] : query.sort) === "popular" ? "popular" : "new";
-  const tagValue = Array.isArray(query.tag) ? query.tag[0] : query.tag;
-  const tag = tagValue?.trim() || undefined;
+  const tagValues = Array.isArray(query.tag) ? query.tag : query.tag ? [query.tag] : [];
+  const tags = tagValues.map((t) => t.trim()).filter(Boolean);
+  const tag = tags[0];
 
   return (
     <PodcastPLPClient
-      initialList={listPodcasts({ page, sort, tag, limit: 10 })}
+      initialList={listPodcasts({ page, sort, tags, limit: 10 })}
       initialFeatured={getLatestPodcast()}
       initialTags={listTags()}
       initialArticles={listArticles({ limit: 5 }).items}
