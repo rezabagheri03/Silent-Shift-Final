@@ -296,7 +296,7 @@ export function FilterIcon({ size = 20, ...p }: IconProps) {
       <path
         d="M4 5h16l-6 7v6l-4 2v-8L4 5z"
         stroke="currentColor"
-        strokeWidth={1.8}
+        strokeWidth={1.5}
         strokeLinejoin="round"
         strokeLinecap="round"
       />
