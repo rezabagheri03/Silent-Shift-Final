@@ -11,7 +11,6 @@ import {
   CastboxIcon,
   AnchorIcon,
 } from "@/components/ui/Icons";
-import SearchPopover from "./SearchPopover";
 import HeaderSearch from "./HeaderSearch";
 
 const NAV_ITEMS = [
@@ -35,6 +34,22 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [searchMounted, setSearchMounted] = useState(false);
+  const [searchVisible, setSearchVisible] = useState(false);
+
+  // Mount → fade/scale in on next frame; fade/scale out → unmount (mobile only)
+  useEffect(() => {
+    if (searchOpen) {
+      setSearchMounted(true);
+      setSearchVisible(false);
+      const frame = requestAnimationFrame(() => requestAnimationFrame(() => setSearchVisible(true)));
+      return () => cancelAnimationFrame(frame);
+    }
+    if (!searchMounted) return;
+    setSearchVisible(false);
+    const timer = setTimeout(() => setSearchMounted(false), 200);
+    return () => clearTimeout(timer);
+  }, [searchOpen, searchMounted]);
 
   // The drawer renders beneath the sticky header, so the morphing icon stays
   // visible the whole time — both animations run together, nothing gets covered.
@@ -84,7 +99,7 @@ export default function Header() {
           <button onClick={() => (menuOpen ? closeMenu() : openMenu())} aria-label={menuOpen ? "بستن منو" : "باز کردن منو"} aria-expanded={menuOpen} aria-controls="mobile-nav-drawer" className="w-8 h-8 shrink-0 flex items-center justify-center text-white">
             <MenuCloseIcon size={24} open={menuOpen} />
           </button>
-          <span dir="ltr" className="text-[24px] font-semibold leading-8 text-[#C9A84C]">SILENT SHIFT</span>
+          <Link href="/" aria-label="خانه" dir="ltr" className="text-[24px] font-semibold leading-8 text-[#C9A84C]">SILENT SHIFT</Link>
           <div className="relative">
             <button
               data-search-trigger
@@ -92,13 +107,17 @@ export default function Header() {
               aria-label="جستجو"
               aria-expanded={searchOpen}
               aria-controls="site-search-popover"
-              className={`w-8 h-8 flex items-center justify-center text-[#F5F5F5] transition-colors hover:text-white ${searchOpen ? "text-brand" : ""}`}
+              className={`w-8 h-8 items-center justify-center text-[#F5F5F5] transition-all duration-200 hover:text-white ${searchOpen ? "hidden" : "flex"}`}
             >
               <SearchIcon size={24} />
             </button>
-            {searchOpen && (
-              <div id="site-search-popover">
-                <SearchPopover open={searchOpen} onClose={() => setSearchOpen(false)} />
+            {searchMounted && (
+              <div
+                id="site-search-popover"
+                aria-hidden={!searchVisible}
+                className={`absolute right-10 top-1/2 w-[280px] max-w-[calc(100vw-140px)] -translate-y-1/2 transition-all duration-200 ease-out md:hidden ${searchVisible ? "translate-x-0 scale-100 opacity-100" : "pointer-events-none translate-x-6 scale-95 opacity-0"}`}
+              >
+                <HeaderSearch autoFocus onNavigate={() => setSearchOpen(false)} />
               </div>
             )}
           </div>
