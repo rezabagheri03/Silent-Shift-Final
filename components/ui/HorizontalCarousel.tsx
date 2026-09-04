@@ -69,7 +69,9 @@ export function HorizontalCarousel({ children, ariaLabel, itemMinWidth = 320 }: 
           </div>
         ))}
       </div>
-      <CarouselDots count={count} active={activeIdx} onSelect={scrollTo} label={ariaLabel || "مورد"} />
+      <div className="mt-4 flex justify-center" dir="ltr">
+        <CarouselDots count={count} active={activeIdx} onSelect={scrollTo} label={ariaLabel || "مورد"} variant="figma" />
+      </div>
     </div>
   );
 }
