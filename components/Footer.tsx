@@ -60,7 +60,7 @@ export default function Footer() {
             <div className="w-full xl:w-[414px] flex justify-center xl:justify-start">
               <Link href="/" aria-label="خانه">
                 <img
-                  src="/brand/logo-cropped.webp"
+                  src="/brand/logo-new.png"
                   alt="Silent Shift"
                   width={1254}
                   height={1254}

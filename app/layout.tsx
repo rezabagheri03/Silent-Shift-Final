@@ -26,12 +26,11 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
   icons: {
     icon: [
-      { url: "/brand/logo-cropped.webp", type: "image/webp" },
-      { url: "/brand/logo-cropped.png", type: "image/png" },
+      { url: "/brand/logo-new.png", type: "image/png" },
     ],
-    shortcut: ["/brand/logo-cropped.png"],
+    shortcut: ["/brand/logo-new.png"],
     apple: [
-      { url: "/brand/logo-cropped.png" },
+      { url: "/brand/logo-new.png" },
     ],
   },
 };
@@ -45,7 +44,7 @@ const siteGraph = JSON.stringify({
       "@id": `${SITE}/#org`,
       name: "Silent Shift",
       url: SITE,
-      logo: `${SITE}/brand/logo-cropped.png`,
+      logo: `${SITE}/brand/logo-new.png`,
     },
     {
       "@type": "Person",
