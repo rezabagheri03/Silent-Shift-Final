@@ -89,7 +89,7 @@ export default function Header() {
             })}
           </nav>
           <Link href="/" aria-label="خانه" className="w-[82px] h-[68px] shrink-0 flex items-center justify-center">
-            <img src="/brand/logo-cropped.webp" alt="Silent Shift" width={1254} height={1254} className="w-full h-full object-contain" />
+            <img src="/brand/logo-new.png" alt="Silent Shift" width={1254} height={1254} className="w-full h-full object-contain" />
           </Link>
         </div>
       </header>
