@@ -66,7 +66,7 @@ export function PodCard({ podcast, className = "" }: Props) {
 
       <Link href={`/podcasts/${podcast.slug}`} className="shrink-0" aria-label={podcast.title}>
         <img
-          src={podcast.cover_url || "/design/podcast-cover.webp"}
+          src={podcast.cover_url || "/Logo.svg"}
           alt=""
           className="shrink-0 w-[100px] h-[100px] rounded-md object-cover"
         />

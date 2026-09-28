@@ -280,7 +280,7 @@ export default function SearchPopover({
                   className="flex items-center gap-3 py-2 rounded-md hover:bg-surface"
                 >
                   <img
-                    src={recommendedPodcast.cover_url || "/design/podcast-cover.webp"}
+                    src={recommendedPodcast.cover_url || "/Logo.svg"}
                     alt=""
                     className="w-9 h-9 rounded-full object-cover shrink-0"
                   />

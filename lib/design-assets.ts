@@ -42,7 +42,7 @@ export function podcastCover(podcast: Pick<Podcast, "id" | "slug" | "cover_url">
 export const designAssets = {
   hero: "/design/hero.webp",
   profile: "/design/profile.webp",
-  podcastCover: "/design/podcast-cover.webp",
+  podcastCover: "/Logo.svg",
   articleHero: "/design/feature-fog.webp",
   podcastHero: "/design/ripple.webp",
   contactHero: "/design/contact-hero.webp",

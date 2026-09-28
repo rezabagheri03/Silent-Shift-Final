@@ -78,7 +78,7 @@ export default function Player() {
                 style={{ boxShadow: "0 0 24px 2px rgba(212,175,55,0.15)" }}
               >
                 <img
-                  src={player.track.cover_url || "/design/podcast-cover.webp"}
+                  src={player.track.cover_url || "/Logo.svg"}
                   alt=""
                   className="h-full w-full object-cover"
                 />
@@ -212,7 +212,7 @@ export default function Player() {
 
               <div className="shrink-0 p-1">
                 <img
-                  src={player.track.cover_url || "/design/podcast-cover.webp"}
+                  src={player.track.cover_url || "/Logo.svg"}
                   alt=""
                   className="h-[92px] w-[92px] rounded object-cover"
                 />

@@ -26,6 +26,7 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
   icons: {
     icon: [
+      { url: "/Logo%20Round.svg", type: "image/svg+xml" },
       { url: "/brand/logo-new.png", type: "image/png" },
     ],
     shortcut: ["/brand/logo-new.png"],

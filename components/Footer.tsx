@@ -60,11 +60,11 @@ export default function Footer() {
             <div className="w-full xl:w-[414px] flex justify-center xl:justify-start">
               <Link href="/" aria-label="خانه">
                 <img
-                  src="/brand/logo-new.png"
+                  src="/Logo.svg"
                   alt="Silent Shift"
-                  width={1254}
-                  height={1254}
-                  className="w-[91px] h-[67.7px] object-contain"
+                  width={1520}
+                  height={1520}
+                  className="w-[110px] h-[82px] object-contain"
                 />
               </Link>
             </div>
