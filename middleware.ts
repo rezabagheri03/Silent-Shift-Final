@@ -12,8 +12,15 @@ function isMarkdownRequest(req: NextRequest) {
 
 function isDocumentRequest(req: NextRequest) {
   if (req.method !== "GET" && req.method !== "HEAD") return false;
+  if (/\.[a-z0-9]+$/i.test(req.nextUrl.pathname)) return false;
   const accept = req.headers.get("accept") || "";
-  return accept.includes("text/html") || req.headers.get("rsc") === "1" || req.nextUrl.searchParams.has("_rsc");
+  // CDN origin fetches often send */*, not text/html.
+  return (
+    accept.includes("text/html") ||
+    accept.includes("*/*") ||
+    req.headers.get("rsc") === "1" ||
+    req.nextUrl.searchParams.has("_rsc")
+  );
 }
 
 function appendVary(res: NextResponse, values: string[]) {
@@ -55,8 +62,7 @@ function withSecurityHeaders(res: NextResponse, req: NextRequest) {
   if (!pathname.startsWith("/api")) {
     res.headers.set("Content-Language", "fa-IR");
     if (isDocumentRequest(req)) {
-      // Next marks dynamic HTML "private, no-store", but Cloudflare ignored it and
-      // cached the shared HTML. These explicit CDN headers keep Cloudflare out.
+      // Cloudflare's cache rule must honour these; it currently caches some HTML anyway.
       res.headers.set("Cache-Control", "private, no-store, max-age=0, must-revalidate");
       res.headers.set("CDN-Cache-Control", "no-store");
       res.headers.set("Cloudflare-CDN-Cache-Control", "no-store");
