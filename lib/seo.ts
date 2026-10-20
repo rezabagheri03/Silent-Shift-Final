@@ -47,6 +47,13 @@ export function isoDuration(totalSeconds: number): string | undefined {
   return `PT${h ? `${h}H` : ""}${m ? `${m}M` : ""}${sec || (!h && !m) ? `${sec}S` : ""}`;
 }
 
+type OgImage = {
+  url: string;
+  width: number;
+  height: number;
+  alt: string;
+};
+
 type PageMeta = {
   title: string;
   description?: string;
@@ -56,8 +63,11 @@ type PageMeta = {
   absoluteTitle?: boolean;
   type?: "website" | "article";
   publishedTime?: string;
+  modifiedTime?: string;
   section?: string;
   tags?: string[];
+  /** Page-specific 1200×630 card; defaults to the site card. */
+  image?: OgImage;
 };
 
 /** Page metadata with canonical, og:url and Twitter fields that actually match the page. */
@@ -68,9 +78,12 @@ export function pageMetadata({
   absoluteTitle,
   type = "website",
   publishedTime,
+  modifiedTime,
   section,
   tags,
+  image,
 }: PageMeta): Metadata {
+  const ogImage = image ?? DEFAULT_OG;
   return {
     title: absoluteTitle ? { absolute: title } : title,
     description,
@@ -85,8 +98,9 @@ export function pageMetadata({
       type,
       siteName: "Silent Shift",
       locale: "fa_IR",
-      images: [DEFAULT_OG],
+      images: [ogImage],
       ...(publishedTime ? { publishedTime } : {}),
+      ...(modifiedTime ? { modifiedTime } : {}),
       ...(section ? { section } : {}),
       ...(tags?.length ? { tags } : {}),
     },
@@ -94,7 +108,7 @@ export function pageMetadata({
       card: "summary_large_image",
       title,
       description,
-      images: [DEFAULT_OG.url],
+      images: [ogImage.url],
     },
   };
 }

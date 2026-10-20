@@ -1,5 +1,7 @@
 import { listPodcasts } from "@/lib/repos/podcasts";
 import { listArticles } from "@/lib/repos/articles";
+import { listCategories } from "@/lib/repos/categories";
+import { listTags } from "@/lib/repos/tags";
 import { getContentUpdatedAt } from "@/lib/repos/content";
 import { SITE_URL, toIso } from "@/lib/seo";
 
@@ -20,8 +22,8 @@ export function GET() {
   const pods = listPodcasts({ limit: 500 }).items;
   const arts = listArticles({ limit: 500 }).items;
   const contentUpdated = toIso(getContentUpdatedAt());
-  const lastPod = toIso(pods.reduce<string | undefined>((max, p) => (!max || p.published_at > max ? p.published_at : max), undefined));
-  const lastArt = toIso(arts.reduce<string | undefined>((max, a) => (!max || a.published_at > max ? a.published_at : max), undefined));
+  const lastPod = toIso(pods.reduce<string | undefined>((max, p) => (!max || (p.updated_at || p.published_at) > max ? p.updated_at || p.published_at : max), undefined));
+  const lastArt = toIso(arts.reduce<string | undefined>((max, a) => (!max || (a.updated_at || a.published_at) > max ? a.updated_at || a.published_at : max), undefined));
 
   const urls: { loc: string; lastmod?: string }[] = [
     { loc: `${base}/`, lastmod: contentUpdated },
@@ -29,9 +31,13 @@ export function GET() {
     { loc: `${base}/articles`, lastmod: lastArt },
     { loc: `${base}/about`, lastmod: contentUpdated },
     { loc: `${base}/contact` },
-    { loc: `${base}/faq` },
-    ...pods.map((p) => ({ loc: `${base}/podcasts/${p.slug}`, lastmod: toIso(p.published_at) })),
-    ...arts.map((a) => ({ loc: `${base}/articles/${a.slug}`, lastmod: toIso(a.published_at) })),
+    { loc: `${base}/faq`, lastmod: contentUpdated },
+    { loc: `${base}/categories`, lastmod: contentUpdated },
+    { loc: `${base}/tags`, lastmod: contentUpdated },
+    ...pods.map((p) => ({ loc: `${base}/podcasts/${p.slug}`, lastmod: toIso(p.updated_at || p.published_at) })),
+    ...arts.map((a) => ({ loc: `${base}/articles/${a.slug}`, lastmod: toIso(a.updated_at || a.published_at) })),
+    ...listCategories().map((c) => ({ loc: `${base}/categories/${c.slug}`, lastmod: contentUpdated })),
+    ...listTags().map((t) => ({ loc: `${base}/tags/${t.slug}`, lastmod: contentUpdated })),
   ];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

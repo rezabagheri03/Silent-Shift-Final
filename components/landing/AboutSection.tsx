@@ -32,6 +32,8 @@ export default function AboutSection({ bio }: Props) {
           <img
             src={designAssets.profile}
             alt="برزو ذاکری"
+            width={572}
+            height={515}
             className="relative w-full h-full object-cover object-bottom"
           />
         </div>
@@ -49,6 +51,8 @@ export default function AboutSection({ bio }: Props) {
           <img
             src={designAssets.profile}
             alt="برزو ذاکری"
+            width={572}
+            height={515}
             className="relative w-full h-full object-cover object-bottom"
           />
         </div>

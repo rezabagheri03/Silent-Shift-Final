@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { createHash } from "node:crypto";
 import { listPodcasts } from "@/lib/repos/podcasts";
 import { SITE_URL, absoluteUrl, toIso } from "@/lib/seo";
 
@@ -61,6 +62,23 @@ function itunesDuration(totalSeconds: number): string | undefined {
   return h > 0 ? `${h}:${pad(m)}:${pad(sec)}` : `${m}:${pad(sec)}`;
 }
 
+/** Stable Podcasting 2.0 channel GUID for this feed URL. */
+function podcastGuid(): string {
+  const hex = createHash("sha1").update(`${SITE_URL}/rss.xml`).digest("hex");
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-5${hex.slice(13, 16)}-a${hex.slice(17, 20)}-${hex.slice(20, 32)}`;
+}
+
+function contentEncoded(episode: { title: string; summary: string | null; description: string | null; transcript: string | null }, link: string): string {
+  const summary = plain(episode.summary || episode.description) || episode.title;
+  const transcript = plain(episode.transcript);
+  const html = [
+    `<p>${escapeXml(summary)}</p>`,
+    transcript ? `<h2>متن اپیزود</h2><p>${escapeXml(transcript)}</p>` : "",
+    `<p><a href="${escapeXml(link)}">مشاهده صفحه اپیزود</a></p>`,
+  ].join("");
+  return html.replace(/]]>/g, "]]]]><![CDATA[>");
+}
+
 function ownerEmail(): string | undefined {
   const explicit = process.env.PODCAST_OWNER_EMAIL?.trim();
   if (explicit) return explicit;
@@ -94,7 +112,8 @@ export function GET() {
       <itunes:summary>${summary}</itunes:summary>
       <itunes:image href="${escapeXml(cover)}" />
       <itunes:explicit>false</itunes:explicit>
-      <itunes:episodeType>full</itunes:episodeType>${
+      <itunes:episodeType>full</itunes:episodeType>
+      <content:encoded><![CDATA[${contentEncoded(episode, link)}]]></content:encoded>${
         episode.episode_number ? `\n      <itunes:episode>${episode.episode_number}</itunes:episode>` : ""
       }${duration ? `\n      <itunes:duration>${duration}</itunes:duration>` : ""}
     </item>`;
@@ -102,11 +121,13 @@ export function GET() {
     .join("\n");
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:podcast="https://podcastindex.org/namespace/1.0" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Silent Shift</title>
     <link>${SITE_URL}</link>
     <atom:link href="${SITE_URL}/rss.xml" rel="self" type="application/rss+xml" />
+    <podcast:guid>${podcastGuid()}</podcast:guid>
+    <podcast:medium>podcast</podcast:medium>
     <description>${escapeXml(description)}</description>
     <language>fa-ir</language>
     <copyright>© ${new Date().getFullYear()} Silent Shift</copyright>

@@ -124,7 +124,7 @@ export function updatePodcast(
   const keys = safeColumnNames(rawKeys, PODCAST_COLUMNS);
   const setSql = keys.map((k) => `${k} = @${k}`).join(", ");
   const info = db
-    .prepare(`UPDATE podcasts SET ${setSql} WHERE id = @id`)
+    .prepare(`UPDATE podcasts SET ${setSql}, updated_at = CURRENT_TIMESTAMP WHERE id = @id`)
     .run({ ...patch, id });
   return info.changes > 0;
 }
@@ -220,10 +220,10 @@ export function createPodcast(input: {
   const info = db
     .prepare(
       `INSERT INTO podcasts (slug, title, subtitle, description, summary, cover_url, audio_url,
-         duration_seconds, episode_number, producer, category_id, apple_url, castbox_url, transcript, published_at)
+         duration_seconds, episode_number, producer, category_id, apple_url, castbox_url, transcript, published_at, updated_at)
        VALUES (@slug, @title, @subtitle, @description, @summary, @cover_url, @audio_url,
          @duration_seconds, @episode_number, @producer, @category_id, @apple_url, @castbox_url, @transcript,
-         COALESCE(@published_at, CURRENT_TIMESTAMP))`
+         COALESCE(@published_at, CURRENT_TIMESTAMP), COALESCE(@published_at, CURRENT_TIMESTAMP))`
     )
     .run({
       slug: input.slug,

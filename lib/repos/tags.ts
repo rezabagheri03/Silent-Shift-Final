@@ -6,6 +6,10 @@ export function listTags(): Tag[] {
   return db.prepare("SELECT * FROM tags ORDER BY name ASC").all() as Tag[];
 }
 
+export function getTagBySlug(slug: string): Tag | null {
+  return (db.prepare("SELECT * FROM tags WHERE slug = ?").get(slug) as Tag | undefined) ?? null;
+}
+
 export function getPodcastTags(podcastId: number): Tag[] {
   return db
     .prepare(

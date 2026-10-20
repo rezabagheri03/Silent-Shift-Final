@@ -70,13 +70,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const podcast = getPodcastBySlug(slug);
-  if (!podcast) return { title: "پیدا نشد" };
+  if (!podcast) notFound();
   return pageMetadata({
     title: podcast.title,
     description: podcast.description ?? podcast.summary ?? undefined,
     path: `/podcasts/${podcast.slug}`,
     type: "article",
     publishedTime: toIso(podcast.published_at),
+    modifiedTime: toIso(podcast.updated_at || podcast.published_at),
     section: podcast.category_name ?? undefined,
     tags: podcast.tags?.map((tag) => tag.name),
   });
@@ -103,6 +104,8 @@ export default async function PodcastPage({
   const paragraphs = summaryParagraphs(podcast.summary || podcast.description);
   const lead = paragraphs[0] ?? "";
   const rest = paragraphs.slice(1).join("\n\n");
+  const pageUrl = `${SITE}/podcasts/${podcast.slug}`;
+  const modified = toIso(podcast.updated_at || podcast.published_at);
 
   const quoteText =
     "ما برای پیدا کردن مسیر درست، نیازی به سرعت بیشتر نداریم؛ نیاز به سکوتی داریم تا بتوانیم صدای مسیر را بشنویم.";
@@ -118,8 +121,9 @@ export default async function PodcastPage({
             "@type": "PodcastEpisode",
             name: podcast.title,
             description: podcast.description || undefined,
-            url: `${SITE}/podcasts/${podcast.slug}`,
+            url: pageUrl,
             datePublished: toIso(podcast.published_at),
+            dateModified: modified,
             episodeNumber: podcast.episode_number || undefined,
             duration: isoDuration(podcast.duration_seconds),
             image: PODCAST_COVER,
@@ -142,6 +146,29 @@ export default async function PodcastPage({
           }).replace(/</g, "\\u003c"),
         }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "@id": pageUrl,
+            url: pageUrl,
+            name: podcast.title,
+            description: podcast.description || podcast.summary || undefined,
+            inLanguage: "fa-IR",
+            isPartOf: { "@id": `${SITE}/#website` },
+            primaryImageOfPage: {
+              "@type": "ImageObject",
+              url: PODCAST_COVER,
+              width: 3000,
+              height: 3000,
+            },
+            datePublished: toIso(podcast.published_at),
+            dateModified: modified,
+          }).replace(/</g, "\\u003c"),
+        }}
+      />
       <Breadcrumb
         items={[
           { label: "خانه", href: "/" },
@@ -156,17 +183,19 @@ export default async function PodcastPage({
         <img
           src={designAssets.podcastHero}
           alt=""
+          width={1408}
+          height={768}
           className="absolute inset-0 h-full w-full object-cover opacity-10"
         />
 
         <div className="mx-auto max-w-page px-page-x-m md:px-12 xl:px-page-x-d">
           <div
             dir="ltr"
-            className="relative flex min-h-0 flex-row items-center justify-end gap-8 py-9 md:min-h-[619px] md:gap-24"
+            className="relative flex min-h-0 flex-col items-center justify-end gap-8 py-9 lg:min-h-[619px] lg:flex-row lg:gap-24"
           >
           <div
             dir="ltr"
-            className="hidden min-w-0 max-w-[441px] flex-1 flex-col items-stretch gap-6 md:flex"
+            className="hidden min-w-0 max-w-[441px] flex-1 flex-col items-stretch gap-6 lg:flex"
           >
             {adjacent.length > 0 && (
               <>
@@ -214,10 +243,12 @@ export default async function PodcastPage({
             )}
           </div>
 
-          <div dir="ltr" className="flex w-full shrink-0 flex-col items-end gap-8 md:w-[663px]">
+          <div dir="ltr" className="flex w-full shrink-0 flex-col items-end gap-8 lg:w-[663px]">
             <img
               src={podcast.cover_url || designAssets.podcastCover}
               alt={podcast.title}
+              width={1024}
+              height={1024}
               className="h-[195px] w-[195px] rounded border border-brand object-cover shadow-[0_0_25px_rgba(201,168,76,0.25)]"
               style={{ borderWidth: 0.5 }}
             />
@@ -236,7 +267,7 @@ export default async function PodcastPage({
                 {podcast.tags.map((tag) => (
                   <Link
                     key={tag.id ?? tag.slug ?? tag.name}
-                    href={`/podcasts?tag=${encodeURIComponent(tag.slug ?? tag.name)}`}
+                    href={`/tags/${encodeURIComponent(tag.slug ?? tag.name)}`}
                     className="inline-flex items-center justify-center rounded px-2 py-1 text-[14px] leading-5 text-[#A1A1AA]"
                     style={{
                       background: "rgba(245, 245, 245, 0.15)",
@@ -259,7 +290,7 @@ export default async function PodcastPage({
 
       {/* Mobile recent */}
       {adjacent.length > 0 && (
-        <section className="flex flex-col gap-4 px-6 md:hidden" dir="ltr">
+        <section className="flex flex-col gap-4 px-6 md:px-12 lg:hidden" dir="ltr">
           <h2 className="w-full text-right text-[14px] leading-5 text-brand">اپیزود‌های اخیر</h2>
           <div className="flex w-full flex-col gap-2">
             {adjacent.slice(0, 3).map((item, index) => {
@@ -472,7 +503,7 @@ export default async function PodcastPage({
             </div>
           </div>
 
-          <div dir="rtl" className="hidden md:flex md:gap-[10px] md:justify-center">
+          <div dir="rtl" className="mx-auto hidden w-full max-w-[1188px] gap-[10px] md:grid md:grid-cols-2 xl:grid-cols-3">
             {related.map((item) => (
               <PodcastListCard key={item.id} podcast={item} />
             ))}

@@ -47,6 +47,8 @@ export default function AboutPage() {
           <img
             src={designAssets.profile}
             alt="برزو ذاکری"
+            width={572}
+            height={515}
             className="w-full max-w-[584px] aspect-[584/626] object-cover"
           />
         </div>

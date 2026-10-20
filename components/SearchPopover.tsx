@@ -282,6 +282,8 @@ export default function SearchPopover({
                   <img
                     src={recommendedPodcast.cover_url || "/Logo.svg"}
                     alt=""
+                    width={36}
+                    height={36}
                     className="w-9 h-9 rounded-full object-cover shrink-0"
                   />
                   <span className="min-w-0 flex-1">

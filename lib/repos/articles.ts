@@ -132,8 +132,9 @@ export function createArticle(input: {
 }): Article {
   const info = db
     .prepare(
-      `INSERT INTO articles (slug, title, excerpt, body, cover_url, author, category_id, read_time_minutes, published_at)
-       VALUES (@slug, @title, @excerpt, @body, @cover_url, @author, @category_id, @read_time_minutes, COALESCE(@published_at, CURRENT_TIMESTAMP))`
+      `INSERT INTO articles (slug, title, excerpt, body, cover_url, author, category_id, read_time_minutes, published_at, updated_at)
+       VALUES (@slug, @title, @excerpt, @body, @cover_url, @author, @category_id, @read_time_minutes,
+         COALESCE(@published_at, CURRENT_TIMESTAMP), COALESCE(@published_at, CURRENT_TIMESTAMP))`
     )
     .run({
       slug: input.slug,
@@ -178,7 +179,7 @@ export function updateArticle(
   const keys = safeColumnNames(rawKeys, ARTICLE_COLUMNS);
   const setSql = keys.map((k) => `${k} = @${k}`).join(", ");
   const info = db
-    .prepare(`UPDATE articles SET ${setSql} WHERE id = @id`)
+    .prepare(`UPDATE articles SET ${setSql}, updated_at = CURRENT_TIMESTAMP WHERE id = @id`)
     .run({ ...patch, id });
   return info.changes > 0;
 }

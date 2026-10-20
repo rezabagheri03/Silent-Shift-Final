@@ -20,6 +20,7 @@ export type Podcast = {
   transcript: string | null;
   play_count: number;
   published_at: string;
+  updated_at?: string | null;
   created_at: string;
   tags?: Tag[];
   chapters?: { id: number; title: string; start_seconds: number }[];
@@ -37,6 +38,7 @@ export type Article = {
   category_name?: string | null;
   view_count: number;
   published_at: string;
+  updated_at?: string | null;
   created_at: string;
   read_time_minutes?: number | null;
   tags?: Tag[];

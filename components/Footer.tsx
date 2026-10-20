@@ -12,6 +12,7 @@ import {
 const NAV = [
   { href: "/podcasts", label: "پادکست‌ها" },
   { href: "/articles", label: "روایت‌ها" },
+  { href: "/faq", label: "پرسش‌ها" },
   { href: "/about", label: "داستان من" },
   { href: "/contact", label: "ارتباط" },
 ];

@@ -24,6 +24,8 @@ export function FeaturedArticleCard({ article }: { article: Article }) {
       <img
         src={designAssets.articleHero}
         alt=""
+        width={1440}
+        height={804}
         className="absolute inset-0 h-full w-full object-cover opacity-40"
       />
 

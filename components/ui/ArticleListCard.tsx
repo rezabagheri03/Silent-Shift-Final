@@ -2,6 +2,8 @@ import Link from "next/link";
 import type { Article } from "@/lib/types";
 import { articleCover } from "@/lib/design-assets";
 import { truncate } from "@/lib/utils";
+import { estimateReadingTime } from "@/lib/reading-time";
+import { designSrcSet, imageDimensions } from "@/lib/responsive-images";
 
 type Props = { article: Article };
 
@@ -15,22 +17,6 @@ function formatCardDate(iso: string | null | undefined): string {
   } catch {
     return "";
   }
-}
-
-function getReadTimeMinutes(article: Article): number {
-  // Use the stored value if available
-  if (typeof article.read_time_minutes === "number" && article.read_time_minutes > 0) {
-    return Math.round(article.read_time_minutes);
-  }
-
-  // Estimate from the article body
-  const text = [article.title, article.excerpt, article.body]
-    .filter(Boolean)
-    .join(" ")
-    .replace(/<[^>]+>/g, " ")
-    .trim();
-  if (!text) return 1;
-  return Math.max(1, Math.round(text.split(/\s+/).filter(Boolean).length / 200));
 }
 
 function StarIcon({ size = 18 }: { size?: number }) {
@@ -79,8 +65,9 @@ const chipStyle: React.CSSProperties = {
 export function ArticleListCard({ article }: Props) {
   const href = `/articles/${article.slug}`;
   const cover = articleCover(article);
+  const [coverWidth, coverHeight] = imageDimensions(cover);
   const dateLabel = formatCardDate(article.published_at);
-  const mins = getReadTimeMinutes(article);
+  const mins = estimateReadingTime([article.title, article.excerpt, article.body].filter(Boolean).join(" "));
   const author = article.author || "برزو ذاکری";
   const category =
     article.category_name || article.tags?.[0]?.name || "توسعه فردی";
@@ -97,7 +84,11 @@ export function ArticleListCard({ article }: Props) {
       {/* Background */}
       <img
         src={cover}
+        srcSet={designSrcSet(cover)}
+        sizes="(min-width: 768px) 389px, 100vw"
         alt=""
+        width={coverWidth}
+        height={coverHeight}
         loading="lazy"
         decoding="async"
         className="absolute inset-0 h-full w-full object-cover"

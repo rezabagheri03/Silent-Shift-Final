@@ -1,3 +1,5 @@
+import fs from "node:fs";
+import path from "node:path";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -17,24 +19,33 @@ import { getArticleBySlug, getRelatedArticles, listArticles } from "@/lib/repos/
 import { getPodcastsByCategoryId } from "@/lib/repos/podcasts";
 import { listFaqs } from "@/lib/repos/faqs";
 import { designAssets } from "@/lib/design-assets";
-import { DEFAULT_OG, SITE_URL, pageMetadata, toIso } from "@/lib/seo";
+import { designSrcSet, imageDimensions } from "@/lib/responsive-images";
+import { DEFAULT_OG, SITE_URL, absoluteUrl, pageMetadata, toIso } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
 const SITE = SITE_URL;
 
+function articleOg(slug: string, title: string) {
+  const relative = `/og/articles/${slug}.jpg`;
+  if (!fs.existsSync(path.join(process.cwd(), "public", relative))) return undefined;
+  return { url: absoluteUrl(relative), width: 1200, height: 630, alt: title };
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const article = getArticleBySlug(slug);
-  if (!article) return { title: "پیدا نشد" };
+  if (!article) notFound();
   return pageMetadata({
     title: article.title,
     description: article.excerpt ?? undefined,
     path: `/articles/${article.slug}`,
     type: "article",
     publishedTime: toIso(article.published_at),
+    modifiedTime: toIso(article.updated_at || article.published_at),
     section: article.category_name ?? undefined,
     tags: article.tags?.map((tag) => tag.name),
+    image: articleOg(article.slug, article.title),
   });
 }
 
@@ -45,6 +56,11 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   const relatedArticles = getRelatedArticles(article.id, 3);
   const mosaicArticles = listArticles({ limit: 2 }).items;
   const faqs = listFaqs();
+  const pageUrl = `${SITE}/articles/${article.slug}`;
+  const modified = toIso(article.updated_at || article.published_at);
+  const ogImage = articleOg(article.slug, article.title) ?? DEFAULT_OG;
+  const heroCover = article.cover_url || designAssets.articleStage;
+  const [heroWidth, heroHeight] = imageDimensions(heroCover);
 
   return (
     <PageShell>
@@ -58,19 +74,45 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             "@type": "Article",
             headline: article.title,
             description: article.excerpt || undefined,
-            url: `${SITE}/articles/${article.slug}`,
+            url: pageUrl,
             datePublished: toIso(article.published_at),
-            image: [DEFAULT_OG.url],
+            dateModified: modified,
+            image: [ogImage.url],
             author: {
               "@type": "Person",
               "@id": `${SITE}/#person`,
               name: article.author || "برزو ذاکری",
+              url: `${SITE}/about`,
             },
             publisher: { "@id": `${SITE}/#org` },
-            mainEntityOfPage: `${SITE}/articles/${article.slug}`,
+            isPartOf: { "@id": pageUrl },
+            mainEntityOfPage: { "@id": pageUrl },
             articleSection: article.category_name || undefined,
             keywords: article.tags?.map((tag) => tag.name).join(", ") || undefined,
             inLanguage: "fa-IR",
+          }).replace(/</g, "\\u003c"),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "@id": pageUrl,
+            url: pageUrl,
+            name: article.title,
+            description: article.excerpt || undefined,
+            inLanguage: "fa-IR",
+            isPartOf: { "@id": `${SITE}/#website` },
+            primaryImageOfPage: {
+              "@type": "ImageObject",
+              url: ogImage.url,
+              width: ogImage.width,
+              height: ogImage.height,
+            },
+            datePublished: toIso(article.published_at),
+            dateModified: modified,
           }).replace(/</g, "\\u003c"),
         }}
       />
@@ -81,7 +123,15 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
       </section>
 
       <figure dir="ltr" className="w-full overflow-hidden rounded-sm">
-        <img src={article.cover_url || designAssets.articleStage} alt={article.title} className="block h-[481px] w-full object-cover" />
+        <img
+          src={heroCover}
+          srcSet={designSrcSet(heroCover)}
+          sizes="100vw"
+          alt={article.title}
+          width={heroWidth}
+          height={heroHeight}
+          className="block h-[481px] w-full object-cover"
+        />
       </figure>
 
       <article className="w-full flex flex-col gap-8">
@@ -135,7 +185,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             </div>
           </div>
 
-          <div className="hidden md:grid gap-4 md:grid-cols-3">{relatedArticles.map((item) => <ArticleListCard key={item.id} article={item} />)}</div>
+          <div className="hidden gap-4 md:grid md:grid-cols-2 xl:grid-cols-3">{relatedArticles.map((item) => <ArticleListCard key={item.id} article={item} />)}</div>
           <div className="md:hidden"><HorizontalCarousel ariaLabel="روایت‌های مرتبط" itemMinWidth={364}>{relatedArticles.map((item) => <ArticleListCard key={item.id} article={item} />)}</HorizontalCarousel></div>
         </section>
       )}

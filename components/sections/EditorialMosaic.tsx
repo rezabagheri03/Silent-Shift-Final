@@ -5,31 +5,10 @@ import { useEffect, useRef, useState } from "react";
 import type { Article } from "@/lib/types";
 import { articleCover } from "@/lib/design-assets";
 import { formatPersianDate, truncate } from "@/lib/utils";
+import { estimateReadingTime } from "@/lib/reading-time";
+import { designSrcSet, imageDimensions } from "@/lib/responsive-images";
 import { CarouselDots } from "@/components/ui/CarouselDots";
 import { ArrowUpLeftIcon } from "@/components/ui/Icons";
-
-type ArticleWithReadTime = Article & {
-  read_time_minutes?: number;
-  reading_time?: number;
-  reading_time_minutes?: number;
-  content?: string | null;
-  body?: string | null;
-};
-
-function getReadTimeMinutes(article: Article): number {
-  const a = article as ArticleWithReadTime;
-  const explicit = a.read_time_minutes ?? a.reading_time_minutes ?? a.reading_time;
-  if (typeof explicit === "number" && explicit > 0) return Math.round(explicit);
-
-  const text = [a.title, a.excerpt, a.content, a.body]
-    .filter(Boolean)
-    .join(" ")
-    .replace(/<[^>]+>/g, " ")
-    .trim();
-
-  if (!text) return 8;
-  return Math.max(1, Math.round(text.split(/\s+/).filter(Boolean).length / 200));
-}
 
 function MosaicCard({
   article,
@@ -44,7 +23,9 @@ function MosaicCard({
   const isMobile = size === "mobile";
   const category = article.category_name || "روایت ویژه";
   const date = formatPersianDate(article.published_at);
-  const mins = getReadTimeMinutes(article);
+  const mins = estimateReadingTime([article.title, article.excerpt, article.body].filter(Boolean).join(" "));
+  const cover = articleCover(article);
+  const [coverWidth, coverHeight] = imageDimensions(cover);
 
   return (
     <article
@@ -58,8 +39,12 @@ function MosaicCard({
     >
       {/* Figma mosaic principle: image fill at 30% (rest) → 40% (hover) */}
       <img
-        src={articleCover(article)}
+        src={cover}
+        srcSet={designSrcSet(cover)}
+        sizes="(min-width: 768px) 50vw, 100vw"
         alt=""
+        width={coverWidth}
+        height={coverHeight}
         className="absolute inset-0 h-full w-full object-cover opacity-30 transition-opacity duration-300 group-hover:opacity-40"
       />
       {/* black 20% overlay → #3C3C3C 20% on hover */}

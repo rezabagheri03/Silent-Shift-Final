@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Article } from "@/lib/types";
 import { formatPersianDate, truncate } from "@/lib/utils";
 import { articleCover } from "@/lib/design-assets";
+import { designSrcSet, imageDimensions } from "@/lib/responsive-images";
 
 type Props = {
   article: Article;
@@ -20,14 +21,20 @@ export function ArticleCard({
 }: Props) {
   const href = `/articles/${article.slug}`;
   const date = formatPersianDate(article.published_at);
+  const cover = articleCover(article);
+  const [coverWidth, coverHeight] = imageDimensions(cover);
 
   return (
     <article
       className={`group relative flex min-h-[460px] flex-col overflow-hidden rounded-lg border border-white/10 bg-black ${className}`}
     >
       <img
-        src={articleCover(article)}
+        src={cover}
+        srcSet={designSrcSet(cover)}
+        sizes="(min-width: 768px) 50vw, 100vw"
         alt={`تصویر روایت ${article.title}`}
+        width={coverWidth}
+        height={coverHeight}
         className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
         loading="lazy"
       />

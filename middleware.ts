@@ -1,7 +1,32 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifySessionEdge } from "@/lib/auth-edge";
 
-function withSecurityHeaders(res: NextResponse, pathname: string) {
+const FONT_PRELOADS = [
+  '</fonts/IRANYekanXFaNum-Regular.woff2>; rel=preload; as=font; type="font/woff2"; crossorigin',
+  '</fonts/IRANYekanXFaNum-Bold.woff2>; rel=preload; as=font; type="font/woff2"; crossorigin',
+].join(", ");
+
+function isMarkdownRequest(req: NextRequest) {
+  return req.method === "GET" && /\btext\/markdown\b/i.test(req.headers.get("accept") || "");
+}
+
+function isDocumentRequest(req: NextRequest) {
+  if (req.method !== "GET" && req.method !== "HEAD") return false;
+  const accept = req.headers.get("accept") || "";
+  return accept.includes("text/html") || req.headers.get("rsc") === "1" || req.nextUrl.searchParams.has("_rsc");
+}
+
+function appendVary(res: NextResponse, values: string[]) {
+  const current = (res.headers.get("Vary") || "")
+    .split(",")
+    .map((value) => value.trim())
+    .filter(Boolean);
+  const merged = Array.from(new Set([...current, ...values]));
+  res.headers.set("Vary", merged.join(", "));
+}
+
+function withSecurityHeaders(res: NextResponse, req: NextRequest) {
+  const pathname = req.nextUrl.pathname;
   res.headers.set("X-Content-Type-Options", "nosniff");
   res.headers.set("X-Frame-Options", "SAMEORIGIN");
   res.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
@@ -29,6 +54,18 @@ function withSecurityHeaders(res: NextResponse, pathname: string) {
   }
   if (!pathname.startsWith("/api")) {
     res.headers.set("Content-Language", "fa-IR");
+    if (isDocumentRequest(req)) {
+      // Next marks dynamic HTML "private, no-store", but Cloudflare ignored it and
+      // cached the shared HTML. These explicit CDN headers keep Cloudflare out.
+      res.headers.set("Cache-Control", "private, no-store, max-age=0, must-revalidate");
+      res.headers.set("CDN-Cache-Control", "no-store");
+      res.headers.set("Cloudflare-CDN-Cache-Control", "no-store");
+      appendVary(res, ["Accept", "RSC", "Next-Router-State-Tree", "Next-Router-Prefetch"]);
+      const existingLink = res.headers.get("Link");
+      res.headers.set("Link", existingLink ? `${existingLink}, ${FONT_PRELOADS}` : FONT_PRELOADS);
+    } else if (isMarkdownRequest(req)) {
+      appendVary(res, ["Accept"]);
+    }
   }
   if (pathname.startsWith("/admin") || pathname.startsWith("/api/admin")) {
     res.headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
@@ -58,6 +95,7 @@ function isSameOriginMutation(req: NextRequest) {
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+  const hasFileExtension = /\.[a-z0-9]+$/i.test(pathname);
 
   // In production, redirect plain HTTP to HTTPS (unless behind a TLS-terminating
   // proxy that already handles this — detected via x-forwarded-proto header).
@@ -67,14 +105,14 @@ export async function middleware(req: NextRequest) {
     if (proto && proto === "http" && !isBehindCloudflare && pathname !== "/api/health") {
       const host = req.headers.get("x-forwarded-host") || req.headers.get("host") || req.nextUrl.host;
       const url = new URL(`https://${host}${pathname}${req.nextUrl.search}`);
-      return withSecurityHeaders(NextResponse.redirect(url), pathname);
+      return withSecurityHeaders(NextResponse.redirect(url), req);
     }
   }
 
   if (!isSameOriginMutation(req)) {
     return withSecurityHeaders(
       NextResponse.json({ ok: false, error: "Cross-origin request rejected" }, { status: 403 }),
-      pathname
+      req
     );
   }
 
@@ -85,11 +123,30 @@ export async function middleware(req: NextRequest) {
       const url = req.nextUrl.clone();
       url.pathname = "/admin/login";
       url.searchParams.set("from", pathname);
-      return withSecurityHeaders(NextResponse.redirect(url), pathname);
+      return withSecurityHeaders(NextResponse.redirect(url), req);
     }
   }
 
-  return withSecurityHeaders(NextResponse.next(), pathname);
+  // One canonical slug casing: /Podcasts/Foo → 301 /podcasts/foo.
+  if (
+    pathname !== pathname.toLowerCase() &&
+    !hasFileExtension &&
+    !pathname.startsWith("/api") &&
+    !pathname.startsWith("/_next")
+  ) {
+    const url = req.nextUrl.clone();
+    url.pathname = pathname.toLowerCase();
+    return withSecurityHeaders(NextResponse.redirect(url, 301), req);
+  }
+
+  // Markdown for agents: same URL, text/markdown body.
+  if (isMarkdownRequest(req) && !pathname.startsWith("/md") && !pathname.startsWith("/api") && !pathname.startsWith("/admin") && !hasFileExtension) {
+    const url = req.nextUrl.clone();
+    url.pathname = pathname === "/" ? "/md" : `/md${pathname}`;
+    return withSecurityHeaders(NextResponse.rewrite(url), req);
+  }
+
+  return withSecurityHeaders(NextResponse.next(), req);
 }
 
 export const config = {

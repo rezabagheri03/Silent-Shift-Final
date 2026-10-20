@@ -5,6 +5,7 @@ import { useRef, useState } from "react";
 import type { Podcast } from "@/lib/types";
 import { podcastCover } from "@/lib/design-assets";
 import { truncate } from "@/lib/utils";
+import { designSrcSet, imageDimensions } from "@/lib/responsive-images";
 import { CarouselDots } from "@/components/ui/CarouselDots";
 
 export function PodcastMosaic({ podcasts }: { podcasts: Podcast[] }) {
@@ -251,6 +252,8 @@ function MosaicCard({
   const tag = getTag(item);
   const minutes = getReadMinutes(item);
   const dateLabel = getDateLabel(item);
+  const cover = podcastCover(item);
+  const [coverWidth, coverHeight] = imageDimensions(cover);
 
   return (
     <article
@@ -263,8 +266,12 @@ function MosaicCard({
       }}
     >
       <img
-        src={podcastCover(item)}
+        src={cover}
+        srcSet={designSrcSet(cover)}
+        sizes="(min-width: 768px) 50vw, 100vw"
         alt=""
+        width={coverWidth}
+        height={coverHeight}
         className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
       />
       <div

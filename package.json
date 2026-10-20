@@ -11,6 +11,7 @@
     "test": "tsx --test tests/*.test.ts",
     "seed": "tsx scripts/seed.ts",
     "seed:force": "tsx scripts/seed.ts --force",
+    "seo:indexnow": "node scripts/indexnow.mjs",
     "lint:js": "next lint"
   },
   "dependencies": {

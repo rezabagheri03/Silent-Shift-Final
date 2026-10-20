@@ -1,10 +1,16 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { designAssets } from "@/lib/design-assets";
+
+export const metadata: Metadata = {
+  title: "صفحه پیدا نشد",
+  robots: { index: false, follow: false },
+};
 
 export default function NotFound() {
   return (
     <main id="main" tabIndex={-1} className="relative min-h-screen overflow-hidden bg-bg flex items-end justify-center outline-none">
-      <img src={designAssets.notFound} alt="" className="absolute inset-0 w-full h-full object-cover" />
+      <img src={designAssets.notFound} alt="" width={1920} height={815} className="absolute inset-0 w-full h-full object-cover" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10" />
       <div className="absolute z-10 top-[66%] left-1/2 -translate-x-1/2 text-[38px] md:text-[56px] leading-none font-bold text-brand whitespace-nowrap">خطا ۴۰۴</div>
       <section className="relative z-10 pb-[7vh] md:pb-[5vh] flex flex-col items-center gap-4 text-center px-6">

@@ -8,11 +8,20 @@ import { pageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = pageMetadata({
-  title: "روایت‌ها",
-  description: "روایت‌ها و نوشته‌های Silent Shift درباره رشد فردی، مهاجرت و تغییرات ماندگار.",
-  path: "/articles",
-});
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams?: Promise<{ page?: string; sort?: string; tag?: string | string[]; q?: string }>;
+}): Promise<Metadata> {
+  const sp = (await searchParams) ?? {};
+  const page = Math.max(1, Number(sp.page) || 1);
+  const filtered = Boolean(sp.tag || sp.q || sp.sort);
+  return pageMetadata({
+    title: page > 1 ? `روایت‌ها — صفحه ${page}` : "روایت‌ها",
+    description: "روایت‌ها و نوشته‌های Silent Shift درباره رشد فردی، مهاجرت و تغییرات ماندگار.",
+    path: page > 1 && !filtered ? `/articles?page=${page}` : "/articles",
+  });
+}
 
 export default async function ArticlesPage({
   searchParams,

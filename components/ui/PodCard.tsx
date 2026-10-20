@@ -68,6 +68,8 @@ export function PodCard({ podcast, className = "" }: Props) {
         <img
           src={podcast.cover_url || "/Logo.svg"}
           alt=""
+          width={100}
+          height={100}
           className="shrink-0 w-[100px] h-[100px] rounded-md object-cover"
         />
       </Link>

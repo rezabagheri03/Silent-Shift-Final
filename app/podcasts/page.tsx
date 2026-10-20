@@ -8,11 +8,21 @@ import type { SortMode } from "@/lib/types";
 import { PODCAST_COVER, SITE_URL, pageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = pageMetadata({
-  title: "پادکست‌ها",
-  description: "اپیزودهای سایلنت شیفت درباره مکث، تغییر آرام، مهاجرت و توسعه فردی.",
-  path: "/podcasts",
-});
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}): Promise<Metadata> {
+  const query = await searchParams;
+  const page = Math.max(1, Number(Array.isArray(query.page) ? query.page[0] : query.page) || 1);
+  const filtered = Boolean(query.tag || query.q || query.sort);
+  return pageMetadata({
+    title: page > 1 ? `پادکست‌ها — صفحه ${page}` : "پادکست‌ها",
+    description: "اپیزودهای سایلنت شیفت درباره مکث، تغییر آرام، مهاجرت و توسعه فردی.",
+    path: page > 1 && !filtered ? `/podcasts?page=${page}` : "/podcasts",
+  });
+}
 
 export default async function PodcastPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const query = await searchParams;

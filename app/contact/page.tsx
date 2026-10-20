@@ -46,6 +46,8 @@ export default function ContactPage() {
         <img
           src={designAssets.contactHero}
           alt=""
+          width={1920}
+          height={815}
           className="w-full h-[300px] md:h-[533px] object-cover opacity-30"
         />
         <div className="absolute inset-0 flex items-center justify-center px-6 text-center">

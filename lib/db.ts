@@ -216,6 +216,15 @@ const MIGRATIONS: { id: string; sql: string }[] = [
       CREATE UNIQUE INDEX IF NOT EXISTS idx_subscribers_unsubscribe_token ON newsletter_subscribers(unsubscribe_token);
     `,
   },
+  {
+    id: "010_content_updated_at",
+    sql: `
+      ALTER TABLE podcasts ADD COLUMN updated_at TEXT;
+      ALTER TABLE articles ADD COLUMN updated_at TEXT;
+      UPDATE podcasts SET updated_at = COALESCE(published_at, created_at) WHERE updated_at IS NULL;
+      UPDATE articles SET updated_at = COALESCE(published_at, created_at) WHERE updated_at IS NULL;
+    `,
+  },
 ];
 
 function migrate(d: Database.Database) {

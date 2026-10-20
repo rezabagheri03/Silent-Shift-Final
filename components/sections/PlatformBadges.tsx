@@ -28,7 +28,7 @@ export function PlatformBadges({
           aria-label="Apple Podcasts"
           className={`group ${reverseMobile ? "order-2 md:order-1" : "order-1"} h-14 md:h-16 min-w-[184px] md:min-w-[200px] rounded-lg border border-border bg-transparent px-5 flex items-center justify-center gap-3 hover:border-brand transition-colors`}
         >
-          <img src="/brand/apple-podcasts.svg" alt="" className="w-9 h-9 md:w-10 md:h-10" />
+          <img src="/brand/apple-podcasts.svg" alt="" width={40} height={40} className="w-9 h-9 md:w-10 md:h-10" />
           <span className="text-left leading-tight text-white">
             <small className="block text-[9px] uppercase tracking-wide text-text-secondary">Listen on</small>
             <strong className="block text-[16px] md:text-[18px] font-medium">Podcasts</strong>
@@ -41,7 +41,7 @@ export function PlatformBadges({
           aria-label="Castbox"
           className={`group ${reverseMobile ? "order-1 md:order-2" : "order-2"} h-14 md:h-16 min-w-[184px] md:min-w-[200px] rounded-lg border border-border bg-transparent px-5 flex items-center justify-center gap-3 hover:border-brand transition-colors`}
         >
-          <img src="/brand/castbox.svg" alt="" className="w-9 h-9 md:w-10 md:h-10" />
+          <img src="/brand/castbox.svg" alt="" width={40} height={40} className="w-9 h-9 md:w-10 md:h-10" />
           <strong className="text-white text-[17px] md:text-[19px] font-medium">Castbox</strong>
         </a>
       </div>

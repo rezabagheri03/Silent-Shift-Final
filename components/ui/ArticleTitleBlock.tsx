@@ -1,30 +1,8 @@
 import type { Article } from "@/lib/types";
 import { formatPersianDate } from "@/lib/utils";
+import { estimateReadingTime } from "@/lib/reading-time";
 
-type ArticleExtra = Article & {
-  author?: string | null;
-  author_name?: string | null;
-  read_time_minutes?: number;
-  reading_time?: number;
-  reading_time_minutes?: number;
-  content?: string | null;
-  body?: string | null;
-};
-
-function getReadTimeMinutes(article: Article): number {
-  const a = article as ArticleExtra;
-  const explicit =
-    a.read_time_minutes ?? a.reading_time_minutes ?? a.reading_time;
-  if (typeof explicit === "number" && explicit > 0) return Math.round(explicit);
-
-  const text = [a.title, a.excerpt, a.content, a.body]
-    .filter(Boolean)
-    .join(" ")
-    .replace(/<[^>]+>/g, " ")
-    .trim();
-  if (!text) return 8;
-  return Math.max(1, Math.round(text.split(/\s+/).filter(Boolean).length / 200));
-}
+type ArticleExtra = Article & { author_name?: string | null };
 
 function UserIcon({ size = 18 }: { size?: number }) {
   return (
@@ -67,7 +45,7 @@ export function ArticleTitleBlock({ article }: { article: Article }) {
   const a = article as ArticleExtra;
   const author = a.author_name || a.author || "برزو ذاکری";
   const date = formatPersianDate(article.published_at);
-  const mins = getReadTimeMinutes(article);
+  const mins = estimateReadingTime([article.title, article.excerpt, article.body].filter(Boolean).join(" "));
 
   return (
     <header dir="rtl" className="flex w-full flex-col items-center gap-6 text-center md:gap-8">

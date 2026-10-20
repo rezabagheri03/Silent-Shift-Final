@@ -66,6 +66,7 @@ const siteGraph = JSON.stringify({
     },
     {
       "@type": "WebSite",
+      "@id": `${SITE}/#website`,
       url: SITE,
       name: "Silent Shift",
       alternateName: "سایلنت شیفت",

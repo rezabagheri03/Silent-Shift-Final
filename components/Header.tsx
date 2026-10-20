@@ -17,6 +17,7 @@ const NAV_ITEMS = [
   { href: "/", label: "خانه" },
   { href: "/podcasts", label: "پادکست‌ها" },
   { href: "/articles", label: "روایت‌ها" },
+  { href: "/faq", label: "سوالات متداول" },
   { href: "/about", label: "داستان من" },
   { href: "/contact", label: "ارتباط" },
 ];

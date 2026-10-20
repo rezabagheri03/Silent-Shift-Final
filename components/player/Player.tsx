@@ -80,6 +80,8 @@ export default function Player() {
                 <img
                   src={player.track.cover_url || "/Logo.svg"}
                   alt=""
+                  width={302}
+                  height={302}
                   className="h-full w-full object-cover"
                 />
               </div>
@@ -214,6 +216,8 @@ export default function Player() {
                 <img
                   src={player.track.cover_url || "/Logo.svg"}
                   alt=""
+                  width={92}
+                  height={92}
                   className="h-[92px] w-[92px] rounded object-cover"
                 />
               </div>

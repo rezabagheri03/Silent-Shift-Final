@@ -8,6 +8,8 @@ export function GET() {
 Allow: /
 Disallow: /admin
 Disallow: /api/
+Disallow: /search
+Disallow: /md/
 Sitemap: ${base}/sitemap.xml
 `;
   return new Response(body, { headers: { "Content-Type": "text/plain", "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400" } });

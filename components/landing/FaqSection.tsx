@@ -26,6 +26,8 @@ export default function FaqSection({ faqs }: Props) {
         <img
           src="/design/profile.webp"
           alt=""
+          width={572}
+          height={515}
           className="w-[150px] h-[150px] object-contain object-bottom"
         />
         <div className="flex flex-col gap-3 text-right w-full">

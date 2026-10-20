@@ -27,7 +27,7 @@ function ContactCard({ children }: { children?: React.ReactNode }) {
   return (
     <div className="relative overflow-hidden rounded-lg border border-white/15 bg-transparent px-6 py-8 xl:px-8 xl:py-9 flex flex-col items-center gap-5 text-center">
       <span className="absolute -left-[405px] -top-[343.56px] w-[623px] h-[623px] rounded-full bg-white/10 blur-[110px]" aria-hidden />
-      <img src={designAssets.profile} alt="تصویر برزو ذاکری" className="relative w-[132px] h-[132px] xl:w-[150px] xl:h-[150px] object-contain object-bottom" />
+      <img src={designAssets.profile} alt="تصویر برزو ذاکری" width={572} height={515} className="relative w-[132px] h-[132px] xl:w-[150px] xl:h-[150px] object-contain object-bottom" />
       <div className="relative flex flex-col gap-3 max-w-md">
         <h3 className="text-d-h4 text-text-primary">رزرو یک تماس ۳۰ دقیقه‌ای</h3>
         <p className="text-d-body-md text-text-secondary leading-relaxed">

@@ -55,6 +55,8 @@ export function FeaturedPodcastCard({ podcast }: { podcast: Podcast }) {
       <img
         src={designAssets.podcastHero}
         alt=""
+        width={1408}
+        height={768}
         className="absolute inset-0 w-full h-full object-cover opacity-5"
       />
 

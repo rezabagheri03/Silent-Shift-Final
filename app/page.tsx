@@ -12,7 +12,7 @@ import { getLatestPodcast } from "@/lib/repos/podcasts";
 import { listArticles } from "@/lib/repos/articles";
 import { listFaqs } from "@/lib/repos/faqs";
 import { getAllContent } from "@/lib/repos/content";
-import { pageMetadata } from "@/lib/seo";
+import { SITE_URL, pageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
@@ -31,6 +31,22 @@ export default function LandingPage() {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "@id": `${SITE_URL}/#webpage`,
+            url: `${SITE_URL}/`,
+            name: "Silent Shift — مکثی برای شروعی دوباره",
+            description: "پادکست‌ها، روایت‌ها و همراهی برزو ذاکری برای بازنگری در باورها و شروعی تازه.",
+            inLanguage: "fa-IR",
+            isPartOf: { "@id": `${SITE_URL}/#website` },
+            about: { "@id": `${SITE_URL}/#org` },
+          }).replace(/</g, "\\u003c"),
+        }}
+      />
       <Header />
 
       <main id="main" tabIndex={-1} className="outline-none">

@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Podcast } from "@/lib/types";
 import { podcastCover } from "@/lib/design-assets";
 import { truncate } from "@/lib/utils";
+import { designSrcSet, imageDimensions } from "@/lib/responsive-images";
 
 type Props = { podcast: Podcast };
 
@@ -35,6 +36,7 @@ function StarIcon({ size = 14 }: { size?: number }) {
  */
 export function PodcastListCard({ podcast }: Props) {
   const cover = podcastCover(podcast);
+  const [coverWidth, coverHeight] = imageDimensions(cover);
   const dateLabel = formatCardDate(podcast.published_at);
   const producer = podcast.producer || "برزوا ذاکری";
   const category =
@@ -44,7 +46,7 @@ export function PodcastListCard({ podcast }: Props) {
   return (
     <article
       dir="rtl"
-      className="group relative flex w-full flex-col overflow-hidden md:w-[389.33px] md:shrink-0"
+      className="group relative mx-auto flex w-full max-w-[389.33px] flex-col overflow-hidden"
       style={{
         height: 460,
         minHeight: 460,
@@ -54,7 +56,11 @@ export function PodcastListCard({ podcast }: Props) {
       {/* Full-bleed cover */}
       <img
         src={cover}
+        srcSet={designSrcSet(cover)}
+        sizes="(min-width: 768px) 389px, 100vw"
         alt=""
+        width={coverWidth}
+        height={coverHeight}
         loading="lazy"
         decoding="async"
         className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"

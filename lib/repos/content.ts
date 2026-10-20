@@ -30,10 +30,16 @@ export function getAllContent(): Record<string, string> {
   return Object.fromEntries(rows.map((r) => [r.key, r.value]));
 }
 
-/** Most recent edit across editable page copy, for sitemap lastmod. */
+/** Most recent content edit, including CMS page copy and articles/episodes, for sitemap lastmod. */
 export function getContentUpdatedAt(): string | null {
-  const row = db.prepare("SELECT MAX(updated_at) AS updated_at FROM site_content").get() as {
-    updated_at: string | null;
-  };
+  const row = db
+    .prepare(
+      `SELECT MAX(updated_at) AS updated_at FROM (
+         SELECT MAX(updated_at) AS updated_at FROM site_content
+         UNION ALL SELECT MAX(updated_at) FROM articles
+         UNION ALL SELECT MAX(updated_at) FROM podcasts
+       )`
+    )
+    .get() as { updated_at: string | null };
   return row?.updated_at ?? null;
 }

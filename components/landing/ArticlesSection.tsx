@@ -5,6 +5,8 @@ import { useEffect, useRef, useState } from "react";
 import type { Article } from "@/lib/types";
 import { articleCover } from "@/lib/design-assets";
 import { formatPersianDate } from "@/lib/utils";
+import { estimateReadingTime } from "@/lib/reading-time";
+import { designSrcSet, imageDimensions } from "@/lib/responsive-images";
 import { CarouselDots } from "@/components/ui/CarouselDots";
 import { ArrowUpLeftIcon } from "@/components/ui/Icons";
 
@@ -35,6 +37,7 @@ function ArticleStoryCard({
 }: CardContent & { size?: "large" | "small" | "mobile"; className?: string }) {
   const isLarge = size === "large";
   const isMobile = size === "mobile";
+  const [imageWidth, imageHeight] = imageDimensions(image);
 
   return (
     <Link
@@ -45,7 +48,11 @@ function ArticleStoryCard({
       {/* Figma: image fill at 30% opacity (rest) → 40% (hover) */}
       <img
         src={image}
+        srcSet={designSrcSet(image)}
+        sizes="(min-width: 768px) 50vw, 327px"
         alt=""
+        width={imageWidth}
+        height={imageHeight}
         className="absolute inset-0 h-full w-full object-cover opacity-30 transition-opacity duration-300 group-hover:opacity-40"
         loading="lazy"
       />
@@ -138,7 +145,7 @@ export default function ArticlesSection({ articles }: Props) {
     title: a.title,
     subtitle: a.excerpt || "",
     date: a.published_at ? formatPersianDate(a.published_at) : "",
-    readTime: a.read_time_minutes ? String(a.read_time_minutes) : "",
+    readTime: String(estimateReadingTime([a.title, a.excerpt, a.body].filter(Boolean).join(" "))),
     image: articleCover?.(a) || "/design/ripple.webp",
     href: `/articles/${a.slug}`,
   }));
