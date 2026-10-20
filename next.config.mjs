@@ -2,6 +2,9 @@
 const nextConfig = {
   reactStrictMode: true,
   serverExternalPackages: ["better-sqlite3"],
+  // Dynamic pages otherwise stream <title>/<meta> into <body>; social crawlers
+  // (and Cloudflare's shared HTML cache) then see no head metadata at all.
+  htmlLimitedBots: /./,
   // T27: fonts never change → immutable; imagery may be replaced in place → 1 day + SWR week
   async headers() {
     const day = "public, max-age=86400, stale-while-revalidate=604800";
@@ -11,6 +14,7 @@ const nextConfig = {
       { source: "/design/:path*", headers: [{ key: "Cache-Control", value: day }] },
       { source: "/images/:path*", headers: [{ key: "Cache-Control", value: day }] },
       { source: "/icons/:path*", headers: [{ key: "Cache-Control", value: day }] },
+      { source: "/og/:path*", headers: [{ key: "Cache-Control", value: day }] },
       { source: "/uploads/:path*", headers: [{ key: "Cache-Control", value: day }] },
       { source: "/audio-sample/:path*", headers: [{ key: "Cache-Control", value: day }] },
     ];

@@ -80,9 +80,9 @@ export function PodcastEpisodeRow({ podcast }: { podcast: Podcast }) {
                 </>
               ) : null}
             </div>
-            <span className="text-base font-normal leading-6 text-[#F5F5F5]">
+            <time dateTime={podcast.published_at} className="text-base font-normal leading-6 text-[#F5F5F5]">
               {formatPersianDate(podcast.published_at)}
-            </span>
+            </time>
           </div>
         </div>
 
@@ -127,9 +127,12 @@ export function PodcastEpisodeRow({ podcast }: { podcast: Podcast }) {
         </div>
 
         {/* Date */}
-        <div className="text-d-body-sm text-text-tertiary md:min-w-[7rem] md:text-left">
+        <time
+          dateTime={podcast.published_at}
+          className="text-d-body-sm text-text-tertiary md:min-w-[7rem] md:text-left"
+        >
           {formatPersianDate(podcast.published_at)}
-        </div>
+        </time>
 
         {/*
           Actions cluster (far left).

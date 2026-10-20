@@ -12,10 +12,16 @@ import { getLatestPodcast } from "@/lib/repos/podcasts";
 import { listArticles } from "@/lib/repos/articles";
 import { listFaqs } from "@/lib/repos/faqs";
 import { getAllContent } from "@/lib/repos/content";
+import { pageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
-export const metadata = { alternates: { canonical: "/" } };
+export const metadata = pageMetadata({
+  title: "Silent Shift — مکثی برای شروعی دوباره",
+  description: "پادکست‌ها، روایت‌ها و همراهی برزو ذاکری برای بازنگری در باورها و شروعی تازه.",
+  path: "/",
+  absoluteTitle: true,
+});
 
 export default function LandingPage() {
   const latest = getLatestPodcast();

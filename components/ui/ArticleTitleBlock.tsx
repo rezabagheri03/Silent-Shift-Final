@@ -91,7 +91,7 @@ export function ArticleTitleBlock({ article }: { article: Article }) {
 
         <li className="inline-flex items-center gap-2 text-[14px] leading-5 md:text-[15px]">
           <CalendarIcon size={18} />
-          <span>{date}</span>
+          <time dateTime={article.published_at}>{date}</time>
         </li>
 
         <li className="inline-flex items-center gap-2 text-[14px] leading-5 md:text-[15px]">

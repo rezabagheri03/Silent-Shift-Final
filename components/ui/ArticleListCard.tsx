@@ -98,6 +98,8 @@ export function ArticleListCard({ article }: Props) {
       <img
         src={cover}
         alt=""
+        loading="lazy"
+        decoding="async"
         className="absolute inset-0 h-full w-full object-cover"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/25" />
@@ -110,9 +112,9 @@ export function ArticleListCard({ article }: Props) {
           className="flex flex-row items-start justify-between"
           style={{ padding: 16 }}
         >
-          <span className="text-[14px] font-normal leading-5 text-white">
+          <time dateTime={article.published_at} className="text-[14px] font-normal leading-5 text-white">
             {dateLabel}
-          </span>
+          </time>
 
           <button
             type="button"

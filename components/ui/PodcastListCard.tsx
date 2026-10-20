@@ -55,6 +55,8 @@ export function PodcastListCard({ podcast }: Props) {
       <img
         src={cover}
         alt=""
+        loading="lazy"
+        decoding="async"
         className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
       />
 
@@ -62,12 +64,13 @@ export function PodcastListCard({ podcast }: Props) {
 
       {/* Date — upper left */}
       {dateLabel ? (
-        <span
+        <time
+          dateTime={podcast.published_at}
           dir="ltr"
           className="absolute top-3 left-3 z-20 text-[13px] leading-5 text-white/90"
         >
           {dateLabel}
-        </span>
+        </time>
       ) : null}
 
       <Link

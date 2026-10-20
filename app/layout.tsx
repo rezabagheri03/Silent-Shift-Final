@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { PlayerProvider } from "@/components/player/PlayerContext";
 import Player from "@/components/player/Player";
+import { DEFAULT_OG, SITE_URL } from "@/lib/seo";
+
+const SITE = SITE_URL;
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
@@ -11,6 +14,9 @@ export const metadata: Metadata = {
   },
   description:
     "پادکست‌ها، روایت‌ها و همراهی برزو ذاکری برای بازنگری در باورها و شروعی تازه.",
+  alternates: {
+    types: { "application/rss+xml": "/rss.xml" },
+  },
   openGraph: {
     title: "Silent Shift",
     description: "مکثی برای شروعی دوباره.",
@@ -18,25 +24,25 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "Silent Shift",
     url: "/",
-    images: [{ url: "/images/hero.jpg", width: 1200, height: 720, alt: "Silent Shift" }],
+    images: [DEFAULT_OG],
   },
   twitter: {
     card: "summary_large_image",
+    title: "Silent Shift",
+    description: "مکثی برای شروعی دوباره.",
+    images: [DEFAULT_OG.url],
   },
   robots: { index: true, follow: true },
   icons: {
     icon: [
-      { url: "/favicon-512.png", type: "image/png" },
-      { url: "/brand/logo-cropped.png", type: "image/png" },
+      { url: "/icons/icon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
     ],
-    shortcut: ["/brand/logo-new.png"],
-    apple: [
-      { url: "/brand/logo-new.png" },
-    ],
+    apple: [{ url: "/icons/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
   },
 };
 
-const SITE = process.env.NEXT_PUBLIC_SITE_URL || "https://silentshift.life";
 const siteGraph = JSON.stringify({
   "@context": "https://schema.org",
   "@graph": [
@@ -44,21 +50,26 @@ const siteGraph = JSON.stringify({
       "@type": "Organization",
       "@id": `${SITE}/#org`,
       name: "Silent Shift",
+      alternateName: "سایلنت شیفت",
+      description: "پادکست‌ها، روایت‌ها و همراهی برزو ذاکری برای بازنگری در باورها و شروعی تازه.",
       url: SITE,
-      logo: `${SITE}/brand/logo-new.png`,
+      logo: `${SITE}/icons/icon-512.png`,
+      founder: { "@id": `${SITE}/#person` },
     },
     {
       "@type": "Person",
       "@id": `${SITE}/#person`,
       name: "برزو ذاکری",
       url: `${SITE}/about`,
+      image: `${SITE}/brand/barzo.jpg`,
       worksFor: { "@id": `${SITE}/#org` },
     },
     {
       "@type": "WebSite",
       url: SITE,
       name: "Silent Shift",
-      inLanguage: "fa",
+      alternateName: "سایلنت شیفت",
+      inLanguage: "fa-IR",
       publisher: { "@id": `${SITE}/#org` },
     },
   ],
@@ -66,7 +77,7 @@ const siteGraph = JSON.stringify({
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fa" dir="rtl">
+    <html lang="fa-IR" dir="rtl">
       <body className="bg-bg text-text-primary">
         <a
           href="#main"

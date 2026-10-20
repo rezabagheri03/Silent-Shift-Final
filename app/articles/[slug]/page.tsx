@@ -17,16 +17,25 @@ import { getArticleBySlug, getRelatedArticles, listArticles } from "@/lib/repos/
 import { getPodcastsByCategoryId } from "@/lib/repos/podcasts";
 import { listFaqs } from "@/lib/repos/faqs";
 import { designAssets } from "@/lib/design-assets";
+import { DEFAULT_OG, SITE_URL, pageMetadata, toIso } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
-const SITE = process.env.NEXT_PUBLIC_SITE_URL || "https://silentshift.life";
+const SITE = SITE_URL;
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const article = getArticleBySlug(slug);
   if (!article) return { title: "پیدا نشد" };
-  return { title: article.title, description: article.excerpt ?? undefined, alternates: { canonical: `/articles/${article.slug}` }, openGraph: { title: article.title, description: article.excerpt ?? undefined, type: "article", images: [article.cover_url || designAssets.articleStage] } };
+  return pageMetadata({
+    title: article.title,
+    description: article.excerpt ?? undefined,
+    path: `/articles/${article.slug}`,
+    type: "article",
+    publishedTime: toIso(article.published_at),
+    section: article.category_name ?? undefined,
+    tags: article.tags?.map((tag) => tag.name),
+  });
 }
 
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
@@ -49,12 +58,19 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             "@type": "Article",
             headline: article.title,
             description: article.excerpt || undefined,
-            datePublished: article.published_at,
-            image: article.cover_url ? [new URL(article.cover_url, SITE).toString()] : undefined,
-            author: { "@type": "Person", name: article.author || "برزو ذاکری" },
+            url: `${SITE}/articles/${article.slug}`,
+            datePublished: toIso(article.published_at),
+            image: [DEFAULT_OG.url],
+            author: {
+              "@type": "Person",
+              "@id": `${SITE}/#person`,
+              name: article.author || "برزو ذاکری",
+            },
             publisher: { "@id": `${SITE}/#org` },
             mainEntityOfPage: `${SITE}/articles/${article.slug}`,
-            inLanguage: "fa",
+            articleSection: article.category_name || undefined,
+            keywords: article.tags?.map((tag) => tag.name).join(", ") || undefined,
+            inLanguage: "fa-IR",
           }).replace(/</g, "\\u003c"),
         }}
       />

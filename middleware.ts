@@ -27,6 +27,9 @@ function withSecurityHeaders(res: NextResponse, pathname: string) {
   if (process.env.NODE_ENV === "production") {
     res.headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
   }
+  if (!pathname.startsWith("/api")) {
+    res.headers.set("Content-Language", "fa-IR");
+  }
   if (pathname.startsWith("/admin") || pathname.startsWith("/api/admin")) {
     res.headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
   }

@@ -5,13 +5,14 @@ import { listArticles } from "@/lib/repos/articles";
 import { listTags } from "@/lib/repos/tags";
 import { listFaqs } from "@/lib/repos/faqs";
 import type { SortMode } from "@/lib/types";
+import { PODCAST_COVER, SITE_URL, pageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "پادکست‌ها",
   description: "اپیزودهای سایلنت شیفت درباره مکث، تغییر آرام، مهاجرت و توسعه فردی.",
-  alternates: { canonical: "/podcasts" },
-};
+  path: "/podcasts",
+});
 
 export default async function PodcastPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const query = await searchParams;
@@ -22,15 +23,35 @@ export default async function PodcastPage({ searchParams }: { searchParams: Prom
   const tag = tags[0];
 
   return (
-    <PodcastPLPClient
-      initialList={listPodcasts({ page, sort, tags, limit: 10 })}
-      initialFeatured={getLatestPodcast()}
-      initialTags={listTags()}
-      initialArticles={listArticles({ limit: 5 }).items}
-      initialFaqs={listFaqs()}
-      initialPage={page}
-      initialSort={sort}
-      initialTag={tag}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "PodcastSeries",
+            "@id": `${SITE_URL}/podcasts#series`,
+            name: "Silent Shift",
+            alternateName: "سایلنت شیفت",
+            url: `${SITE_URL}/podcasts`,
+            webFeed: `${SITE_URL}/rss.xml`,
+            image: PODCAST_COVER,
+            inLanguage: "fa-IR",
+            author: { "@id": `${SITE_URL}/#person` },
+            publisher: { "@id": `${SITE_URL}/#org` },
+          }).replace(/</g, "\\u003c"),
+        }}
+      />
+      <PodcastPLPClient
+        initialList={listPodcasts({ page, sort, tags, limit: 10 })}
+        initialFeatured={getLatestPodcast()}
+        initialTags={listTags()}
+        initialArticles={listArticles({ limit: 5 }).items}
+        initialFaqs={listFaqs()}
+        initialPage={page}
+        initialSort={sort}
+        initialTag={tag}
+      />
+    </>
   );
 }

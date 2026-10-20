@@ -1,7 +1,9 @@
+import { SITE_URL } from "@/lib/seo";
+
 export const dynamic = "force-dynamic";
 
-export function GET(req: Request) {
-  const base = (process.env.NEXT_PUBLIC_SITE_URL || new URL(req.url).origin).replace(/\/+$/, "");
+export function GET() {
+  const base = SITE_URL;
   const body = `User-agent: *
 Allow: /
 Disallow: /admin

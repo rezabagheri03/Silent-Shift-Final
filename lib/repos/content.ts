@@ -29,3 +29,11 @@ export function getAllContent(): Record<string, string> {
   }[];
   return Object.fromEntries(rows.map((r) => [r.key, r.value]));
 }
+
+/** Most recent edit across editable page copy, for sitemap lastmod. */
+export function getContentUpdatedAt(): string | null {
+  const row = db.prepare("SELECT MAX(updated_at) AS updated_at FROM site_content").get() as {
+    updated_at: string | null;
+  };
+  return row?.updated_at ?? null;
+}

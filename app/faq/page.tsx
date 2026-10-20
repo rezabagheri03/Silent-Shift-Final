@@ -5,14 +5,15 @@ import { SectionTitle } from "@/components/ui/SectionTitle";
 import { FaqAccordion } from "@/components/ui/FaqAccordion";
 import { Button } from "@/components/ui/Button";
 import { listFaqs } from "@/lib/repos/faqs";
+import { pageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "سوالات متداول",
   description: "پاسخ سوالات پرتکرار درباره پادکست، جلسات کوچینگ و همراهی Silent Shift.",
-  alternates: { canonical: "/faq" },
-};
+  path: "/faq",
+});
 
 export default function FaqPage() {
   const faqs = listFaqs();

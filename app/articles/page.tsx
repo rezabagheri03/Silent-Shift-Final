@@ -4,14 +4,15 @@ import { listArticles } from "@/lib/repos/articles";
 import { listTags } from "@/lib/repos/tags";
 import { listFaqs } from "@/lib/repos/faqs";
 import type { SortMode } from "@/lib/types";
+import { pageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "روایت‌ها",
   description: "روایت‌ها و نوشته‌های Silent Shift درباره رشد فردی، مهاجرت و تغییرات ماندگار.",
-  alternates: { canonical: "/articles" },
-};
+  path: "/articles",
+});
 
 export default async function ArticlesPage({
   searchParams,

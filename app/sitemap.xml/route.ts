@@ -1,5 +1,7 @@
 import { listPodcasts } from "@/lib/repos/podcasts";
 import { listArticles } from "@/lib/repos/articles";
+import { getContentUpdatedAt } from "@/lib/repos/content";
+import { SITE_URL, toIso } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
@@ -13,20 +15,23 @@ function escapeXml(s: string): string {
     .replace(/'/g, "&apos;");
 }
 
-export function GET(req: Request) {
-  const base = (process.env.NEXT_PUBLIC_SITE_URL || new URL(req.url).origin).replace(/\/+$/, "");
+export function GET() {
+  const base = SITE_URL;
   const pods = listPodcasts({ limit: 500 }).items;
   const arts = listArticles({ limit: 500 }).items;
+  const contentUpdated = toIso(getContentUpdatedAt());
+  const lastPod = toIso(pods.reduce<string | undefined>((max, p) => (!max || p.published_at > max ? p.published_at : max), undefined));
+  const lastArt = toIso(arts.reduce<string | undefined>((max, a) => (!max || a.published_at > max ? a.published_at : max), undefined));
 
   const urls: { loc: string; lastmod?: string }[] = [
-    { loc: `${base}/` },
-    { loc: `${base}/podcasts` },
-    { loc: `${base}/articles` },
-    { loc: `${base}/about` },
+    { loc: `${base}/`, lastmod: contentUpdated },
+    { loc: `${base}/podcasts`, lastmod: lastPod },
+    { loc: `${base}/articles`, lastmod: lastArt },
+    { loc: `${base}/about`, lastmod: contentUpdated },
     { loc: `${base}/contact` },
     { loc: `${base}/faq` },
-    ...pods.map((p) => ({ loc: `${base}/podcasts/${p.slug}`, lastmod: p.published_at })),
-    ...arts.map((a) => ({ loc: `${base}/articles/${a.slug}`, lastmod: a.published_at })),
+    ...pods.map((p) => ({ loc: `${base}/podcasts/${p.slug}`, lastmod: toIso(p.published_at) })),
+    ...arts.map((a) => ({ loc: `${base}/articles/${a.slug}`, lastmod: toIso(a.published_at) })),
   ];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

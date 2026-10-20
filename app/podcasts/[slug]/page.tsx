@@ -15,11 +15,12 @@ import { listArticles } from "@/lib/repos/articles";
 import { listFaqs } from "@/lib/repos/faqs";
 import { designAssets } from "@/lib/design-assets";
 import { formatPersianDate } from "@/lib/utils";
+import { PODCAST_COVER, SITE_URL, isoDuration, pageMetadata, toIso } from "@/lib/seo";
 import VisitTracker from "@/components/ui/VisitTracker";
 
 export const dynamic = "force-dynamic";
 
-const SITE = process.env.NEXT_PUBLIC_SITE_URL || "https://silentshift.life";
+const SITE = SITE_URL;
 
 function formatChapterTime(totalSeconds: number): string {
   const s = Math.max(0, Math.floor(totalSeconds));
@@ -70,17 +71,15 @@ export async function generateMetadata({
   const { slug } = await params;
   const podcast = getPodcastBySlug(slug);
   if (!podcast) return { title: "پیدا نشد" };
-  return {
+  return pageMetadata({
     title: podcast.title,
-    description: podcast.description ?? undefined,
-    alternates: { canonical: `/podcasts/${podcast.slug}` },
-    openGraph: {
-      title: podcast.title,
-      description: podcast.description ?? undefined,
-      type: "article",
-      images: [podcast.cover_url || designAssets.podcastCover],
-    },
-  };
+    description: podcast.description ?? podcast.summary ?? undefined,
+    path: `/podcasts/${podcast.slug}`,
+    type: "article",
+    publishedTime: toIso(podcast.published_at),
+    section: podcast.category_name ?? undefined,
+    tags: podcast.tags?.map((tag) => tag.name),
+  });
 }
 
 export default async function PodcastPage({
@@ -120,14 +119,26 @@ export default async function PodcastPage({
             name: podcast.title,
             description: podcast.description || undefined,
             url: `${SITE}/podcasts/${podcast.slug}`,
-            datePublished: podcast.published_at,
+            datePublished: toIso(podcast.published_at),
             episodeNumber: podcast.episode_number || undefined,
-            image: podcast.cover_url ? new URL(podcast.cover_url, SITE).toString() : undefined,
-            inLanguage: "fa",
+            duration: isoDuration(podcast.duration_seconds),
+            image: PODCAST_COVER,
+            inLanguage: "fa-IR",
+            keywords: podcast.tags?.map((tag) => tag.name).join(", ") || undefined,
             associatedMedia: podcast.audio_url
-              ? { "@type": "AudioObject", contentUrl: new URL(podcast.audio_url, SITE).toString() }
+              ? {
+                  "@type": "AudioObject",
+                  contentUrl: new URL(podcast.audio_url, SITE).toString(),
+                  duration: isoDuration(podcast.duration_seconds),
+                }
               : undefined,
-            partOfSeries: { "@type": "PodcastSeries", name: "Silent Shift", url: SITE },
+            partOfSeries: {
+              "@type": "PodcastSeries",
+              "@id": `${SITE}/podcasts#series`,
+              name: "Silent Shift",
+              url: `${SITE}/podcasts`,
+              webFeed: `${SITE}/rss.xml`,
+            },
           }).replace(/</g, "\\u003c"),
         }}
       />
@@ -414,9 +425,9 @@ export default async function PodcastPage({
               </div>
               <div className="flex flex-col items-end gap-6">
                 <span className="text-[14px] leading-5 text-[#52525B]">تاریخ انتشار</span>
-                <span className="text-[14px] leading-5 text-[#A1A1AA]">
+                <time dateTime={toIso(podcast.published_at)} className="text-[14px] leading-5 text-[#A1A1AA]">
                   {podcast.published_at ? formatPersianDate(podcast.published_at) : "—"}
-                </span>
+                </time>
               </div>
             </div>
           </div>

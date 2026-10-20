@@ -8,9 +8,14 @@ import { Button } from "@/components/ui/Button";
 import { getAllContent } from "@/lib/repos/content";
 import { listFaqs } from "@/lib/repos/faqs";
 import { designAssets } from "@/lib/design-assets";
+import { pageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "داستان من", description: "درباره برزو ذاکری و چرایی ساختن Silent Shift.", alternates: { canonical: "/about" } };
+export const metadata: Metadata = pageMetadata({
+  title: "داستان من",
+  description: "درباره برزو ذاکری و چرایی ساختن Silent Shift.",
+  path: "/about",
+});
 
 const PILLARS = [
   { title: "شنیدن بدون قضاوت", description: "فضایی امن برای گفت‌وگو، بدون قضاوت؛ جایی که می‌توانی خودت باشی و مسیر را از نو ببینی." },
