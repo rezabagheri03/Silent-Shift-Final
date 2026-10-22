@@ -12,6 +12,7 @@ import {
   AnchorIcon,
 } from "@/components/ui/Icons";
 import HeaderSearch from "./HeaderSearch";
+import { socialUrl } from "@/lib/seo";
 
 const NAV_ITEMS = [
   { href: "/", label: "خانه" },
@@ -21,13 +22,19 @@ const NAV_ITEMS = [
   { href: "/contact", label: "ارتباط" },
 ];
 
-const SOCIALS = [
+const SOCIAL_LINKS = [
   // size = per-icon render size matching the footer chips (Figma ink specs)
-  { href: process.env.NEXT_PUBLIC_INSTAGRAM_URL || "https://instagram.com/", label: "Instagram", icon: InstagramIcon, size: 28 },
-  { href: process.env.NEXT_PUBLIC_TELEGRAM_URL || "https://t.me/8heshtaam", label: "Telegram", icon: TelegramIcon, size: 33 },
-  { href: process.env.NEXT_PUBLIC_CASTBOX_URL || "https://castbox.fm/", label: "Castbox", icon: CastboxIcon, size: 31 },
-  { href: process.env.NEXT_PUBLIC_APPLE_PODCASTS_URL || "https://podcasts.apple.com/", label: "Apple Podcasts", icon: AnchorIcon, size: 33 },
+  { href: process.env.NEXT_PUBLIC_INSTAGRAM_URL, label: "Instagram", icon: InstagramIcon, size: 28 },
+  { href: process.env.NEXT_PUBLIC_TELEGRAM_URL, label: "Telegram", icon: TelegramIcon, size: 33 },
+  { href: process.env.NEXT_PUBLIC_CASTBOX_URL, label: "Castbox", icon: CastboxIcon, size: 31 },
+  { href: process.env.NEXT_PUBLIC_APPLE_PODCASTS_URL, label: "Apple Podcasts", icon: AnchorIcon, size: 33 },
 ];
+
+// Placeholder profiles stay hidden until real URLs are configured.
+const SOCIALS = SOCIAL_LINKS.flatMap(({ href, ...rest }) => {
+  const url = socialUrl(href);
+  return url ? [{ href: url, ...rest }] : [];
+});
 
 export default function Header() {
   const pathname = usePathname();

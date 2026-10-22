@@ -72,6 +72,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Article",
+            "@id": `${pageUrl}#article`,
             headline: article.title,
             description: article.excerpt || undefined,
             url: pageUrl,
@@ -85,7 +86,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
               url: `${SITE}/about`,
             },
             publisher: { "@id": `${SITE}/#org` },
-            isPartOf: { "@id": pageUrl },
+            isPartOf: { "@id": `${SITE}/#website` },
             mainEntityOfPage: { "@id": pageUrl },
             articleSection: article.category_name || undefined,
             keywords: article.tags?.map((tag) => tag.name).join(", ") || undefined,
@@ -105,6 +106,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             description: article.excerpt || undefined,
             inLanguage: "fa-IR",
             isPartOf: { "@id": `${SITE}/#website` },
+            mainEntity: { "@id": `${pageUrl}#article` },
             primaryImageOfPage: {
               "@type": "ImageObject",
               url: ogImage.url,
@@ -139,6 +141,29 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         {article.excerpt && <p className="text-d-body-lg text-text-primary leading-loose text-right">{article.excerpt}</p>}
         <Markdown content={article.body} />
       </article>
+
+      <aside
+        dir="rtl"
+        className="flex flex-col gap-3 rounded-sm border border-border-medium bg-surface p-5 text-right md:flex-row md:items-center md:gap-5"
+      >
+        <img
+          src={designAssets.profile}
+          alt="برزو ذاکری"
+          width={72}
+          height={72}
+          className="h-16 w-16 shrink-0 self-center rounded-full object-cover object-bottom md:self-auto"
+        />
+        <p className="text-d-body-md leading-relaxed text-text-secondary">
+          <Link href="/about" className="font-medium text-text-primary hover:text-brand transition-colors">
+            برزو ذاکری
+          </Link>{" "}
+          کوچ و منتور ایرانیان خارج از کشور در توسعه فردی، مسیر شغلی و رشد کسب‌وکار؛ سازنده
+          Silent Shift.{" "}
+          <Link href="/about" className="text-brand hover:underline underline-offset-4">
+            داستان من
+          </Link>
+        </p>
+      </aside>
 
       <div className="flex justify-center">
         <Button

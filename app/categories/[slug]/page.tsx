@@ -17,8 +17,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const category = getCategoryBySlug(slug);
   if (!category) notFound();
   return pageMetadata({
-    title: `دسته‌بندی ${category.name}`,
-    description: `پادکست‌ها و روایت‌های Silent Shift در دسته ${category.name}.`,
+    title: `${category.name}؛ پادکست‌ها و روایت‌ها`,
+    description: `پادکست‌ها و روایت‌های Silent Shift در دسته ${category.name} با برزو ذاکری.`,
     path: `/categories/${category.slug}`,
   });
 }

@@ -8,12 +8,13 @@ import { Button } from "@/components/ui/Button";
 import { getAllContent } from "@/lib/repos/content";
 import { listFaqs } from "@/lib/repos/faqs";
 import { designAssets } from "@/lib/design-assets";
-import { pageMetadata } from "@/lib/seo";
+import { pageMetadata, SITE_URL } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = pageMetadata({
-  title: "داستان من",
-  description: "درباره برزو ذاکری و چرایی ساختن Silent Shift.",
+  title: "درباره برزو ذاکری؛ کوچ و منتور ایرانیان خارج از کشور",
+  description:
+    "برزو ذاکری، کوچ و منتور توسعه فردی و کسب‌وکار؛ تجربه همراهی با ایرانیان خارج از کشور و چرایی ساختن Silent Shift.",
   path: "/about",
 });
 
@@ -34,6 +35,21 @@ export default function AboutPage() {
   const faqs = listFaqs();
   return (
     <PageShell>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ProfilePage",
+            "@id": `${SITE_URL}/about#page`,
+            url: `${SITE_URL}/about`,
+            name: "درباره برزو ذاکری",
+            inLanguage: "fa-IR",
+            isPartOf: { "@id": `${SITE_URL}/#website` },
+            mainEntity: { "@id": `${SITE_URL}/#person` },
+          }).replace(/</g, "\\u003c"),
+        }}
+      />
       <Breadcrumb items={[{ label: "خانه", href: "/" }, { label: "داستان من" }]} />
 
       <section className="grid gap-8 md:grid-cols-2 md:gap-8 items-center md:[direction:ltr]">

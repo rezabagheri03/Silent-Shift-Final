@@ -5,8 +5,9 @@ import { pageMetadata } from "@/lib/seo";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = pageMetadata({
-  title: "ارتباط",
-  description: "برای گفت‌وگو، هماهنگی جلسه کوچینگ یا هر پرسشی با برزو ذاکری در ارتباط باشید.",
+  title: "تماس و رزرو جلسه کوچینگ",
+  description:
+    "برای گفت‌وگو، هماهنگی جلسه کوچینگ یا هر پرسشی با برزو ذاکری در ارتباط باشید؛ یک گفتگوی کوتاه و بدون تعهد برای شروع.",
   path: "/contact",
 });
 

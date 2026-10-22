@@ -2,9 +2,19 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { PlayerProvider } from "@/components/player/PlayerContext";
 import Player from "@/components/player/Player";
-import { DEFAULT_OG, SITE_URL } from "@/lib/seo";
+import { DEFAULT_OG, SITE_URL, socialUrl } from "@/lib/seo";
 
 const SITE = SITE_URL;
+
+/** Profiles that actually exist; placeholders are dropped rather than asserted. */
+const SAME_AS = [
+  process.env.NEXT_PUBLIC_INSTAGRAM_URL,
+  process.env.NEXT_PUBLIC_TELEGRAM_URL,
+  process.env.NEXT_PUBLIC_APPLE_PODCASTS_URL,
+  process.env.NEXT_PUBLIC_CASTBOX_URL,
+]
+  .map(socialUrl)
+  .filter((url): url is string => Boolean(url));
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
@@ -54,8 +64,14 @@ const siteGraph = JSON.stringify({
       alternateName: "سایلنت شیفت",
       description: "پادکست‌ها، روایت‌ها و همراهی برزو ذاکری برای بازنگری در باورها و شروعی تازه.",
       url: SITE,
-      logo: `${SITE}/favicon-512.png`,
+      logo: {
+        "@type": "ImageObject",
+        url: `${SITE}/favicon-512.png`,
+        width: 512,
+        height: 512,
+      },
       founder: { "@id": `${SITE}/#person` },
+      ...(SAME_AS.length ? { sameAs: SAME_AS } : {}),
     },
     {
       "@type": "Person",
@@ -63,7 +79,12 @@ const siteGraph = JSON.stringify({
       name: "برزو ذاکری",
       url: `${SITE}/about`,
       image: `${SITE}/brand/barzo.jpg`,
+      jobTitle: "کوچ و منتور",
+      description:
+        "کوچ و منتور ایرانیان خارج از کشور در توسعه فردی، مسیر شغلی و رشد کسب‌وکار.",
+      knowsAbout: ["توسعه فردی", "کوچینگ حرفه‌ای", "منتورینگ", "کارآفرینی", "مهاجرت"],
       worksFor: { "@id": `${SITE}/#org` },
+      ...(SAME_AS.length ? { sameAs: SAME_AS } : {}),
     },
     {
       "@type": "WebSite",

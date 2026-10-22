@@ -17,8 +17,9 @@ export async function generateMetadata({
   const page = Math.max(1, Number(sp.page) || 1);
   const filtered = Boolean(sp.tag || sp.q || sp.sort);
   return pageMetadata({
-    title: page > 1 ? `روایت‌ها — صفحه ${page}` : "روایت‌ها",
-    description: "روایت‌ها و نوشته‌های Silent Shift درباره رشد فردی، مهاجرت و تغییرات ماندگار.",
+    title: page > 1 ? `روایت‌ها — صفحه ${page}` : "روایت‌ها؛ رشد فردی، مهاجرت و کسب‌وکار",
+    description:
+      "روایت‌ها و نوشته‌های برزو ذاکری در Silent Shift درباره رشد فردی، مهاجرت، تصمیم‌گیری و تغییرات ماندگار.",
     path: page > 1 && !filtered ? `/articles?page=${page}` : "/articles",
   });
 }

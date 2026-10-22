@@ -1,6 +1,7 @@
 import type { Article } from "@/lib/types";
 import { formatPersianDate } from "@/lib/utils";
 import { estimateReadingTime } from "@/lib/reading-time";
+import Link from "next/link";
 
 type ArticleExtra = Article & { author_name?: string | null };
 
@@ -64,7 +65,9 @@ export function ArticleTitleBlock({ article }: { article: Article }) {
       >
         <li className="inline-flex items-center gap-2 text-[14px] leading-5 md:text-[15px]">
           <UserIcon size={18} />
-          <span>{author}</span>
+          <Link href="/about" className="hover:underline underline-offset-4">
+            {author}
+          </Link>
         </li>
 
         <li className="inline-flex items-center gap-2 text-[14px] leading-5 md:text-[15px]">

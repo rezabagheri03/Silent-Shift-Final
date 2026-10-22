@@ -18,8 +18,9 @@ export async function generateMetadata({
   const page = Math.max(1, Number(Array.isArray(query.page) ? query.page[0] : query.page) || 1);
   const filtered = Boolean(query.tag || query.q || query.sort);
   return pageMetadata({
-    title: page > 1 ? `پادکست‌ها — صفحه ${page}` : "پادکست‌ها",
-    description: "اپیزودهای سایلنت شیفت درباره مکث، تغییر آرام، مهاجرت و توسعه فردی.",
+    title: page > 1 ? `پادکست‌ها — صفحه ${page}` : "پادکست‌ها؛ توسعه فردی، مهاجرت و تغییر آرام",
+    description:
+      "اپیزودهای پادکست Silent Shift با برزو ذاکری درباره مکث، تغییر آرام، مهاجرت و توسعه فردی.",
     path: page > 1 && !filtered ? `/podcasts?page=${page}` : "/podcasts",
   });
 }

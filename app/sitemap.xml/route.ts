@@ -1,7 +1,6 @@
 import { listPodcasts } from "@/lib/repos/podcasts";
 import { listArticles } from "@/lib/repos/articles";
 import { listCategories } from "@/lib/repos/categories";
-import { listTags } from "@/lib/repos/tags";
 import { getContentUpdatedAt } from "@/lib/repos/content";
 import { SITE_URL, toIso } from "@/lib/seo";
 
@@ -37,7 +36,6 @@ export function GET() {
     ...pods.map((p) => ({ loc: `${base}/podcasts/${p.slug}`, lastmod: toIso(p.updated_at || p.published_at) })),
     ...arts.map((a) => ({ loc: `${base}/articles/${a.slug}`, lastmod: toIso(a.updated_at || a.published_at) })),
     ...listCategories().map((c) => ({ loc: `${base}/categories/${c.slug}`, lastmod: contentUpdated })),
-    ...listTags().map((t) => ({ loc: `${base}/tags/${t.slug}`, lastmod: contentUpdated })),
   ];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

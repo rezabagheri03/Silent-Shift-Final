@@ -10,8 +10,9 @@ import { pageMetadata } from "@/lib/seo";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = pageMetadata({
-  title: "سوالات متداول",
-  description: "پاسخ سوالات پرتکرار درباره پادکست، جلسات کوچینگ و همراهی Silent Shift.",
+  title: "سوالات متداول کوچینگ، منتورینگ و جلسات",
+  description:
+    "پاسخ سوالات پرتکرار درباره پادکست Silent Shift، جلسات کوچینگ و منتورینگ، نحوه برگزاری و شروع همراهی با برزو ذاکری.",
   path: "/faq",
 });
 

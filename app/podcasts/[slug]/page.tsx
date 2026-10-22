@@ -15,7 +15,7 @@ import { listArticles } from "@/lib/repos/articles";
 import { listFaqs } from "@/lib/repos/faqs";
 import { designAssets } from "@/lib/design-assets";
 import { formatPersianDate } from "@/lib/utils";
-import { PODCAST_COVER, SITE_URL, isoDuration, pageMetadata, toIso } from "@/lib/seo";
+import { PODCAST_COVER, SITE_URL, audioMime, isoDuration, pageMetadata, toIso } from "@/lib/seo";
 import VisitTracker from "@/components/ui/VisitTracker";
 
 export const dynamic = "force-dynamic";
@@ -119,6 +119,7 @@ export default async function PodcastPage({
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "PodcastEpisode",
+            "@id": `${pageUrl}#episode`,
             name: podcast.title,
             description: podcast.description || undefined,
             url: pageUrl,
@@ -129,19 +130,27 @@ export default async function PodcastPage({
             image: PODCAST_COVER,
             inLanguage: "fa-IR",
             keywords: podcast.tags?.map((tag) => tag.name).join(", ") || undefined,
+            author: { "@id": `${SITE}/#person` },
+            publisher: { "@id": `${SITE}/#org` },
             associatedMedia: podcast.audio_url
               ? {
                   "@type": "AudioObject",
                   contentUrl: new URL(podcast.audio_url, SITE).toString(),
                   duration: isoDuration(podcast.duration_seconds),
+                  encodingFormat: audioMime(podcast.audio_url),
                 }
               : undefined,
             partOfSeries: {
               "@type": "PodcastSeries",
               "@id": `${SITE}/podcasts#series`,
               name: "Silent Shift",
+              description:
+                "پادکست فارسی Silent Shift درباره مکث، تغییر آرام، مهاجرت و توسعه فردی.",
               url: `${SITE}/podcasts`,
+              image: PODCAST_COVER,
               webFeed: `${SITE}/rss.xml`,
+              author: { "@id": `${SITE}/#person` },
+              publisher: { "@id": `${SITE}/#org` },
             },
           }).replace(/</g, "\\u003c"),
         }}

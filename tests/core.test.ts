@@ -4,6 +4,17 @@ import { markdownToHtml } from "@/lib/markdown";
 import { estimateReadingTime } from "@/lib/reading-time";
 import { formatDuration, slugify, toAsciiDigits } from "@/lib/utils";
 import { safeAdminRedirect } from "@/lib/security";
+import { socialUrl } from "@/lib/seo";
+
+test("socialUrl drops unset and placeholder profiles", () => {
+  assert.equal(socialUrl(undefined), undefined);
+  assert.equal(socialUrl(""), undefined);
+  assert.equal(socialUrl("https://instagram.com/yourusername"), undefined);
+  assert.equal(socialUrl("https://castbox.fm/channel/yourchannel"), undefined);
+  assert.equal(socialUrl("https://podcasts.apple.com/yourpodcast"), undefined);
+  assert.equal(socialUrl("not a url"), undefined);
+  assert.equal(socialUrl("https://instagram.com/silentshift"), "https://instagram.com/silentshift");
+});
 
  test("safeAdminRedirect only accepts internal admin paths", () => {
   assert.equal(safeAdminRedirect("/admin/articles"), "/admin/articles");

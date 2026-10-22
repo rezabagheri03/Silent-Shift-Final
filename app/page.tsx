@@ -17,8 +17,9 @@ import { SITE_URL, pageMetadata } from "@/lib/seo";
 export const dynamic = "force-dynamic";
 
 export const metadata = pageMetadata({
-  title: "Silent Shift — مکثی برای شروعی دوباره",
-  description: "پادکست‌ها، روایت‌ها و همراهی برزو ذاکری برای بازنگری در باورها و شروعی تازه.",
+  title: "Silent Shift — کوچینگ، منتورینگ و پادکست توسعه فردی",
+  description:
+    "کوچینگ و منتورینگ اختصاصی برای ایرانیان خارج از کشور؛ پادکست‌ها و روایت‌هایی برای مکث، بازنگری و ساختن مسیری تازه با برزو ذاکری.",
   path: "/",
   absoluteTitle: true,
 });

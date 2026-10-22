@@ -8,6 +8,7 @@ import {
   CastboxIcon,
   AnchorIcon,
 } from "@/components/ui/Icons";
+import { socialUrl } from "@/lib/seo";
 
 const NAV = [
   { href: "/podcasts", label: "پادکست‌ها" },
@@ -17,9 +18,9 @@ const NAV = [
   { href: "/contact", label: "ارتباط" },
 ];
 
-const SOCIALS = [
+const SOCIAL_LINKS = [
   {
-    href: process.env.NEXT_PUBLIC_INSTAGRAM_URL || "https://instagram.com/",
+    href: process.env.NEXT_PUBLIC_INSTAGRAM_URL,
     label: "Instagram",
     icon: InstagramIcon,
     // Per-icon render sizes chosen so the visible glyph ink matches the
@@ -27,24 +28,30 @@ const SOCIALS = [
     size: 28,
   },
   {
-    href: process.env.NEXT_PUBLIC_TELEGRAM_URL || "https://t.me/8heshtaam",
+    href: process.env.NEXT_PUBLIC_TELEGRAM_URL,
     label: "Telegram",
     icon: TelegramIcon,
     size: 33,
   },
   {
-    href: process.env.NEXT_PUBLIC_CASTBOX_URL || "https://castbox.fm/",
+    href: process.env.NEXT_PUBLIC_CASTBOX_URL,
     label: "Castbox",
     icon: CastboxIcon,
     size: 31,
   },
   {
-    href: process.env.NEXT_PUBLIC_APPLE_PODCASTS_URL || "https://podcasts.apple.com/",
+    href: process.env.NEXT_PUBLIC_APPLE_PODCASTS_URL,
     label: "Apple Podcasts",
     icon: AnchorIcon,
     size: 33,
   },
 ];
+
+// Placeholder profiles stay hidden until real URLs are configured.
+const SOCIALS = SOCIAL_LINKS.flatMap(({ href, ...rest }) => {
+  const url = socialUrl(href);
+  return url ? [{ href: url, ...rest }] : [];
+});
 
 export default function Footer() {
   const { email, setEmail, status, message: msg, messageId, submit, inputA11y } = useNewsletterSignup();

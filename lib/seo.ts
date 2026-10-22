@@ -24,6 +24,22 @@ export const DEFAULT_OG = {
 
 export const PODCAST_COVER = `${SITE_URL}/og/podcast-cover-3000.png`;
 
+const PLACEHOLDER_SOCIAL = /(?:yourusername|yourchannel|yourpodcast)\/?$/i;
+
+/**
+ * Env-provided profile URL, or undefined while it is unset or still the
+ * setup placeholder. Keeps dead links out of the UI and out of sameAs.
+ */
+export function socialUrl(value: string | undefined | null): string | undefined {
+  if (!value) return undefined;
+  try {
+    const url = new URL(value);
+    return PLACEHOLDER_SOCIAL.test(url.pathname) ? undefined : url.toString();
+  } catch {
+    return undefined;
+  }
+}
+
 /** Absolute URL for a site-relative path; passes absolute URLs through. */
 export function absoluteUrl(value: string): string {
   if (/^https?:\/\//i.test(value)) return value;
@@ -45,6 +61,20 @@ export function isoDuration(totalSeconds: number): string | undefined {
   const m = Math.floor((s % 3600) / 60);
   const sec = s % 60;
   return `PT${h ? `${h}H` : ""}${m ? `${m}M` : ""}${sec || (!h && !m) ? `${sec}S` : ""}`;
+}
+
+/** Audio MIME type from the file extension; undefined when unknown. */
+export function audioMime(value: string | null | undefined): string | undefined {
+  const ext = value?.split(/[?#]/)[0].split(".").pop()?.toLowerCase();
+  const types: Record<string, string> = {
+    mp3: "audio/mpeg",
+    m4a: "audio/mp4",
+    mp4: "audio/mp4",
+    wav: "audio/wav",
+    ogg: "audio/ogg",
+    oga: "audio/ogg",
+  };
+  return ext ? types[ext] : undefined;
 }
 
 type OgImage = {

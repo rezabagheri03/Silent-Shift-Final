@@ -8,11 +8,15 @@ import { pageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = pageMetadata({
-  title: "برچسب‌ها",
-  description: "همه برچسب‌های پادکست‌ها و روایت‌های Silent Shift.",
-  path: "/tags",
-});
+export const metadata: Metadata = {
+  ...pageMetadata({
+    title: "برچسب‌ها",
+    description: "همه برچسب‌های پادکست‌ها و روایت‌های Silent Shift.",
+    path: "/tags",
+  }),
+  // Index of tag pages only; the tags themselves are noindex.
+  robots: { index: false, follow: true },
+};
 
 export default function TagsPage() {
   const tags = listTags();

@@ -16,11 +16,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const tag = getTagBySlug(slug);
   if (!tag) notFound();
-  return pageMetadata({
-    title: `برچسب ${tag.name}`,
-    description: `پادکست‌ها و روایت‌های Silent Shift با برچسب ${tag.name}.`,
-    path: `/tags/${tag.slug}`,
-  });
+  return {
+    ...pageMetadata({
+      title: `برچسب ${tag.name}`,
+      description: `پادکست‌ها و روایت‌های Silent Shift با برچسب ${tag.name}.`,
+      path: `/tags/${tag.slug}`,
+    }),
+    // Tag pages list one or two items each: keep them crawlable, not indexable.
+    robots: { index: false, follow: true },
+  };
 }
 
 export default async function TagPage({ params }: { params: Promise<{ slug: string }> }) {
