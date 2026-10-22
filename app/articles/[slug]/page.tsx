@@ -142,29 +142,6 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         <Markdown content={article.body} />
       </article>
 
-      <aside
-        dir="rtl"
-        className="flex flex-col gap-3 rounded-sm border border-border-medium bg-surface p-5 text-right md:flex-row md:items-center md:gap-5"
-      >
-        <img
-          src={designAssets.profile}
-          alt="برزو ذاکری"
-          width={72}
-          height={72}
-          className="h-16 w-16 shrink-0 self-center rounded-full object-cover object-bottom md:self-auto"
-        />
-        <p className="text-d-body-md leading-relaxed text-text-secondary">
-          <Link href="/about" className="font-medium text-text-primary hover:text-brand transition-colors">
-            برزو ذاکری
-          </Link>{" "}
-          کوچ و منتور ایرانیان خارج از کشور در توسعه فردی، مسیر شغلی و رشد کسب‌وکار؛ سازنده
-          Silent Shift.{" "}
-          <Link href="/about" className="text-brand hover:underline underline-offset-4">
-            داستان من
-          </Link>
-        </p>
-      </aside>
-
       <div className="flex justify-center">
         <Button
           href="/contact"
