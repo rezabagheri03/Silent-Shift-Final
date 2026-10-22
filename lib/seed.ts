@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { ensureBootstrapAdmin } from "@/lib/auth";
+import { EXAMPLE_ARTICLE, EXAMPLE_EPISODE } from "@/lib/content-examples";
 
 const CATEGORIES = [
   { slug: "self-development", name: "توسعه فردی" },
@@ -20,7 +21,7 @@ const TAGS = [
 
 const SAMPLE_AUDIO = "/audio-sample/sample.wav";
 
-const PODCASTS = [
+const DEMO_PODCASTS = [
   {
     slug: "to-az-no-episode-1",
     episode_number: 4,
@@ -128,6 +129,9 @@ const PODCASTS = [
   },
 ];
 
+// The gold-standard example replaces the demo episode with the same slug.
+const PODCASTS = [EXAMPLE_EPISODE, ...DEMO_PODCASTS.filter((p) => p.slug !== EXAMPLE_EPISODE.slug)];
+
 const CHAPTERS = [
   { title: "مقدمه و تعریف مکث", start_seconds: 0 },
   { title: "چرا همیشه عجله داریم؟", start_seconds: 240 },
@@ -136,7 +140,7 @@ const CHAPTERS = [
   { title: "جمع‌بندی", start_seconds: 2100 },
 ];
 
-const ARTICLES = [
+const DEMO_ARTICLES = [
   {
     slug: "bavarhaye-jaygozin",
     title: "معماری سکوت؛ طراحی فضاهای خالی در تقویم روزانه",
@@ -222,6 +226,9 @@ const ARTICLES = [
     read_time_minutes: 4,
   },
 ];
+
+// The gold-standard example replaces the demo article with the same slug.
+const ARTICLES = [EXAMPLE_ARTICLE, ...DEMO_ARTICLES.filter((a) => a.slug !== EXAMPLE_ARTICLE.slug)];
 
 const FAQS = [
   ["آیا محتوای سایلنت شیفت فقط برای مهاجران است؟", "نه. اگرچه بخش زیادی از تجربه من با ایرانیان مهاجر است، مسیرهای مکث و بازنگری برای هر کسی که در دوره تحول قرار دارد ارزشمند است."],

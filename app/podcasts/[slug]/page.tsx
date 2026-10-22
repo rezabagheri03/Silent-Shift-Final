@@ -4,6 +4,7 @@ import Link from "next/link";
 import { PageShell } from "@/components/ui/PageShell";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { InlinePlayer } from "@/components/ui/InlinePlayer";
+import { Markdown } from "@/components/ui/Markdown";
 import { PodcastListCard } from "@/components/ui/PodcastListCard";
 import { HorizontalCarousel } from "@/components/ui/HorizontalCarousel";
 import { MobileCarousel } from "@/components/ui/MobileCarousel";
@@ -438,22 +439,7 @@ export default async function PodcastPage({
             <span className="h-px w-full max-w-[599px] bg-[#C9A84C]" aria-hidden />
           </div>
 
-          <div className="flex w-full flex-col-reverse items-stretch gap-8 pt-10 md:flex-row md:items-center md:justify-between">
-            <div className="flex flex-row flex-wrap items-center gap-3">
-              <button
-                type="button"
-                className="inline-flex h-9 min-w-[100px] items-center justify-center rounded-sm border border-[#C9A84C] px-3 text-[14px] leading-5 text-[#C9A84C] transition-colors hover:bg-[#C9A84C] hover:text-black"
-              >
-                ذخیره
-              </button>
-              <button
-                type="button"
-                className="inline-flex h-9 min-w-[100px] items-center justify-center rounded-sm border border-[#C9A84C] px-3 text-[14px] leading-5 text-[#C9A84C] transition-colors hover:bg-[#C9A84C] hover:text-black"
-              >
-                انتشار
-              </button>
-            </div>
-
+          <div className="flex w-full flex-col-reverse items-stretch gap-8 pt-10 md:flex-row md:items-center md:justify-end">
             <div className="flex flex-row items-center justify-end gap-8">
               <div className="flex flex-col items-end gap-6">
                 <span className="text-[14px] leading-5 text-[#52525B]">مدت زمان اپیزود</span>
@@ -473,6 +459,24 @@ export default async function PodcastPage({
           </div>
         </div>
       </section>
+
+      {/* ── Transcript ──
+          The "متن اپیزود" button in the episode row links here. */}
+      {podcast.transcript ? (
+        <section
+          id="transcript"
+          dir="rtl"
+          className="flex w-full scroll-mt-24 flex-col gap-6 border-t border-[#C9A84C]/20 pt-10"
+        >
+          <div className="flex w-full flex-row items-center justify-end gap-6">
+            <h2 className="text-[20px] font-medium leading-7 text-[#A1A1AA] md:text-[22px]">
+              متن اپیزود
+            </h2>
+            <span className="h-[2px] w-14 shrink-0 bg-[#C9A84C]" aria-hidden />
+          </div>
+          <Markdown content={podcast.transcript} className="max-w-[75ch] self-end text-right" />
+        </section>
+      ) : null}
 
       {/* ── More episodes ──
           left:  ‹ تمام اپیزودها
