@@ -15,10 +15,10 @@ export function PlatformBadges({
   compact = false,
   reverseMobile = false,
 }: Props) {
-  // Nothing to link to until the real show URLs are configured.
-  const apple = socialUrl(appleUrl);
-  const castbox = socialUrl(castboxUrl);
-  if (!apple && !castbox) return null;
+  // Until real show URLs are configured, the badges point at our own episode
+  // list instead of the placeholder URLs (which 404).
+  const apple = socialUrl(appleUrl) ?? "/podcasts";
+  const castbox = socialUrl(castboxUrl) ?? "/podcasts";
 
   return (
     <section className={`flex flex-col items-center ${compact ? "gap-4" : "gap-6 py-4 md:py-8"}`}>
