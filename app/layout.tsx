@@ -33,6 +33,7 @@ export const metadata: Metadata = {
     images: [DEFAULT_OG.url],
   },
   robots: { index: true, follow: true },
+  verification: { google: "1Qb9rKnqguxe1DO2ETDQPHYymRNDVo4wBOddV46uLbY" },
   icons: {
     icon: [
       { url: "/icons/icon-32.png?v=2", sizes: "32x32", type: "image/png" },
