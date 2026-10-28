@@ -47,7 +47,8 @@ function withSecurityHeaders(res: NextResponse, req: NextRequest) {
       "form-action 'self'",
       "frame-ancestors 'self'",
       "object-src 'none'",
-      `script-src 'self' 'unsafe-inline'${development ? " 'unsafe-eval'" : ""}`,
+      // clarity.ms family: the tag (www.) loads its engine from scripts.clarity.ms
+      `script-src 'self' 'unsafe-inline' https://*.clarity.ms${development ? " 'unsafe-eval'" : ""}`,
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https:",
       "font-src 'self' data:",
