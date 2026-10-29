@@ -43,7 +43,10 @@ export const metadata: Metadata = {
     images: [DEFAULT_OG.url],
   },
   robots: { index: true, follow: true },
-  verification: { google: "1Qb9rKnqguxe1DO2ETDQPHYymRNDVo4wBOddV46uLbY" },
+  // Two properties: silentshift.life (legacy, still verified) and silentshift.ir (canonical)
+  verification: {
+    google: ["1Qb9rKnqguxe1DO2ETDQPHYymRNDVo4wBOddV46uLbY", "I4l0X3i7wlRBYgHXEZTGp0diJ8x0dvRCikm6V87CBHA"],
+  },
   icons: {
     icon: [
       { url: "/icons/icon-32.png?v=2", sizes: "32x32", type: "image/png" },
@@ -102,7 +105,7 @@ const CLARITY_SNIPPET = `(function(c,l,a,r,i,t,y){
   c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
   t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
   y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-})(window, document, "clarity", "script", "z4tqh7nhgj");`;
+})(window, document, "clarity", "script", "z5b9pp89z2");`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
