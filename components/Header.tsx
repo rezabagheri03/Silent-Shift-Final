@@ -101,7 +101,8 @@ export default function Header() {
           </button>
           {/* Mobile-only wordmark SVG (desktop keeps the square mark) */}
           <Link href="/" aria-label="خانه" dir="ltr" className="flex items-center">
-            <img src="/brand/silent-shift-wordmark.svg" alt="Silent Shift" width={1000} height={220} className="h-8 w-auto" />
+            {/* ?v=2: the CDN caches /brand/* for 24h, so the URL must change with the asset */}
+            <img src="/brand/silent-shift-wordmark.svg?v=2" alt="Silent Shift" width={629} height={142} className="h-10 w-auto" />
           </Link>
           <div className="relative">
             <button
