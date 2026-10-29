@@ -99,7 +99,10 @@ export default function Header() {
           <button onClick={() => (menuOpen ? closeMenu() : openMenu())} aria-label={menuOpen ? "بستن منو" : "باز کردن منو"} aria-expanded={menuOpen} aria-controls="mobile-nav-drawer" className="w-8 h-8 shrink-0 flex items-center justify-center text-white">
             <MenuCloseIcon size={24} open={menuOpen} />
           </button>
-          <Link href="/" aria-label="خانه" dir="ltr" className="text-[24px] font-semibold leading-8 text-[#C9A84C]">SILENT SHIFT</Link>
+          {/* Mobile-only wordmark SVG (desktop keeps the square mark) */}
+          <Link href="/" aria-label="خانه" dir="ltr" className="flex items-center">
+            <img src="/brand/silent-shift-wordmark.svg" alt="Silent Shift" width={1000} height={220} className="h-8 w-auto" />
+          </Link>
           <div className="relative">
             <button
               data-search-trigger
